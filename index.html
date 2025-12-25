@@ -2,26 +2,556 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Login | Shah Pharmacy</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Order medicines and groceries online from Shah Pharmacy. Fast delivery in Khalilabad, Sant Kabir Nagar. Best prices guaranteed.">
+  <meta name="keywords" content="pharmacy, medicine, grocery, online, delivery, Khalilabad, Sant Kabir Nagar">
+  <meta property="og:title" content="Shah Pharmacy & Mini Mart">
+  <meta property="og:description" content="Your trusted online pharmacy and grocery store">
+  <meta property="og:type" content="website">
+  <link rel="manifest" href="manifest.json">
+  <title>Shah Pharmacy & Mini Mart - Online Medicine & Grocery Store</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/user-auth.css">
+  <link rel="stylesheet" href="css/enhanced-features.css">
+  <link rel="stylesheet" href="css/hierarchical-categories.css">
+  <link rel="stylesheet" href="css/side-menu-fix.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/hierarchical-categories.js"></script>
 </head>
-<body class="bg-light d-flex justify-content-center align-items-center vh-100">
 
-<div class="card p-4 shadow" style="width:320px;">
-  <h5 class="text-center mb-3">Admin Login</h5>
+<body onload="applyTheme()">
 
-  <input id="adminUser" class="form-control mb-2" placeholder="Username">
-  <input id="adminPass" type="password" class="form-control mb-3" placeholder="Password">
-
-  <button class="btn btn-success w-100" onclick="adminLogin()">Login</button>
-
-  <small class="text-muted d-block mt-2 text-center">
-    Default: admin / 1234
-  </small>
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="delivery-info">
+    <i class="fas fa-clock"></i>
+    <span id="deliveryHours">Delivery: 9 AM - 9 PM</span>
+  </div>
+  <div class="contact-info">
+    <i class="fas fa-phone"></i>
+    <span id="contactNumbers">9369009763 | 7905190933</span>
+  </div>
 </div>
 
-<script src="admin.js"></script>
+<!-- HEADER -->
+<header class="header">
+  <div class="header-content">
+    <div class="logo">
+      <h1><i class="fas fa-pills"></i> Shah Pharmacy & Mini Mart</h1>
+      <div class="shop-details">
+        <p class="tagline">Everything delivered in minutes</p>
+        <p class="address">
+          <i class="fas fa-map-marker-alt"></i>
+          Banjariya Road, Near Naval's National Academy Junior, Khalilabad - Sant Kabir Nagar
+        </p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="qr-section" onclick="showQRCodes()">
+        <i class="fas fa-qrcode"></i>
+        <span>QR Codes</span>
+      </div>
+      <div class="ai-assistant" onclick="toggleAIChat()">
+        <i class="fas fa-robot"></i>
+        <span>AI Assistant</span>
+      </div>
+      <div class="cart-icon" onclick="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cartCount" class="cart-count">0</span>
+      </div>
+      <div class="wishlist-icon" onclick="toggleWishlist()">
+        <i class="fas fa-heart"></i>
+        <span id="wishlistCount" class="wishlist-count">0</span>
+      </div>
+      <div class="overflow-menu-trigger" onclick="toggleOverflowMenu()">
+        <i class="fas fa-ellipsis-v"></i>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- SEARCH -->
+<div class="search-container">
+  <div class="search-box">
+    <i class="fas fa-search"></i>
+    <input id="searchBox" placeholder="Search for medicines, groceries..." onkeyup="searchProducts()" oninput="searchProducts()">
+    <button class="search-clear-btn" onclick="clearSearch()" style="display:none;">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="categories">
+  <div class="category-scroll" id="categoryContainer">
+    <!-- Categories will be loaded dynamically -->
+  </div>
+</div>
+
+<!-- SUBCATEGORIES -->
+<div class="subcategories" id="subcategoryContainer" style="display: none;">
+  <div class="subcategory-scroll">
+    <!-- Subcategories will be loaded dynamically -->
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  <div id="productList" class="product-grid">
+    <!-- Products will be loaded dynamically -->
+  </div>
+  <div id="pagination" class="pagination" style="display: none;">
+    <!-- Pagination will be loaded dynamically -->
+  </div>
+</main>
+
+<!-- CART SIDEBAR -->
+<div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
+<div id="cartSidebar" class="cart-sidebar">
+  <div class="cart-header">
+    <h3><i class="fas fa-shopping-cart"></i> Your Cart</h3>
+    <div class="cart-header-actions">
+      <button class="cart-scroll-to-bottom" onclick="scrollToCartBottom()" title="Scroll to Payment">
+        <i class="fas fa-arrow-down"></i>
+      </button>
+      <button class="close-cart" onclick="toggleCart()">×</button>
+    </div>
+  </div>
+  <div class="cart-body">
+    <div id="cartItems" class="cart-items">
+      <!-- Cart items will be loaded dynamically -->
+    </div>
+    <div class="cart-summary">
+      <div class="summary-line">
+        <span>Subtotal:</span>
+        <span>₹<span id="cartSubtotal">0</span></span>
+      </div>
+      <div class="summary-line" id="deliveryLine">
+        <span>Delivery:</span>
+        <span id="deliveryChargeText">FREE</span>
+      </div>
+      <div class="summary-line" id="discountLine" style="display: none;">
+        <span>Discount:</span>
+        <span id="discountAmount">-₹0</span>
+      </div>
+      <div class="summary-line" id="autoDiscountLine" style="display: none;">
+        <span id="autoDiscountLabel">Auto Discount:</span>
+        <span id="autoDiscountAmount">-₹0</span>
+      </div>
+      <div class="summary-line" id="coinsLine" style="display: none;">
+        <span>Coins Used:</span>
+        <span id="coinsUsedAmount">-₹0</span>
+      </div>
+      <div class="summary-total">
+        <span>Total:</span>
+        <span>₹<span id="cartTotal">0</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="checkout-section">
+      <div class="delivery-address">
+        <input type="text" id="deliveryAddress" placeholder="Enter delivery address" onchange="calculateDelivery()">
+        <button class="location-btn" onclick="getCurrentLocation()">
+          <i class="fas fa-crosshairs"></i> Use Current Location
+        </button>
+      </div>
+      <div id="deliveryInfo" class="delivery-info-box"></div>
+      <div class="payment-methods">
+        <label><input type="radio" name="paymentMethod" value="cod" checked> Cash on Delivery</label>
+        <label><input type="radio" name="paymentMethod" value="razorpay"> Online Payment</label>
+      </div>
+      <button class="checkout-btn" onclick="placeOrder()">
+        <i class="fas fa-shopping-bag"></i> Place Order
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- WISHLIST SIDEBAR -->
+<div id="wishlistOverlay" class="cart-overlay" onclick="toggleWishlist()"></div>
+<div id="wishlistSidebar" class="cart-sidebar">
+  <div class="cart-header">
+    <h3><i class="fas fa-heart"></i> Wishlist</h3>
+    <button class="close-cart" onclick="toggleWishlist()">×</button>
+  </div>
+  <div class="cart-body">
+    <div id="wishlistItems" class="cart-items">
+      <!-- Wishlist items will be loaded dynamically -->
+    </div>
+  </div>
+  <div class="cart-footer">
+    <button class="checkout-btn" onclick="addAllToCart()">
+      <i class="fas fa-plus"></i> Add All to Cart
+    </button>
+  </div>
+</div>
+
+<!-- OVERFLOW MENU -->
+<div id="overflowMenuOverlay" class="overflow-menu-overlay" onclick="closeOverflowMenu()"></div>
+<div id="overflowMenuPanel" class="overflow-menu-panel">
+  <div class="menu-handle"></div>
+  
+  <!-- USER PROFILE SECTION -->
+  <div class="menu-section user-profile-section">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="profile-info">
+        <div class="profile-name" id="overflowUserName">Guest User</div>
+        <div class="profile-phone" id="overflowUserPhone">Not logged in</div>
+      </div>
+      <button class="edit-profile-btn" onclick="showLogin()" id="overflowEditBtn">
+        <i class="fas fa-sign-in-alt"></i>
+      </button>
+    </div>
+  </div>
+  
+  <!-- MENU OPTIONS -->
+  <div class="menu-section menu-options">
+    <div class="menu-group">
+      <div class="menu-group-title">Account</div>
+      <div class="menu-item" onclick="showAccountManagement(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-user"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">User Profile</div>
+          <div class="menu-desc">Manage your account</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+    </div>
+    
+    <div class="menu-group">
+      <div class="menu-group-title">Shopping</div>
+      <div class="menu-item" onclick="toggleCart(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-shopping-cart"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">My Cart</div>
+          <div class="menu-desc">Items: <span id="menuCartCount">0</span></div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+      <div class="menu-item" onclick="toggleWishlist(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-heart"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">Wishlist</div>
+          <div class="menu-desc">Saved items: <span id="menuWishlistCount">0</span></div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+    </div>
+    
+    <div class="menu-group">
+      <div class="menu-group-title">AI & Tools</div>
+      <div class="menu-item" onclick="toggleAIChat(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-robot"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">AI Assistant</div>
+          <div class="menu-desc">Get health advice & medicine info</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+      <div class="menu-item" onclick="showQRCodes(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-qrcode"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">QR Codes</div>
+          <div class="menu-desc">Share & download app</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+    </div>
+    
+    <div class="menu-group">
+      <div class="menu-group-title">Settings</div>
+      <div class="menu-item" onclick="showColorCustomizer(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-palette"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">Appearance</div>
+          <div class="menu-desc">Customize theme colors</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+      <div class="menu-item" onclick="showPaymentMethods(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-credit-card"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">Payment Methods</div>
+          <div class="menu-desc">Manage payment options</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+      <div class="menu-item" onclick="showSettings(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-cog"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">Settings</div>
+          <div class="menu-desc">App preferences</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+    </div>
+    
+    <div class="menu-group">
+      <div class="menu-group-title">Address</div>
+      <div class="menu-item" onclick="showAddressBook(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-address-book"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">Address Book</div>
+          <div class="menu-desc">Manage delivery addresses</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+      <div class="menu-item" onclick="getCurrentLocation(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">Current Location</div>
+          <div class="menu-desc">Use GPS location</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+    </div>
+    
+    <div class="menu-group">
+      <div class="menu-group-title">Orders</div>
+      <div class="menu-item" onclick="showOrderHistory(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-history"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">Order History</div>
+          <div class="menu-desc">View past orders</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+      <div class="menu-item" onclick="showPrescriptionUpload(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-prescription"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">Upload Prescription</div>
+          <div class="menu-desc">Upload medicine prescription</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+    </div>
+    
+    <div class="menu-group">
+      <div class="menu-group-title">Support</div>
+      <div class="menu-item" onclick="showShopChat(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-comments"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">Chat with Shop</div>
+          <div class="menu-desc">Get instant help</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+      <div class="menu-item" onclick="callShop(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fas fa-phone"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">Call Support</div>
+          <div class="menu-desc">9369009763</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+      <div class="menu-item" onclick="whatsappShop(); closeOverflowMenu();">
+        <div class="menu-icon"><i class="fab fa-whatsapp"></i></div>
+        <div class="menu-text">
+          <div class="menu-title">WhatsApp</div>
+          <div class="menu-desc">Quick support via WhatsApp</div>
+        </div>
+        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- LOGOUT SECTION -->
+  <div class="menu-section logout-section" id="overflowLogoutSection" style="display: none;">
+    <div class="menu-item logout-item" onclick="logoutUser(); closeOverflowMenu();">
+      <div class="menu-icon"><i class="fas fa-sign-out-alt"></i></div>
+      <div class="menu-text">
+        <div class="menu-title">Logout</div>
+        <div class="menu-desc">Sign out of your account</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI CHATBOT -->
+<div id="aiOverlay" class="ai-overlay" onclick="toggleAIChat()"></div>
+<div id="aiChatbot" class="ai-chatbot">
+  <div class="ai-header">
+    <h3><i class="fas fa-robot"></i> AI Assistant</h3>
+    <button class="close-ai" onclick="toggleAIChat()">×</button>
+  </div>
+  <div class="ai-body">
+    <div id="aiChatBody" class="ai-chat-body">
+      <div class="ai-message">
+        <div class="ai-avatar">🤖</div>
+        <div class="message-content">
+          <p>Hi! I'm your pharmacy assistant. Ask me about medicines, symptoms, or health advice!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ai-footer">
+    <div class="quick-queries">
+      <button onclick="quickAIQuery('fever')">Fever</button>
+      <button onclick="quickAIQuery('headache')">Headache</button>
+      <button onclick="quickAIQuery('diabetes')">Diabetes</button>
+      <button onclick="quickAIQuery('vitamins')">Vitamins</button>
+    </div>
+    <div class="ai-input-section">
+      <input type="text" id="aiInput" placeholder="Ask me anything..." onkeypress="handleAIEnter(event)">
+      <button onclick="sendAIMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- SMART SUGGESTIONS -->
+<div id="smartSuggestions" class="smart-suggestions">
+  <div class="suggestion-content">
+    <span id="suggestionText"></span>
+    <button onclick="hideSuggestion()">×</button>
+  </div>
+</div>
+
+<!-- COLOR CUSTOMIZER MODAL -->
+<div id="colorCustomizer" class="color-customizer-modal">
+  <div class="color-customizer-overlay" onclick="hideColorCustomizer()"></div>
+  <div class="color-customizer-content">
+    <div class="color-customizer-header">
+      <h3><i class="fas fa-palette"></i> Customize Theme Colors</h3>
+      <button class="close-customizer" onclick="hideColorCustomizer()">×</button>
+    </div>
+    <div class="color-customizer-body">
+      <div class="color-section">
+        <label>Primary Color:</label>
+        <input type="color" id="primaryColorInput" value="#DC2626" oninput="updatePrimaryColor()">
+        <span id="primaryColorPreview">#DC2626</span>
+      </div>
+      <div class="color-presets">
+        <h4>Quick Presets:</h4>
+        <div class="preset-colors">
+          <button class="preset-btn" style="background:#DC2626" onclick="setColorPreset('#DC2626', 'Red')">Red</button>
+          <button class="preset-btn" style="background:#2563EB" onclick="setColorPreset('#2563EB', 'Blue')">Blue</button>
+          <button class="preset-btn" style="background:#059669" onclick="setColorPreset('#059669', 'Green')">Green</button>
+          <button class="preset-btn" style="background:#7C3AED" onclick="setColorPreset('#7C3AED', 'Purple')">Purple</button>
+          <button class="preset-btn" style="background:#EA580C" onclick="setColorPreset('#EA580C', 'Orange')">Orange</button>
+        </div>
+      </div>
+    </div>
+    <div class="color-customizer-footer">
+      <button class="apply-colors-btn" onclick="applyColors()">Apply Colors</button>
+      <button class="reset-colors-btn" onclick="resetColors()">Reset to Default</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="company-section">
+      <div class="company-header">
+        <h3><i class="fas fa-pills"></i> Shah Pharmacy & Mini Mart</h3>
+      </div>
+      <div class="company-quote">
+        "Your health, our priority - delivering wellness to your doorstep"
+      </div>
+      <div class="company-details">
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+              <strong>Address:</strong>
+              <p>Banjariya Road, Near Naval's National Academy Junior, Khalilabad - Sant Kabir Nagar</p>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-phone"></i>
+            <div>
+              <strong>Phone:</strong>
+              <p>9369009763 | 7905190933</p>
+            </div>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="fas fa-clock"></i>
+            <div>
+              <strong>Delivery Hours:</strong>
+              <p>9:00 AM - 9:00 PM (All Days)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="company-services">
+        <h4>Our Services</h4>
+        <div class="services-grid">
+          <span><i class="fas fa-pills"></i> Medicines</span>
+          <span><i class="fas fa-shopping-basket"></i> Groceries</span>
+          <span><i class="fas fa-truck"></i> Home Delivery</span>
+          <span><i class="fas fa-prescription"></i> Prescription Upload</span>
+          <span><i class="fas fa-robot"></i> AI Health Assistant</span>
+          <span><i class="fas fa-heart"></i> Health Consultation</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-divider"></div>
+    
+    <div class="developer-section">
+      <div class="developer-header">
+        <h3><i class="fas fa-code"></i> Developed by LaxRani AI Labs</h3>
+      </div>
+      <div class="developer-quote">
+        "Crafting intelligent solutions with AI innovation"
+      </div>
+      <div class="developer-details">
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="fas fa-user"></i>
+            <div>
+              <strong>Managed by:</strong>
+              <p>Sarthak Srivastava</p>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-phone"></i>
+            <div>
+              <strong>Phone:</strong>
+              <p>8081782267</p>
+            </div>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="fas fa-envelope"></i>
+            <div>
+              <strong>Email:</strong>
+              <p>laxrabiailabs07@gmail.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="services-section">
+        <h4>AI Development Services</h4>
+        <div class="services-list">
+          <span class="service-tag">AI Solutions</span>
+          <span class="service-tag">Web Development</span>
+          <span class="service-tag">Mobile Apps</span>
+          <span class="service-tag">E-commerce</span>
+          <span class="service-tag">Cloud Solutions</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Load JavaScript -->
+<script src="js/security-utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/side-menu-fix.js"></script>
+<script src="js/zomato-menu.js"></script>
+<script src="js/overflow-menu.js"></script>
+<script src="js/admin-access.js"></script>
+
 </body>
 </html>
