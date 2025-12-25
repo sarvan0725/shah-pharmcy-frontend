@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard | Shah Pharmacy & Mini Mart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ADMIN CSS -->
+  <link rel="stylesheet" href="admin.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <!-- CHART JS (FOR GRAPHS) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar">
+  <h2>Admin Panel</h2>
+
+  <button onclick="showSection('sales')">📊 Sales</button>
+  <button onclick="showSection('analytics')">📈 Analytics</button>
+  <button onclick="showSection('ai-insights')">🤖 AI Insights</button>
+  <button onclick="showSection('products')">📦 Products</button>
+  <button onclick="showSection('categories')">📂 Categories</button>
+  <button onclick="showSection('alerts')">🚨 Stock Alerts</button>
+  <button onclick="showSection('orders')">🧾 Orders</button>
+  <button onclick="showSection('customers')">👥 Customers</button>
+  <button onclick="showSection('discounts')">🎁 Discounts</button>
+  <button onclick="showSection('chat-messages')">💬 Shop Chat Messages</button>
+  <button onclick="showSection('notifications')">📢 User Notifications</button>
+  <button onclick="showSection('marketing')">📢 AI Marketing</button>
+  <button onclick="showSection('shop-images')">🖼️ Shop Images</button>
+  <button onclick="showSection('delivery-settings')">🚚 Delivery Settings</button>
+  <button onclick="showSection('admin-settings')">⚙️ Admin Settings</button>
+  <button onclick="showSection('theme')">🎨 Theme</button>
+</aside>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main class="content">
+
+  <!-- ========== SALES DASHBOARD ========== -->
+  <section id="sales" class="section">
+    <h2>Sales Dashboard</h2>
+
+    <div class="cards">
+      <div class="card"><h3>Today Sales</h3><p id="todaySales">₹0</p></div>
+      <div class="card"><h3>Last 7 Days</h3><p id="weekSales">₹0</p></div>
+      <div class="card"><h3>Last 30 Days</h3><p id="monthSales">₹0</p></div>
+      <div class="card"><h3>Delivery Revenue</h3><p id="deliveryRevenue">₹0</p></div>
+      <div class="card"><h3>Total Orders</h3><p id="totalOrders">0</p></div>
+    </div>
+  </section>
+
+  <!-- ========== ANALYTICS ========== -->
+  <section id="analytics" class="section hidden">
+    <h2>Business Analytics</h2>
+
+    <div class="cards">
+      <div class="card"><h3>Total Products</h3><p id="totalProducts">0</p></div>
+      <div class="card"><h3>Out of Stock</h3><p id="outOfStock">0</p></div>
+      <div class="card"><h3>Grocery</h3><p id="groceryCount">0</p></div>
+      <div class="card"><h3>Medicine</h3><p id="medicineCount">0</p></div>
+      <div class="card"><h3>Bulk</h3><p id="bulkCount">0</p></div>
+    </div>
+
+    <div class="charts">
+      <canvas id="categoryChart"></canvas>
+      <canvas id="salesChart"></canvas>
+    </div>
+  </section>
+
+  <!-- ========== AI INSIGHTS ========== -->
+  <section id="ai-insights" class="section hidden">
+    <h2>AI Business Intelligence</h2>
+    
+    <div class="cards">
+      <div class="card"><h3>Sales Prediction</h3><p id="salesPrediction">Loading...</p></div>
+      <div class="card"><h3>Best Selling</h3><p id="bestSelling">Loading...</p></div>
+      <div class="card"><h3>Reorder Alert</h3><p id="reorderAlert">Loading...</p></div>
+      <div class="card"><h3>Profit Margin</h3><p id="profitMargin">Loading...</p></div>
+    </div>
+    
+    <div class="ai-recommendations">
+      <h3>AI Recommendations</h3>
+      <div id="aiRecommendations"></div>
+    </div>
+    
+    <div class="demand-forecast">
+      <h3>Demand Forecasting</h3>
+      <canvas id="demandChart"></canvas>
+    </div>
+  </section>
+
+  <!-- ========== CUSTOMER INSIGHTS ========== -->
+  <section id="customers" class="section hidden">
+    <h2>Customer Intelligence</h2>
+    
+    <div class="cards">
+      <div class="card"><h3>Total Customers</h3><p id="totalCustomers">0</p></div>
+      <div class="card"><h3>Repeat Customers</h3><p id="repeatCustomers">0</p></div>
+      <div class="card"><h3>Avg Order Value</h3><p id="avgOrderValue">₹0</p></div>
+      <div class="card"><h3>Customer Satisfaction</h3><p id="satisfaction">95%</p></div>
+    </div>
+    
+    <div class="customer-segments">
+      <h3>Customer Segments</h3>
+      <div id="customerSegments"></div>
+    </div>
+  </section>
+
+  <!-- ========== DISCOUNT MANAGEMENT ========== -->
+  <section id="discounts" class="section hidden">
+    <h2>Discount & Offers Management</h2>
+    
+    <div class="discount-creator">
+      <h3>Create New Offer</h3>
+      <div class="form-grid">
+        <input id="discountTitle" placeholder="Offer Title">
+        <select id="discountType">
+          <option value="percentage">Percentage (%)</option>
+          <option value="fixed">Fixed Amount (₹)</option>
+        </select>
+        <input id="discountValue" type="number" placeholder="Discount Value">
+        <input id="minOrderAmount" type="number" placeholder="Minimum Order Amount">
+        <label><input type="checkbox" id="autoApply"> Auto Apply</label>
+        <input id="discountExpiry" type="datetime-local">
+        <button onclick="createDiscount()">Create Offer</button>
+      </div>
+    </div>
+    
+    <div class="quick-discounts">
+      <h3>Quick Discount Actions</h3>
+      <div class="quick-actions">
+        <button onclick="createQuickDiscount(2, 500)">2% on ₹500+</button>
+        <button onclick="createQuickDiscount(3, 1000)">3% on ₹1000+</button>
+        <button onclick="createQuickDiscount(5, 2000)">5% on ₹2000+</button>
+        <button onclick="createCustomDiscount()">Custom Discount</button>
+      </div>
+    </div>
+    
+    <div class="active-offers">
+      <h3>Active Offers</h3>
+      <div id="offersList"></div>
+    </div>
+  </section>
+
+  <!-- ========== AI MARKETING ========== -->
+  <section id="marketing" class="section hidden">
+    <h2>AI Marketing Assistant</h2>
+    
+    <div class="marketing-tools">
+      <div class="tool-card">
+        <h3>📱 WhatsApp Campaigns</h3>
+        <p>Send personalized offers to customers</p>
+        <button onclick="generateWhatsAppCampaign()">Generate Campaign</button>
+      </div>
+      
+      <div class="tool-card">
+        <h3>🎁 Smart Offers</h3>
+        <p>AI-generated discount strategies</p>
+        <button onclick="generateSmartOffers()">Create Offers</button>
+      </div>
+      
+      <div class="tool-card">
+        <h3>📈 Social Media</h3>
+        <p>Auto-generate promotional content</p>
+        <button onclick="generateSocialContent()">Create Posts</button>
+      </div>
+    </div>
+    
+    <div id="marketingOutput"></div>
+  </section>
+
+  <!-- ========== STOCK ALERTS ========== -->
+  <section id="alerts" class="section hidden">
+    <h2>Stock Alert System</h2>
+    
+    <div class="alert-settings" style="background: #e8f5e8; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+      <h3>Alert Settings</h3>
+      <p><strong>WhatsApp Number:</strong> +91 7905190933</p>
+      <p><strong>Low Stock Threshold:</strong> 30 items</p>
+      <p><strong>Status:</strong> <span style="color: green;">✅ Active</span></p>
+    </div>
+    
+    <div id="lowStockAlerts"></div>
+    
+    <button onclick="checkLowStock()" style="background: #ff9800; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 10px;">
+      🔄 Check Stock Levels Now
+    </button>
+  </section>
+
+  <!-- ========== SHOP IMAGES ========== -->
+  <section id="shop-images" class="section hidden">
+    <h2>Shop Images Management</h2>
+    
+    <div class="image-upload-section">
+      <h3>Upload Shop Banner</h3>
+      <div class="upload-area">
+        <input type="file" id="shopImageUpload" accept="image/*" onchange="uploadShopImage()" style="display: none;">
+        <button onclick="document.getElementById('shopImageUpload').click()" class="upload-btn">
+          <i class="fas fa-cloud-upload-alt"></i> Choose Shop Image
+        </button>
+        <p>Upload shop exterior, interior, or promotional images</p>
+      </div>
+      
+      <div class="current-banner">
+        <h4>Current Shop Banner</h4>
+        <div id="currentShopImage" class="image-preview">
+          <p>No banner set</p>
+        </div>
+        <button onclick="setAsMainBanner()" id="setBannerBtn" class="set-banner-btn" style="display: none;">
+          Set as Main Banner
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CATEGORY MANAGEMENT ========== -->
+  <section id="categories" class="section hidden">
+    <h2>Category & Subcategory Management</h2>
+    
+    <div class="category-creator">
+      <h3>Add New Category</h3>
+      <div class="form-group">
+        <input id="newCategoryName" placeholder="Category Name (e.g., Electronics, Books)">
+        <button onclick="addCategory()">Add Category</button>
+      </div>
+    </div>
+    
+    <div class="category-list">
+      <h3>Manage Categories</h3>
+      <div id="categoryList"></div>
+    </div>
+  </section>
+
+  <!-- ========== PRODUCTS PANEL ========== -->
+  <section id="products" class="section hidden">
+    <h2>Product Management</h2>
+
+    <div class="admin-search" style="margin-bottom: 20px;">
+      <input type="text" id="adminProductSearch" placeholder="Search products..." onkeyup="searchAdminProducts()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+    </div>
+
+    <div class="form-box">
+      <input id="pName" placeholder="Product Name">
+      <input id="pWeight" placeholder="Weight/Quantity (e.g., 1kg, 10 tablets)">
+      <input id="pPrice" type="number" placeholder="Price">
+      <input id="pStock" type="number" placeholder="Stock">
+
+      <select id="pCategory" onchange="loadSubcategoryOptions()">
+        <option value="grocery">Grocery</option>
+        <option value="medicine">Medicine</option>
+        <option value="personal">Personal Care</option>
+        <option value="bulk">Bulk</option>
+      </select>
+      
+      <select id="pSubcategory" style="display: none;">
+        <option value="">Select Subcategory</option>
+      </select>
+
+      <div class="product-image-upload">
+        <input type="file" id="productImageUpload" accept="image/*" onchange="uploadProductImage()" style="display: none;">
+        <button onclick="document.getElementById('productImageUpload').click()" class="upload-btn">
+          <i class="fas fa-image"></i> Upload Product Image
+        </button>
+        <div id="productImagePreview" class="product-preview"></div>
+      </div>
+      
+      <button onclick="addProduct()">Add Product</button>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Weight</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Category</th>
+          <th>Image</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="productTable"></tbody>
+    </table>
+  </section>
+
+  <!-- ========== ORDERS ========== -->
+  <section id="orders" class="section hidden">
+    <h2>Orders</h2>
+    <div id="orderList"></div>
+  </section>
+
+  <!-- ========== DELIVERY SETTINGS ========== -->
+  <section id="delivery-settings" class="section hidden">
+    <h2>Delivery Settings</h2>
+    
+    <div class="delivery-config">
+      <h3>Configure Delivery Charges</h3>
+      
+      <div class="setting-group">
+        <label>Free Delivery Radius (km)</label>
+        <input type="number" id="freeDeliveryRadius" value="8" min="1" max="50">
+        <small>Customers within this radius get free delivery</small>
+      </div>
+      
+      <div class="setting-group">
+        <label>Delivery Charge per KM (₹)</label>
+        <input type="number" id="deliveryChargePerKm" value="10" min="1" max="100">
+        <small>Amount charged per kilometer beyond free radius</small>
+      </div>
+      
+      <div class="setting-group">
+        <label>Maximum Delivery Distance (km)</label>
+        <input type="number" id="maxDeliveryDistance" value="25" min="5" max="100">
+        <small>Maximum distance for delivery service</small>
+      </div>
+      
+      <div class="current-settings">
+        <h4>Current Settings Preview:</h4>
+        <div class="preview-box">
+          <p><strong>Free Delivery:</strong> Within <span id="previewFreeRadius">8</span> km</p>
+          <p><strong>Paid Delivery:</strong> ₹<span id="previewChargePerKm">10</span> per km after <span id="previewFreeRadius2">8</span> km</p>
+          <p><strong>Max Distance:</strong> <span id="previewMaxDistance">25</span> km</p>
+        </div>
+      </div>
+      
+      <button onclick="saveDeliverySettings()" class="save-settings-btn">
+        <i class="fas fa-save"></i> Save Delivery Settings
+      </button>
+    </div>
+  </section>
+
+  <!-- ========== ADMIN SETTINGS ========== -->
+  <section id="admin-settings" class="section hidden">
+    <h2>Admin Settings</h2>
+    
+    <div class="admin-config">
+      <div class="setting-card">
+        <h3><i class="fas fa-key"></i> Security Settings</h3>
+        <div class="setting-actions">
+          <button onclick="showPasswordChange()" class="security-btn">
+            <i class="fas fa-lock"></i> Change Password
+          </button>
+          <button onclick="changeAdminUsername()" class="security-btn">
+            <i class="fas fa-user-edit"></i> Change Username
+          </button>
+        </div>
+        <p class="setting-info">Keep your admin account secure by regularly updating credentials</p>
+      </div>
+      
+      <div class="setting-card">
+        <h3><i class="fas fa-database"></i> Data Management</h3>
+        <div class="setting-actions">
+          <button onclick="exportData()" class="data-btn">
+            <i class="fas fa-download"></i> Export Data
+          </button>
+          <button onclick="clearAllData()" class="danger-btn">
+            <i class="fas fa-trash"></i> Clear All Data
+          </button>
+        </div>
+        <p class="setting-info">Backup or reset your pharmacy data</p>
+      </div>
+      
+      <div class="setting-card">
+        <h3><i class="fas fa-bell"></i> Alert Settings</h3>
+        <div class="setting-group">
+          <label>Low Stock Alert Threshold:</label>
+          <input type="number" id="stockThreshold" value="30" min="1" max="100">
+          <button onclick="updateStockThreshold()">Update</button>
+        </div>
+        <div class="setting-group">
+          <label>WhatsApp Alert Number:</label>
+          <input type="tel" id="alertPhone" value="7905190933" maxlength="10">
+          <button onclick="updateAlertPhone()">Update</button>
+        </div>
+      </div>
+      
+      <div class="setting-card">
+        <h3><i class="fas fa-info-circle"></i> System Information</h3>
+        <div class="system-info">
+          <p><strong>Version:</strong> 1.0.0</p>
+          <p><strong>Last Login:</strong> <span id="lastLogin">Just now</span></p>
+          <p><strong>Total Products:</strong> <span id="systemProducts">0</span></p>
+          <p><strong>Total Orders:</strong> <span id="systemOrders">0</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== THEME SETTINGS ========== -->
+  <section id="theme" class="section hidden">
+    <h2>Theme Settings</h2>
+
+    <label>Primary Color</label><br>
+    <input type="color" id="primaryColor"><br><br>
+
+    <label>Background Color</label><br>
+    <input type="color" id="bgColor"><br><br>
+
+    <button onclick="saveTheme()">Save Theme</button>
+  </section>
+
+</main>
+
+<!-- ================= SECTION SWITCH ================= -->
+<script>
+  function showSection(id) {
+    document.querySelectorAll(".section").forEach(sec =>
+      sec.classList.add("hidden")
+    );
+    document.getElementById(id).classList.remove("hidden");
+  }
+</script>
+
+<!-- ================= ANALYTICS GRAPHS ================= -->
+<script>
+  // Dummy charts (real data admin.js se update hoga)
+  new Chart(document.getElementById("categoryChart"), {
+    type: "pie",
+    data: {
+      labels: ["Grocery", "Medicine", "Bulk"],
+      datasets: [{
+        data: [0, 0, 0],
+        backgroundColor: ["#2563eb", "#16a34a", "#f97316"]
+      }]
+    }
+  });
+
+  new Chart(document.getElementById("salesChart"), {
+    type: "bar",
+    data: {
+      labels: ["Today", "7 Days", "30 Days"],
+      datasets: [{
+        label: "Sales ₹",
+        data: [0, 0, 0],
+        backgroundColor: "#2563eb"
+      }]
+    }
+  });
+</script>
+
+<!-- ADMIN LOGIC -->
+<script src="admin.js"></script>
+
+</body>
+</html>
+  <!-- ========== SHOP CHAT MESSAGES ========== -->
+  <section id="chat-messages" class="section hidden">
+    <h2>Shop Chat Messages</h2>
+    
+    <div class="chat-stats">
+      <div class="cards">
+        <div class="card"><h3>Total Messages</h3><p id="totalChatMessages">0</p></div>
+        <div class="card"><h3>Unread Messages</h3><p id="unreadMessages">0</p></div>
+        <div class="card"><h3>Active Chats</h3><p id="activeChats">0</p></div>
+        <div class="card"><h3>Response Rate</h3><p id="responseRate">100%</p></div>
+      </div>
+    </div>
+    
+    <div class="chat-management">
+      <h3>Customer Messages</h3>
+      <div class="chat-filters">
+        <button onclick="filterChatMessages('all')" class="filter-btn active">All Messages</button>
+        <button onclick="filterChatMessages('unread')" class="filter-btn">Unread Only</button>
+        <button onclick="filterChatMessages('today')" class="filter-btn">Today</button>
+      </div>
+      
+      <div id="chatMessagesList" class="chat-messages-list">
+        <!-- Chat messages will be loaded here -->
+      </div>
+    </div>
+    
+    <div class="quick-responses">
+      <h3>Quick Response Templates</h3>
+      <div class="response-templates">
+        <button onclick="sendQuickResponse('Thank you for contacting Shah Pharmacy! How can we help you today?')">Welcome Message</button>
+        <button onclick="sendQuickResponse('Your order is being prepared and will be delivered soon.')">Order Update</button>
+        <button onclick="sendQuickResponse('We have that medicine in stock. Would you like to place an order?')">Stock Confirmation</button>
+        <button onclick="sendQuickResponse('Our delivery charges are ₹10 per km beyond 8km radius.')">Delivery Info</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ADMIN NOTIFICATIONS ========== -->
+  <section id="notifications" class="section hidden">
+    <h2>Send Notifications to Users</h2>
+    
+    <div class="notification-creator">
+      <h3>Create User Notification</h3>
+      <div class="form-grid">
+        <input id="notificationTitle" placeholder="Notification Title">
+        <textarea id="notificationMessage" placeholder="Notification Message" rows="3"></textarea>
+        <select id="notificationType">
+          <option value="info">Info</option>
+          <option value="offer">Special Offer</option>
+          <option value="alert">Alert</option>
+          <option value="update">Update</option>
+        </select>
+        <input id="notificationExpiry" type="datetime-local">
+        <button onclick="sendNotificationToUsers()">Send to All Users</button>
+      </div>
+    </div>
+    
+    <div class="quick-notifications">
+      <h3>Quick Notifications</h3>
+      <div class="quick-actions">
+        <button onclick="sendQuickNotification('New medicines arrived! Check out our latest stock.')">New Stock Alert</button>
+        <button onclick="sendQuickNotification('Free delivery on orders above ₹500 today!')">Free Delivery Offer</button>
+        <button onclick="sendQuickNotification('Shop timings: 8 AM to 10 PM daily')">Shop Timings</button>
+        <button onclick="sendQuickNotification('Prescription medicines available. Call us for details.')">Prescription Info</button>
+      </div>
+    </div>
+    
+    <div class="sent-notifications">
+      <h3>Recent Notifications</h3>
+      <div id="sentNotificationsList"></div>
+    </div>
+  </section>
