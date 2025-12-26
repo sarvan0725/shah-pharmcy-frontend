@@ -2006,8 +2006,8 @@ function sendOTP() {
   }
   
   // Production mode - send to backend
-  const apiUrl = 'https://shah-pharmacy-backend.onrender.com/api/auth/send-otp';
-  
+  const apiUrl = `${API_BASE_URL}/auth/send-otp`;
+ 
   fetch(apiUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -2088,7 +2088,7 @@ function verifyOTP() {
   }
   
   // Production mode - verify with backend
-  const apiUrl = 'https://shah-pharmacy-backend.onrender.com/api/auth/verify-otp';
+    const apiUrl = `${API_BASE_URL}/auth/verify-otp`;
   
   fetch(apiUrl, {
     method: 'POST',
