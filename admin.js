@@ -3,24 +3,103 @@
 ================================*/
 
 // Load products from main app
-let products = JSON.parse(localStorage.getItem("products")) || [
-  { id: 1, name: "Rice", price: 60, stock: 50, category: "grocery", image: "", weight: "1kg" },
-  { id: 2, name: "Sugar", price: 45, stock: 40, category: "grocery", image: "", weight: "1kg" },
-  { id: 3, name: "Wheat Flour", price: 55, stock: 35, category: "grocery", image: "", weight: "1kg" },
-  { id: 4, name: "Paracetamol", price: 25, stock: 100, category: "medicine", image: "", weight: "10 tablets" },
-  { id: 5, name: "Crocin", price: 30, stock: 80, category: "medicine", image: "", weight: "15 tablets" },
-  { id: 6, name: "Rice", price: 1350, stock: 10, category: "bulk", image: "", weight: "25kg" },
-  { id: 7, name: "Sugar", price: 1120, stock: 8, category: "bulk", image: "", weight: "25kg" },
-  { id: 8, name: "Refgine Oil", price: 850, stock: 15, category: "bulk", image: "", weight: "5L" }
-];
-
+ // ✅ ADD THIS
+const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
+let products = [];
 // Orders data
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
 
 // Alert settings
 const ALERT_PHONE = "7905190933";
 const LOW_STOCK_THRESHOLD = 30;
 let alertedProducts = JSON.parse(localStorage.getItem("alertedProducts")) || [];
+
+// ===============================
+// LOAD PRODUCTS FROM BACKEND
+// ===============================
+async function loadProducts() {
+  try {
+    const res = await fetch(`${API_BASE}/products`);
+    const data = await res.json();
+
+    products = data;
+
+    const table = document.getElementById("productTable");
+    if (!table) return;
+
+    table.innerHTML = "";
+
+    products.forEach((p) => {
+      table.innerHTML += `
+        <tr>
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>₹${p.price}</td>
+          <td>${p.stock}</td>
+          <td>${p.category_id}</td>
+          <td>
+            <button onclick="deleteProduct(${p.id})">❌</button>
+          </td>
+        </tr>
+      `;
+    });
+  } catch (err) {
+    console.error(err);
+    alert("Failed to load products");
+  }
+}
+
+/* 👇👇 YAHAN PASTE KAR 👇👇 */
+async function addProduct() {
+  const name = document.getElementById("pName").value;
+  const price = Number(document.getElementById("pPrice").value);
+  const stock = Number(document.getElementById("pStock").value);
+  const category = document.getElementById("pCategory").value;
+
+  if (!name || !price || !stock || !category) {
+    alert("Fill all required fields");
+    return;
+  }
+
+  const categoryMap = {
+    medicine: 1,
+    grocery: 2,
+    personal: 3,
+    bulk: 4
+  };
+
+  const payload = {
+    name,
+    price,
+    stock,
+    category_id: categoryMap[category],
+    image: null
+  };
+
+  try {
+    const res = await fetch(`${API_BASE}/products`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || "Failed to add product");
+      return;
+    }
+
+    alert("✅ Product added successfully");
+    loadProducts();
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
+  }
+}
+
+
 
 // Charts
 let categoryChart;
@@ -1533,3 +1612,12 @@ if (response.ok) {
   alert("❌ Failed to add product");
   console.error("Backend error:", data);
 }
+// ===============================
+// AUTO LOAD PRODUCTS ON DASHBOARD
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.location.pathname.includes("dashboard.html")) {
+    loadProducts();
+  }
+});
+
