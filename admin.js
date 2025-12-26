@@ -1507,3 +1507,46 @@ function loadAdminSettings() {
   setText('systemOrders', orders.length);
   setText('lastLogin', new Date().toLocaleString());
 }
+// =======================
+// ADD PRODUCT FUNCTION
+// =======================
+async function addProduct() {
+  try {
+    const name = document.getElementById("productName")?.value;
+    const weight = document.getElementById("productWeight")?.value;
+    const price = document.getElementById("productPrice")?.value;
+    const stock = document.getElementById("productStock")?.value;
+    const category = document.getElementById("productCategory")?.value;
+
+    if (!name || !price || !stock || !category) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    const response = await fetch(
+      "https://shah-pharmacy-backend.onrender.com/api/products",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          weight,
+          price,
+          stock,
+          category
+        })
+      }
+    );
+const data = await response.json();
+
+if (response.ok) {
+  alert("✅ Product added successfully");
+  console.log("Product added:", data);
+  location.reload();
+} else {
+  alert("❌ Failed to add product");
+  console.error("Error response:", data);
+}
+    
