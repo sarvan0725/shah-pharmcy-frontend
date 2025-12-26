@@ -2,12 +2,14 @@
 
  CONFIGURATION FILE
  Shah Pharmacy & Mini Mart
- // BACKEND API BASE URL (PRODUCTION)
  
-const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
  
  Update these settings before deployment
 *************************************************/
+
+// BACKEND API BASE URL (PRODUCTION)
+ 
+const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
 
 // PAYMENT CONFIGURATION
 // Replace with your actual Razorpay Key ID from dashboard
