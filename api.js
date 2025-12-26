@@ -1,8 +1,6 @@
 // API Configuration
 // Update this URL after backend deployment on Render
-const API_BASE = window.location.hostname === 'localhost' 
-  ? 'http://localhost:3000/api' 
-  : 'https://shah-pharmacy-backend.onrender.com/api';
+const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
 
 class PharmacyAPI {
   constructor() {
