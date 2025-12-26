@@ -1523,23 +1523,7 @@ async function addProduct() {
       return;
     }
 
-    const response = await fetch(
-      "https://shah-pharmacy-backend.onrender.com/api/products",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name,
-          weight,
-          price,
-          stock,
-          category
-        })
-      }
-    );
-const data = await response.json();
+    const data = await response.json();
 
 if (response.ok) {
   alert("✅ Product added successfully");
@@ -1547,6 +1531,5 @@ if (response.ok) {
   location.reload();
 } else {
   alert("❌ Failed to add product");
-  console.error("Error response:", data);
+  console.error("Backend error:", data);
 }
-    
