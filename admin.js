@@ -1557,18 +1557,18 @@ document.addEventListener("DOMContentLoaded", () => {
   // Dashboard auto load
   if (window.location.pathname.includes("dashboard.html")) {
     loadProducts();
-    loadAnalytics?.();
-    loadOrders?.();
-    checkLowStock?.();
+    if (typeof loadAnalytics === "function") loadAnalytics();
+    if (typeof loadOrders === "function") loadOrders();
+    if (typeof checkLowStock === "function") checkLowStock();
   }
 
   // Add Product button
   const btn = document.getElementById("addProductBtn");
   if (btn) {
     btn.addEventListener("click", addProduct);
-    console.log("✅ Add Product button connected");
+    console.log(" Add Product button connected");
   } else {
-    console.error("❌ Add Product button not found");
+    console.error(" Add Product button not found");
   }
 
   // Delivery preview inputs
