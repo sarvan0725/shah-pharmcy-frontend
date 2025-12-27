@@ -1608,4 +1608,27 @@ document.addEventListener("DOMContentLoaded", () => {
     loadProducts();
   }
 });
+// ================= PRODUCT ADD =================
+function addProduct() {
+  console.log("Add Product button clicked");
 
+  const name = document.getElementById("pName")?.value;
+  const price = document.getElementById("pPrice")?.value;
+  const stock = document.getElementById("pStock")?.value;
+  const category = document.getElementById("pCategory")?.value;
+
+  if (!name || !price || !stock || !category) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  const product = {
+    name,
+    price,
+    stock,
+    category,
+  };
+
+  console.log("Product:", product);
+  alert("addProduct() kaam kar raha hai ✅");
+}
