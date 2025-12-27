@@ -313,26 +313,7 @@ setInterval(() => {
   }
 }, 30000);
 
-/* ===============================
-   ADMIN LOGIN
-================================*/
-// Get admin credentials from localStorage or use defaults
-function getAdminCredentials() {
-  const saved = localStorage.getItem('adminCredentials');
-  return saved ? JSON.parse(saved) : { username: 'admin', password: '1234' };
-}
 
-function adminLogin() {
-  const user = document.getElementById("adminUser").value;
-  const pass = document.getElementById("adminPass").value;
-  const credentials = getAdminCredentials();
-  
-  if (user === credentials.username && pass === credentials.password) {
-    window.location.href = "dashboard.html";
-  } else {
-    alert("Invalid credentials!");
-  }
-}
 
 /* ===============================
    ADMIN PASSWORD CHANGE
