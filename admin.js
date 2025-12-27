@@ -51,12 +51,14 @@ async function loadProducts() {
 }
 
 /* 👇👇 YAHAN PASTE KAR 👇👇 */
-async function addProduct() {
-  const name = document.getElementById("pName").value;
-  const price = Number(document.getElementById("pPrice").value);
-  const stock = Number(document.getElementById("pStock").value);
-  const category = document.getElementById("pCategory").value;
+window.addProduct = async function () {
+const name = document.getElementById("pName").value;
+const price = Number(document.getElementById("pPrice").value);
+const stock = Number(document.getElementById("pStock").value);
+const category = document.getElementById("pCategory").value;
 
+
+   
   if (!name || !price || !stock || !category) {
     alert("Fill all required fields");
     return;
