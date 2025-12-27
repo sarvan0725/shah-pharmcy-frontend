@@ -350,17 +350,7 @@ function changeAdminUsername() {
   }
 }
 
-/* ===============================
-   LOAD DASHBOARD
-================================*/
-document.addEventListener("DOMContentLoaded", () => {
-  if (window.location.pathname.includes("dashboard.html")) {
-    loadProducts();
-    loadAnalytics();
-    loadOrders();
-    checkLowStock();
-  }
-});
+
 
 
 /* ===============================
@@ -1047,16 +1037,7 @@ function updateDeliveryPreview() {
   document.getElementById('previewMaxDistance').textContent = maxDistance;
 }
 
-// Add event listeners for real-time preview
-document.addEventListener('DOMContentLoaded', () => {
-  const inputs = ['freeDeliveryRadius', 'deliveryChargePerKm', 'maxDeliveryDistance'];
-  inputs.forEach(id => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.addEventListener('input', updateDeliveryPreview);
-    }
-  });
-});
+
 
 function addTestOrder() {
   const testOrder = {
@@ -1568,26 +1549,37 @@ async function addProduct() {
 
 // ✅ VERY IMPORTANT
 window.addProduct = addProduct;
-// ===============================
-// AUTO LOAD PRODUCTS ON DASHBOARD
-// ===============================
+
+
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("admin.js loaded");
+
+  // Dashboard auto load
   if (window.location.pathname.includes("dashboard.html")) {
     loadProducts();
+    loadAnalytics?.();
+    loadOrders?.();
+    checkLowStock?.();
   }
-});
 
-
-console.log("admin.js loaded");
-
-document.addEventListener("DOMContentLoaded", () => {
+  // Add Product button
   const btn = document.getElementById("addProductBtn");
-
-  if (!btn) {
-    console.error("Add Product button not found");
-    return;
+  if (btn) {
+    btn.addEventListener("click", addProduct);
+    console.log("✅ Add Product button connected");
+  } else {
+    console.error("❌ Add Product button not found");
   }
 
-  btn.addEventListener("click", addProduct);
-  console.log("Add Product button connected");
+  // Delivery preview inputs
+  [
+    "freeDeliveryRadius",
+    "deliveryChargePerKm",
+    "maxDeliveryDistance"
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("input", updateDeliveryPreview);
+    }
+  });
 });
