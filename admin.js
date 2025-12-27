@@ -1526,16 +1526,40 @@ async function addProduct() {
       return;
     }
 
+    const payload = {
+      name,
+      weight,
+      price,
+      stock,
+      category
+    };
+
+    const response = await fetch(`${API_BASE}/products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
+      },
+      body: JSON.stringify(payload)
+    });
+
     const data = await response.json();
 
-if (response.ok) {
-  alert("✅ Product added successfully");
-  console.log("Product added:", data);
-  location.reload();
-} else {
-  alert("❌ Failed to add product");
-  console.error("Backend error:", data);
+    if (response.ok) {
+      alert("✅ Product added successfully");
+      loadProducts();
+    } else {
+      alert("❌ Failed to add product");
+      console.error(data);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
+  }
 }
+
+// ✅ VERY IMPORTANT
+window.addProduct = addProduct;
 // ===============================
 // AUTO LOAD PRODUCTS ON DASHBOARD
 // ===============================
