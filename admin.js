@@ -1,6 +1,7 @@
 /* ===============================
    ADMIN PANEL - COMPLETE SYSTEM
 ================================*/
+console.log("admin.js loaded");
 
 // Load products from main app
  // ✅ ADD THIS
@@ -1632,3 +1633,5 @@ function addProduct() {
   console.log("Product:", product);
   alert("addProduct() kaam kar raha hai ✅");
 }
+     // expose function to global scope
+window.addProduct = addProduct;
