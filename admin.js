@@ -51,61 +51,7 @@ async function loadProducts() {
   }
 }
 
-/* 👇👇 YAHAN PASTE KAR 👇👇 */
-window.addProduct = async function () {
-const name = document.getElementById("pName").value;
-const price = Number(document.getElementById("pPrice").value);
-const stock = Number(document.getElementById("pStock").value);
-const category = document.getElementById("pCategory").value;
-
-
-   
-  if (!name || !price || !stock || !category) {
-    alert("Fill all required fields");
-    return;
-  }
-
-  const categoryMap = {
-    medicine: 1,
-    grocery: 2,
-    personal: 3,
-    bulk: 4
-  };
-
-  const payload = {
-    name,
-    price,
-    stock,
-    category_id: categoryMap[category],
-    image: null
-  };
-
-  try {
-    const res = await fetch(`${API_BASE}/products`, {
-      method: "POST",
-      const res = await fetch(`${API_BASE}/products`, {
-      method: "POST",
-      headers: {
-     "Content-Type": "application/json",
-     "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
-  },
-  body: JSON.stringify(payload)
-});
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.error || "Failed to add product");
-      return;
-    }
-
-    alert("✅ Product added successfully");
-    loadProducts();
-  } catch (err) {
-    console.error(err);
-    alert("Server error");
-  }
-}
+/
 
 
 
@@ -1660,5 +1606,52 @@ function addProduct() {
   console.log("Product:", product);
   alert("addProduct() kaam kar raha hai ✅");
 }
-     // expose function to global scope
+     function addProduct() {
+  console.log("Add Product button clicked");
+
+  const name = document.getElementById("pName")?.value;
+  const price = Number(document.getElementById("pPrice")?.value);
+  const stock = Number(document.getElementById("pStock")?.value);
+  const category = document.getElementById("pCategory")?.value;
+
+  if (!name || !price || !stock || !category) {
+    alert("Fill all required fields");
+    return;
+  }
+
+  const categoryMap = {
+    medicine: 1,
+    grocery: 2,
+    personal: 3,
+    bulk: 4
+  };
+
+  const payload = {
+    name,
+    price,
+    stock,
+    category_id: categoryMap[category],
+    image: null
+  };
+
+  fetch(`${API_BASE}/products`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert("✅ Product added successfully");
+    loadProducts();
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Server error");
+  });
+}
+
+// 🔥 THIS LINE MUST BE ONLY ONCE
 window.addProduct = addProduct;
