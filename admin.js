@@ -1515,16 +1515,24 @@ function loadAdminSettings() {
 // =======================
 async function addProduct() {
   try {
-    const name = document.getElementById("productName")?.value;
-    const weight = document.getElementById("productWeight")?.value;
-    const price = document.getElementById("productPrice")?.value;
-    const stock = document.getElementById("productStock")?.value;
-    const category = document.getElementById("productCategory")?.value;
+     const name = document.getElementById("pName")?.value;
+      const weight = document.getElementById("pWeight")?.value;
+      const price = document.getElementById("pPrice")?.value;
+      const stock = document.getElementById("pStock")?.value;
+      const category = document.getElementById("pCategory")?.value;
+  
 
     if (!name || !price || !stock || !category) {
       alert("Please fill all required fields");
       return;
     }
+     console.log("ADD PRODUCT DATA:", {
+     name,
+     weight,
+     price,
+     stock,
+     category
+}); 
 
     const payload = {
       name,
