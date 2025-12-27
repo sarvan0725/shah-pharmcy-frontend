@@ -1568,3 +1568,18 @@ document.addEventListener("DOMContentLoaded", () => {
     loadProducts();
   }
 });
+
+
+console.log("admin.js loaded");
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("addProductBtn");
+
+  if (!btn) {
+    console.error("Add Product button not found");
+    return;
+  }
+
+  btn.addEventListener("click", addProduct);
+  console.log("Add Product button connected");
+});
