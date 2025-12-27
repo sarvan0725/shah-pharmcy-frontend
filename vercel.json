@@ -1,0 +1,6 @@
+{
+  "routes": [
+    { "src": "/admin-login", "dest": "/admin-login/index.html" },
+    { "src": "/admin-login/", "dest": "/admin-login/index.html" }
+  ]
+}
