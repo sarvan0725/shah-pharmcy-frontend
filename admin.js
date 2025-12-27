@@ -489,19 +489,7 @@ function setAsMainBanner() {
   }
 }
 
-function addProduct() {
-  const name = document.getElementById("pName").value;
-  const weight = document.getElementById("pWeight").value;
-  const price = Number(document.getElementById("pPrice").value);
-  const stock = Number(document.getElementById("pStock").value);
-  const category = document.getElementById("pCategory").value;
-  const subcategory = document.getElementById("pSubcategory").value;
-  const image = currentProductImage; // Use uploaded image
-  
-  if (!name || !weight || !price || !stock) {
-    alert("Please fill all required fields!");
-    return;
-  }
+
   
   // Map category names to IDs for user site compatibility
   const categoryMap = {
@@ -1556,76 +1544,3 @@ document.addEventListener("DOMContentLoaded", () => {
     loadProducts();
   }
 });
-// ================= PRODUCT ADD =================
-function addProduct() {
-  console.log("Add Product button clicked");
-
-  const name = document.getElementById("pName")?.value;
-  const price = document.getElementById("pPrice")?.value;
-  const stock = document.getElementById("pStock")?.value;
-  const category = document.getElementById("pCategory")?.value;
-
-  if (!name || !price || !stock || !category) {
-    alert("Please fill all fields");
-    return;
-  }
-
-  const product = {
-    name,
-    price,
-    stock,
-    category,
-  };
-
-  console.log("Product:", product);
-  alert("addProduct() kaam kar raha hai ✅");
-}
-     function addProduct() {
-  console.log("Add Product button clicked");
-
-  const name = document.getElementById("pName")?.value;
-  const price = Number(document.getElementById("pPrice")?.value);
-  const stock = Number(document.getElementById("pStock")?.value);
-  const category = document.getElementById("pCategory")?.value;
-
-  if (!name || !price || !stock || !category) {
-    alert("Fill all required fields");
-    return;
-  }
-
-  const categoryMap = {
-    medicine: 1,
-    grocery: 2,
-    personal: 3,
-    bulk: 4
-  };
-
-  const payload = {
-    name,
-    price,
-    stock,
-    category_id: categoryMap[category],
-    image: null
-  };
-
-  fetch(`${API_BASE}/products`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
-    },
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.json())
-  .then(data => {
-    alert("✅ Product added successfully");
-    loadProducts();
-  })
-  .catch(err => {
-    console.error(err);
-    alert("Server error");
-  });
-}
-
-// 🔥 THIS LINE MUST BE ONLY ONCE
-window.addProduct = addProduct;
