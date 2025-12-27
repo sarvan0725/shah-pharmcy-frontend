@@ -1,23 +1,11 @@
-// Admin access via keyboard shortcut (Ctrl + Shift + A)
-document.addEventListener('keydown', function (event) {
-  if (
-    event.ctrlKey &&
-    event.shiftKey &&
-    event.key.toLowerCase() === 'a'
-  ) {
-    event.preventDefault();
-    adminAccess();
-  }
-});
+// admin-access.js
+// This file should run ONLY on admin pages (dashboard)
 
-function adminAccess() {
-  const password = prompt('Enter admin password:');
-  if (!password) return;
+(function () {
+  const isAdminLoggedIn = localStorage.getItem("admin_logged_in");
 
-  // passwords (temporary – frontend only)
-  if (password === 'admin123' || password === 'shah2024') {
-    window.location.href = '/dashboard.html';
-  } else {
-    alert('❌ Invalid password');
+  if (!isAdminLoggedIn) {
+    alert("Admin access only. Please login.");
+    window.location.href = "/admin-login.html";
   }
-}
+})();
