@@ -82,9 +82,14 @@ const category = document.getElementById("pCategory").value;
   try {
     const res = await fetch(`${API_BASE}/products`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+      const res = await fetch(`${API_BASE}/products`, {
+      method: "POST",
+      headers: {
+     "Content-Type": "application/json",
+     "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
+  },
+  body: JSON.stringify(payload)
+});
 
     const data = await res.json();
 
