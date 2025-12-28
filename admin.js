@@ -14,7 +14,17 @@ let orders = JSON.parse(localStorage.getItem("orders")) || [];
 // Alert settings
 const ALERT_PHONE = "7905190933";
 const LOW_STOCK_THRESHOLD = 30;
-let alertedProducts = JSON.parse(localStorage.getItem("alertedProducts")) || [];
+
+let alertredProducts = [];
+
+try {
+  const rawAlerted = localStorage.getItem("alertedProducts");
+  alertredProducts = rawAlerted ? JSON.parse(rawAlerted) : [];
+} catch (err) {
+  console.error("alertedProducts corrupted, resetting", err);
+  localStorage.removeItem("alertedProducts");
+  alertredProducts = [];
+}
 
 // ===============================
 // LOAD PRODUCTS FROM BACKEND
@@ -1591,4 +1601,8 @@ window.changeAdminUsername = changeAdminUsername;
 
 
 window.addCategory = addCategory;
+
+window.addProduct = function () {
+  console.log("addProduct called");
+};
 
