@@ -8,9 +8,8 @@ async function addProduct() {
   console.log("🟢 addProduct clicked");
 
   const name = document.getElementById("pName")?.value;
-  const weight = document.getElementById("pWeight")?.value;
-  const price = document.getElementById("pPrice")?.value;
-  const stock = document.getElementById("pStock")?.value;
+  const price = Number(document.getElementById("pPrice")?.value);
+  const stock = Number(document.getElementById("pStock")?.value);
   const category = document.getElementById("pCategory")?.value;
 
   if (!name || !price || !stock || !category) {
@@ -18,24 +17,40 @@ async function addProduct() {
     return;
   }
 
-  const payload = { name, weight, price, stock, category };
-  console.log("📦 SENDING:", payload);
+  // 🔥 BACKEND CATEGORY MAP
+  const categoryMap = {
+    grocery: 1,
+    medicine: 2,
+    personal: 3,
+    bulk: 4
+  };
+
+  const payload = {
+    name,
+    price,
+    stock,
+    category_id: categoryMap[category]
+  };
+
+  console.log("📦 FINAL PAYLOAD:", payload);
 
   try {
-    const res = await fetch(`${API_BASE}/products`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("admin_token")}`
-      },
-      body: JSON.stringify(payload)
-    });
+    const res = await fetch(
+      "https://shah-pharmacy-backend.onrender.com/api/products",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
 
     const data = await res.json();
     console.log("✅ RESPONSE:", data);
 
     if (!res.ok) {
-      alert("Backend error");
+      alert(data.error || "Backend error");
       return;
     }
 
@@ -46,5 +61,5 @@ async function addProduct() {
   }
 }
 
-// expose globally
+// 🔴 MUST BE GLOBAL
 window.addProduct = addProduct;
