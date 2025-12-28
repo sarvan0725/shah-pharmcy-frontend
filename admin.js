@@ -1600,7 +1600,7 @@ window.filterChatMessages = filterChatMessages;
 window.changeAdminUsername = changeAdminUsername;
 
 
-window.addCategory = addCategory;
+
 
 window.addProduct = function () {
   console.log("addProduct called");
