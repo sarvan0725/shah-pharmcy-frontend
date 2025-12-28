@@ -1547,8 +1547,6 @@ async function addProduct() {
   }
 }
 
-// ✅ VERY IMPORTANT
-window.addProduct = addProduct;
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1583,3 +1581,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// 🔥 Expose admin functions to global scope
+window.addProduct = addProduct;
+window.checkLowStock = checkLowStock;
+window.createDiscount = createDiscount;
+window.filterChatMessages = filterChatMessages;
+window.changeAdminUsername = changeAdminUsername;
