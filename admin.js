@@ -1563,8 +1563,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Add Product button
   const btn = document.getElementById("addProductBtn");
   if (btn) {
-    btn.addEventListener("click", addProduct);
-    console.log(" Add Product button connected");
+
+     
   } else {
     console.error(" Add Product button not found");
   }
