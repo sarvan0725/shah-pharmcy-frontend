@@ -1,7 +1,68 @@
+
+console.log("admin.js STARTED");
+
+
 /* ===============================
    ADMIN PANEL - COMPLETE SYSTEM
 ================================*/
 console.log("admin.js loaded");
+// ======================
+// ADD PRODUCT (GLOBAL)
+// ======================
+
+async function addProduct() {
+  try {
+    const name = document.getElementById("pName")?.value;
+    const weight = document.getElementById("pWeight")?.value;
+    const price = document.getElementById("pPrice")?.value;
+    const stock = document.getElementById("pStock")?.value;
+    const category = document.getElementById("pCategory")?.value;
+
+    if (!name || !price || !stock || !category) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    const payload = { name, weight, price, stock, category };
+    console.log("🟢 ADD PRODUCT DATA:", payload);
+
+    const response = await fetch(`${API_BASE}/products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("❌ BACKEND ERROR:", data);
+      alert("Failed to add product");
+      return;
+    }
+
+    alert("✅ Product added successfully");
+
+    if (typeof loadProducts === "function") {
+      loadProducts();
+    }
+
+  } catch (err) {
+    console.error("❌ JS ERROR:", err);
+    alert("Server error");
+  }
+}
+
+// 🔥 THIS LINE IS MOST IMPORTANT
+window.addProduct = addProduct;
+
+
+
+
+
+
 
 // Load products from main app
  // ✅ ADD THIS
@@ -1501,52 +1562,7 @@ function loadAdminSettings() {
   setText('systemOrders', orders.length);
   setText('lastLogin', new Date().toLocaleString());
 }
-// =======================
-// ADD PRODUCT FUNCTION
-// =======================
-async function addProduct() {
-  try {
-    const name = document.getElementById("pName")?.value;
-    const weight = document.getElementById("pWeight")?.value;
-    const price = document.getElementById("pPrice")?.value;
-    const stock = document.getElementById("pStock")?.value;
-    const category = document.getElementById("pCategory")?.value;
 
-    if (!name || !price || !stock || !category) {
-      alert("Please fill all required fields");
-      return;
-    }
-
-    const payload = { name, weight, price, stock, category };
-    console.log("🚀 ADD PRODUCT DATA:", payload);
-
-    const response = await fetch(`${API_BASE}/products`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error(data);
-      alert("❌ Failed to add product");
-      return;
-    }
-
-    alert("✅ Product added successfully");
-    loadProducts();
-
-  } catch (err) {
-    console.error(err);
-    alert("Server error");
-  }
-}
-
-window.addProduct = addProduct;
   // Dashboard auto load
   if (window.location.pathname.includes("dashboard.html")) {
     loadProducts();
