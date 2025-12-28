@@ -1589,3 +1589,6 @@ window.createDiscount = createDiscount;
 window.filterChatMessages = filterChatMessages;
 window.changeAdminUsername = changeAdminUsername;
 
+
+window.addCategory = addCategory;
+
