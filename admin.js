@@ -1582,6 +1582,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// 🔥 Expose admin functions to global scope
+// expose to global
 window.addProduct = addProduct;
+window.checkLowStock = checkLowStock;
+window.createDiscount = createDiscount;
+window.filterChatMessages = filterChatMessages;
+window.changeAdminUsername = changeAdminUsername;
 
