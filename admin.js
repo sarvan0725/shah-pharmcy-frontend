@@ -1601,8 +1601,3 @@ window.changeAdminUsername = changeAdminUsername;
 
 
 
-
-window.addProduct = function () {
-  console.log("addProduct called");
-};
-
