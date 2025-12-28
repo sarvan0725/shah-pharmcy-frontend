@@ -1,5 +1,5 @@
 
-console.log("admin.js STARTED");
+console.log("🔥 admin.js REAL FILE LOADED");
 
 
 /* ===============================
@@ -1611,6 +1611,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof checkLowStock === "function") checkLowStock();
   }
 });
+
+// 🔴 FORCE GLOBAL EXPOSURE
+window.addProduct = addProduct;
+console.log("✅ addProduct exposed:", typeof window.addProduct);
 
 
 
