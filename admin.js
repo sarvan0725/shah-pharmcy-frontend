@@ -1506,32 +1506,19 @@ function loadAdminSettings() {
 // =======================
 async function addProduct() {
   try {
-     const name = document.getElementById("pName")?.value;
-      const weight = document.getElementById("pWeight")?.value;
-      const price = document.getElementById("pPrice")?.value;
-      const stock = document.getElementById("pStock")?.value;
-      const category = document.getElementById("pCategory")?.value;
-  
+    const name = document.getElementById("pName")?.value;
+    const weight = document.getElementById("pWeight")?.value;
+    const price = document.getElementById("pPrice")?.value;
+    const stock = document.getElementById("pStock")?.value;
+    const category = document.getElementById("pCategory")?.value;
 
     if (!name || !price || !stock || !category) {
       alert("Please fill all required fields");
       return;
     }
-     console.log("ADD PRODUCT DATA:", {
-     name,
-     weight,
-     price,
-     stock,
-     category
-}); 
 
-    const payload = {
-      name,
-      weight,
-      price,
-      stock,
-      category
-    };
+    const payload = { name, weight, price, stock, category };
+    console.log("🚀 ADD PRODUCT DATA:", payload);
 
     const response = await fetch(`${API_BASE}/products`, {
       method: "POST",
@@ -1544,24 +1531,22 @@ async function addProduct() {
 
     const data = await response.json();
 
-    if (response.ok) {
-      alert("✅ Product added successfully");
-      loadProducts();
-    } else {
-      alert("❌ Failed to add product");
+    if (!response.ok) {
       console.error(data);
+      alert("❌ Failed to add product");
+      return;
     }
+
+    alert("✅ Product added successfully");
+    loadProducts();
+
   } catch (err) {
     console.error(err);
     alert("Server error");
   }
 }
 
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("admin.js loaded");
-
+window.addProduct = addProduct;
   // Dashboard auto load
   if (window.location.pathname.includes("dashboard.html")) {
     loadProducts();
@@ -1598,6 +1583,18 @@ window.checkLowStock = checkLowStock;
 window.createDiscount = createDiscount;
 window.filterChatMessages = filterChatMessages;
 window.changeAdminUsername = changeAdminUsername;
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("admin.js loaded");
+
+  if (window.location.pathname.includes("dashboard.html")) {
+    loadProducts();
+    if (typeof loadOrders === "function") loadOrders();
+    if (typeof checkLowStock === "function") checkLowStock();
+  }
+});
 
 
 
