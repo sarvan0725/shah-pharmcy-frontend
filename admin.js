@@ -1,6 +1,5 @@
 
-console.log("🔥 admin.js REAL FILE LOADED");
-
+console.log("admin.js started");
 
 /* ===============================
    ADMIN PANEL - COMPLETE SYSTEM
@@ -1614,7 +1613,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 🔴 FORCE GLOBAL EXPOSURE
 window.addProduct = addProduct;
-console.log("✅ addProduct exposed:", typeof window.addProduct);
-
+console.log("addProduct type =", typeof window.addProduct);
 
 
