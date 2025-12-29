@@ -31,17 +31,47 @@ let defaultCategories = [
   { id: 4, name: "Bulk", icon: "📦", active: true, subcategories: [] }
 ];
 
-let defaultProducts = [
-  { id: 1, name: "Paracetamol", price: 25, stock: 100, categoryId: 1, subcategoryId: 11, image: "", weight: "10 tablets" },
-  { id: 2, name: "Crocin", price: 30, stock: 80, categoryId: 1, subcategoryId: 11, image: "", weight: "15 tablets" },
-  { id: 3, name: "Rice", price: 60, stock: 50, categoryId: 2, subcategoryId: 21, image: "", weight: "1kg" },
-  { id: 4, name: "Sugar", price: 45, stock: 40, categoryId: 2, subcategoryId: 21, image: "", weight: "1kg" },
-  { id: 5, name: "Coconut Oil", price: 120, stock: 25, categoryId: 2, subcategoryId: 22, image: "", weight: "500ml" },
-  { id: 6, name: "Face Cream", price: 85, stock: 15, categoryId: 3, subcategoryId: null, image: "", weight: "50g" },
-  { id: 7, name: "Rice Bulk", price: 1350, stock: 10, categoryId: 4, subcategoryId: null, image: "", weight: "25kg" },
-  { id: 8, name: "Sugar Bulk", price: 1120, stock: 8, categoryId: 4, subcategoryId: null, image: "", weight: "25kg" },
-  { id: 9, name: "Oil Bulk", price: 850, stock: 15, categoryId: 4, subcategoryId: null, image: "", weight: "5L" }
-];
+// ===============================
+// LOAD PRODUCTS FROM BACKEND
+// ===============================
+async function loadBackendProducts() {
+  try {
+    const res = await fetch("https://shah-pharmacy-backend.onrender.com/api/products");
+    const data = await res.json();
+
+    products = data.map(p => ({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      stock: p.stock,
+      weight: p.weight || "",
+      image: p.image_url || p.image || p.imageUrl || p.secure_url,
+      categoryId: p.category_id,
+      subcategoryId: p.subcategory_id || null
+    }));
+
+    renderProducts();
+  } catch (err) {
+    console.error("❌ Failed to load backend products", err);
+  }
+}
+
+
+
+
+
+
+//let defaultProducts = [
+ // { id: 1, name: "Paracetamol", price: 25, stock: 100, categoryId: 1, subcategoryId: 11, image: "", weight: "10 tablets" },
+  //{ id: 2, name: "Crocin", price: 30, stock: 80, categoryId: 1, subcategoryId: 11, image: "", weight: "15 tablets" },
+  //{ id: 3, name: "Rice", price: 60, stock: 50, categoryId: 2, subcategoryId: 21, image: "", weight: "1kg" },
+//  { id: 4, name: "Sugar", price: 45, stock: 40, categoryId: 2, subcategoryId: 21, image: "", weight: "1kg" },
+ // { id: 5, name: "Coconut Oil", price: 120, stock: 25, categoryId: 2, subcategoryId: 22, image: "", weight: "500ml" },
+//  { id: 6, name: "Face Cream", price: 85, stock: 15, categoryId: 3, subcategoryId: null, image: "", weight: "50g" },
+  //{ id: 7, name: "Rice Bulk", price: 1350, stock: 10, categoryId: 4, subcategoryId: null, image: "", weight: "25kg" },
+  //{ id: 8, name: "Sugar Bulk", price: 1120, stock: 8, categoryId: 4, subcategoryId: null, image: "", weight: "25kg" },
+ // { id: 9, name: "Oil Bulk", price: 850, stock: 15, categoryId: 4, subcategoryId: null, image: "", weight: "5L" }
+//];
 
 // Initialize data properly
 let categories, products;
@@ -65,28 +95,28 @@ let quantityMap = {};
 let currentCategoryId = 1;
 
 // Force reload data on startup
-function forceReloadData() {
+// forceReloadData() {
   // Don't overwrite existing data, just ensure we have defaults if empty
-  const existingProducts = JSON.parse(localStorage.getItem("products")) || [];
-  const existingCategories = JSON.parse(localStorage.getItem("categories")) || [];
+ // const existingProducts = JSON.parse(localStorage.getItem("products")) || [];
+//  const existingCategories = JSON.parse(localStorage.getItem("categories")) || [];
   
-  if (existingProducts.length === 0) {
-    products = defaultProducts;
-    localStorage.setItem("products", JSON.stringify(products));
-  } else {
-    products = existingProducts;
-  }
+//  if (existingProducts.length === 0) {
+//    products = defaultProducts;
+//    localStorage.setItem("products", JSON.stringify(products));
+//  } else {
+//    products = existingProducts;
+//  }
   
-  if (existingCategories.length === 0) {
-    categories = defaultCategories;
-    localStorage.setItem("categories", JSON.stringify(categories));
-  } else {
-    categories = existingCategories;
-  }
-}
-let currentSubcategoryId = null;
-let currentPage = 1;
-const ITEMS_PER_PAGE = 20;
+//  if (existingCategories.length === 0) {
+    //categories = defaultCategories;
+  //  localStorage.setItem("categories", JSON.stringify(categories));
+ // } else {
+//    categories = existingCategories;
+  //}
+//}
+//let currentSubcategoryId = null;
+//let currentPage = 1;
+//const ITEMS_PER_PAGE = 20;
 
 // Shop location from configuration
 const SHOP_LOCATION = BUSINESS_CONFIG.shopLocation;
@@ -105,21 +135,22 @@ function applyTheme() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Force fresh data load
-  forceReloadData();
-  
-  // Load custom colors first
+  // forceReloadData(); ❌ OFF
+
   loadCustomColors();
-  
+
   loadCategories();
+  loadBackendProducts(); // ✅ BACKEND SE PRODUCTS
   renderProducts();
   updateCart();
+
   initializeUser();
   loadUserTheme();
   loadShopBanner();
   initializeContactInfo();
   checkDeliveryHours();
 });
+
 
 /* ===============================
    INITIALIZE CONTACT INFO
