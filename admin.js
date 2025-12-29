@@ -55,11 +55,52 @@ async function addProduct() {
     }
 
     alert("🎉 Product added successfully");
+   loadProducts();
+    
   } catch (err) {
     console.error(err);
     alert("Server error");
   }
 }
+
+async function loadProducts() {
+  try {
+    const res = await fetch(
+      "https://shah-pharmacy-backend.onrender.com/api/products"
+    );
+    const products = await res.json();
+
+    const tbody = document.getElementById("productTableBody");
+    if (!tbody) {
+      console.error("❌ productTableBody not found");
+      return;
+    }
+
+    tbody.innerHTML = "";
+
+    products.forEach(p => {
+      tbody.innerHTML += `
+        <tr>
+         <td>
+
+  ${
+    (p.image_url || p.image || p.imageUrl || p.secure_url)
+      ? `<img src="${p.image_url || p.image || p.imageUrl || p.secure_url}" width="50"/>`
+      : ""
+  }
+</td>
+          <td>${p.name}</td>
+          <td>${p.price}</td>
+          <td>${p.stock}</td>
+          <td>${p.category_name || ""}</td>
+        </tr>
+      `;
+    });
+  } catch (err) {
+    console.error("❌ Load products error:", err);
+  }
+}
+
 
 // 🔴 MUST BE GLOBAL
 window.addProduct = addProduct;
