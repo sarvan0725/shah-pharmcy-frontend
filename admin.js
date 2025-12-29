@@ -1,12 +1,9 @@
-
 console.log("admin.js loaded");
 
 const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
 
 // ===== ADD PRODUCT =====
 async function addProduct() {
-  console.log("🟢 addProduct clicked");
-
   const name = document.getElementById("pName")?.value;
   const price = Number(document.getElementById("pPrice")?.value);
   const stock = Number(document.getElementById("pStock")?.value);
@@ -17,7 +14,6 @@ async function addProduct() {
     return;
   }
 
-  // 🔥 BACKEND CATEGORY MAP
   const categoryMap = {
     grocery: 1,
     medicine: 2,
@@ -32,63 +28,49 @@ async function addProduct() {
     category_id: categoryMap[category]
   };
 
-  console.log("📦 FINAL PAYLOAD:", payload);
-
   try {
-    const res = await fetch(
-      "https://shah-pharmacy-backend.onrender.com/api/products",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      }
-    );
+    const res = await fetch(`${API_BASE}/products`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
     const data = await res.json();
-    console.log("✅ RESPONSE:", data);
-
     if (!res.ok) {
       alert(data.error || "Backend error");
       return;
     }
 
     alert("🎉 Product added successfully");
-   loadProducts();
-    
+    loadProducts();
+
   } catch (err) {
     console.error(err);
     alert("Server error");
   }
 }
 
+// ===== LOAD PRODUCTS =====
 async function loadProducts() {
   try {
-    const res = await fetch(
-      "https://shah-pharmacy-backend.onrender.com/api/products"
-    );
+    const res = await fetch(`${API_BASE}/products`);
     const products = await res.json();
 
     const tbody = document.getElementById("productTableBody");
-    if (!tbody) {
-      console.error("❌ productTableBody not found");
-      return;
-    }
+    if (!tbody) return;
 
     tbody.innerHTML = "";
 
     products.forEach(p => {
       tbody.innerHTML += `
         <tr>
-         <td>
-
-  ${
-    (p.image_url || p.image || p.imageUrl || p.secure_url)
-      ? `<img src="${p.image_url || p.image || p.imageUrl || p.secure_url}" width="50"/>`
-      : ""
-  }
-</td>
+          <td>
+            ${
+              p.image_url || p.image || p.imageUrl || p.secure_url
+                ? `<img src="${p.image_url || p.image || p.imageUrl || p.secure_url}" width="50"/>`
+                : ""
+            }
+          </td>
           <td>${p.name}</td>
           <td>${p.price}</td>
           <td>${p.stock}</td>
@@ -96,11 +78,12 @@ async function loadProducts() {
         </tr>
       `;
     });
+
   } catch (err) {
     console.error("❌ Load products error:", err);
   }
 }
 
-
-// 🔴 MUST BE GLOBAL
 window.addProduct = addProduct;
+
+    
