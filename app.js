@@ -154,11 +154,7 @@ let deliveryCharge = 0;
 /* ===============================
    LOAD
 ================================*/
-function applyTheme() {
-  loadCategories();
-  renderProducts();
-  updateCart();
-}
+
 
 document.addEventListener("DOMContentLoaded", () => {
   // forceReloadData(); ❌ OFF
