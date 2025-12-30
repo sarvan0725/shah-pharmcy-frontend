@@ -2846,3 +2846,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+
+
+const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
+
+//====================================================
+ //==USER SITE - LOAD PRODUCTS 
+//===================================================
+
+async function loadUserProducts() {
+  try {
+    console.log("🟢 Loading products from backend...");
+
+    const res = await fetch(`${API_BASE_URL}/products`);
+    const products = await res.json();
+
+    const container = document.getElementById("productList");
+    if (!container) {
+      console.error("❌ productList not found");
+      return;
+    }
+
+    container.innerHTML = "";
+
+    products.forEach(p => {
+      container.innerHTML += `
+        <div class="product-card">
+          <h4>${p.name}</h4>
+          <p>${p.weight || ""}</p>
+          <p>₹${p.price}</p>
+          <p>Category: ${p.category}</p>
+          <button>Add to Cart</button>
+        </div>
+      `;
+    });
+
+  } catch (err) {
+    console.error("❌ Backend error", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadUserProducts);
