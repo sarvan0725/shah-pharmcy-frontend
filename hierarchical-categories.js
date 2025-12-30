@@ -174,8 +174,10 @@ function initializeDefaultCategories() {
    RENDER CATEGORY NAVIGATION
 ================================*/
 function renderCategoryNavigation() {
-  const container = document.getElementById('categoryContainer');
-  if (!container) return;
+  const categoryContainer = document.getElementById("categoryContainer");
+   if (!categoryContainer) return;
+
+   categoryContainer.innerHTML = ""; 
 
   // Clear existing content
   container.innerHTML = '';
@@ -273,8 +275,12 @@ function getCategoryIcon(categoryName) {
    BREADCRUMB NAVIGATION
 ================================*/
 function renderBreadcrumb() {
-  const container = document.getElementById('categoryContainer');
-  
+  const breadcrumbContainer = document.getElementById("breadcrumbContainer");
+if (!breadcrumbContainer) return;
+
+breadcrumbContainer.innerHTML = "";
+
+ 
   const breadcrumbElement = document.createElement('div');
   breadcrumbElement.className = 'category-breadcrumb';
   
@@ -375,9 +381,13 @@ async function loadAllProducts() {
 }
 
 function displayProducts(productList) {
-  const container = document.getElementById('productList');
-  if (!container) return;
-  
+ const productContainer = document.getElementById("productList");
+if (!productContainer) {
+  console.error("❌ productList container not found");
+  return;
+}
+
+productContainer.innerHTML = "";
   container.innerHTML = '';
   
   if (productList.length === 0) {
@@ -397,6 +407,10 @@ function displayProducts(productList) {
   productList.forEach(product => {
     const productElement = createProductElement(product);
     container.appendChild(productElement);
+   
+     productContainer.appendChild(productElement);
+
+   
   });
 }
 
