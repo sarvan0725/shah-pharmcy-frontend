@@ -19,7 +19,7 @@ let currentLevel = 1; // Current navigation level
 ================================*/
 async function loadHierarchicalCategories() {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/products/categories/tree`);
+    const response = await fetch(`${API_BASE_URL}/products/categories/tree`);
     if (response.ok) {
       categoryTree = await response.json();
       renderCategoryNavigation();
@@ -339,7 +339,7 @@ function navigateToBreadcrumb(index) {
 ================================*/
 async function loadProductsByCategory(categoryId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/products?category=${categoryId}`);
+    const response = await fetch(`${API_BASE_URL}/products?category=${categoryId}`);
     if (response.ok) {
       const data = await response.json();
       displayProducts(data.products);
@@ -357,7 +357,7 @@ async function loadProductsByCategory(categoryId) {
 
 async function loadAllProducts() {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/products`);
+    const response = await fetch(`${API_BASE_URL}/products`);
     if (response.ok) {
       const data = await response.json();
       displayProducts(data.products);
