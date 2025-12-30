@@ -67,12 +67,4 @@ const RAZORPAY_CONFIG = {
   }
 };
 
-// EXPORT FOR USE IN OTHER FILES
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    RAZORPAY_KEY_ID,
-    BUSINESS_CONFIG,
-    FEATURES,
-    RAZORPAY_CONFIG
-  };
-}
+
