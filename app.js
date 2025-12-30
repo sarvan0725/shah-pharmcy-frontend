@@ -6,6 +6,15 @@
 /* ===============================
    CONFIGURATION (from config.js)
 ================================*/
+const CATEGORY_MAP = {
+  1: "Medicine",
+  2: "Grocery",
+  3: "Baby Care",
+  4: "Personal Care",
+  5: "Health Devices"
+};
+
+
 
 
 // ===============================
@@ -2873,6 +2882,12 @@ function initializePWA() {
 
     console.log("🟢 Products array:", products);
 
+   if (!Array.isArray(products)) {
+  console.error("❌ Products is not an array:", products);
+  return;
+}
+   
+
     const container = document.getElementById("productList");
     if (!container) {
       console.error("❌ productList not found");
@@ -2887,16 +2902,16 @@ function initializePWA() {
     }
 
     products.forEach(p => {
-      container.innerHTML += `
-        <div class="product-card">
-          <h4>${p.name}</h4>
-          <p>₹${p.price}</p>
-          <p>Stock: ${p.stock}</p>
-          <p>Category: ${CATEGORY_MAP[p.category_id] || "N/A"}</p>
-          <button onclick="addToCart(${p.id})">Add to Cart</button>
-        </div>
-      `;
-    });
+  container.innerHTML += `
+    <div class="product-card">
+      <h4>${p.name}</h4>
+      <p>₹${p.price}</p>
+      <p>Stock: ${p.stock}</p>
+      <p>Category: ${CATEGORY_MAP[p.category_id] ?? "N/A"}</p>
+      <button onclick="addToCart(${p.id})">Add to Cart</button>
+    </div>
+  `;
+});
 
   } catch (err) {
     console.error("❌ Product load failed", err);
