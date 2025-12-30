@@ -43,21 +43,21 @@ let defaultCategories = [
 // ===============================
 // LOAD PRODUCTS FROM BACKEND
 // ===============================
-async function loadBackendProducts() {
-  try {
-    const res = await fetch("https://shah-pharmacy-backend.onrender.com/api/products");
-    const data = await res.json();
+//async function loadBackendProducts() {
+//  try {
+//    const res = await fetch("https://shah-pharmacy-backend.onrender.com/api/products");
+//    const data = await res.json();
 
-    products = data.map(p => ({
-      id: p.id,
-      name: p.name,
-      price: p.price,
-      stock: p.stock,
-      weight: p.weight || "",
-      image: p.image_url || p.image || p.imageUrl || p.secure_url,
-      categoryId: p.category_id,
-      subcategoryId: p.subcategory_id || null
-    }));
+ //   products = data.map(p => ({
+ //     id: p.id,
+//name: p.name,
+  //    price: p.price,
+  //    stock: p.stock,
+  //    weight: p.weight || "",
+   //   image: p.image_url || p.image || p.imageUrl || p.secure_url,
+   //   categoryId: p.category_id,
+  //    subcategoryId: p.subcategory_id || null
+    //}));
 
     renderProducts();
   } catch (err) {
