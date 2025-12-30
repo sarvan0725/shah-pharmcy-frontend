@@ -158,7 +158,7 @@ let deliveryCharge = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
   // forceReloadData(); ❌ OFF
-
+   applyTheme(); // ✅ YAHI HOGA (ONLY ONCE)
   loadCustomColors();
 
   loadCategories();
