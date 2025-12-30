@@ -549,45 +549,65 @@ function displayProducts(productList) {
 
 
 function createProductElement(product) {
+  const id = product._id || product.id;
+  quantityMap[id] = quantityMap[id] || 1;
+
   const div = document.createElement('div');
   div.className = 'product-card';
 
-  const id = product._id || product.id;
-
   div.innerHTML = `
-    <div class="product-info">
-      <h4>${product.name}</h4>
-      <p>₹${product.price}</p>
-
-      <div class="quantity-control">
-        <button onclick="decreaseQty('${id}')">-</button>
-        <span id="qty-${id}">1</span>
-        <button onclick="increaseQty('${id}')">+</button>
-      </div>
-
-      <button class="btn-primary"
-        onclick="addToCart('${id}')">
-        + Add to Cart
-      </button>
+    <div class="product-image">
+      <img src="${product.image || 'https://via.placeholder.com/150'}" 
+           alt="${product.name}">
     </div>
+
+    <h4>${product.name}</h4>
+    <p class="price">₹${product.price}</p>
+
+    <div class="qty-control">
+      <button onclick="decreaseQty('${id}')">-</button>
+      <span id="qty-${id}">${quantityMap[id]}</span>
+      <button onclick="increaseQty('${id}')">+</button>
+    </div>
+
+    <button class="add-cart-btn" onclick="addToCart('${id}')">
+      + Add to Cart
+    </button>
   `;
 
   return div;
 }
 
-function increaseQty(id) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+window.increaseQty = function (id) {
   quantityMap[id] = (quantityMap[id] || 1) + 1;
   document.getElementById(`qty-${id}`).innerText = quantityMap[id];
-}
+};
 
-function decreaseQty(id) {
+window.decreaseQty = function (id) {
   if (!quantityMap[id] || quantityMap[id] <= 1) return;
   quantityMap[id]--;
   document.getElementById(`qty-${id}`).innerText = quantityMap[id];
-}
+};
 
-function addToCart(id) {
+window.addToCart = function (id) {
   const product = products.find(p => (p._id || p.id) === id);
+
   if (!product) {
     console.error('❌ Product not found');
     return;
@@ -595,6 +615,6 @@ function addToCart(id) {
 
   const qty = quantityMap[id] || 1;
   console.log('🛒 Added:', product.name, 'Qty:', qty);
-
+};
   // next step: backend order API
 }
