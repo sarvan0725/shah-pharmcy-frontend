@@ -35,6 +35,9 @@ const PRODUCTION_CONFIG = {
   }
 };
 
+// Make API base URL globally available
+window.API_BASE_URL = PRODUCTION_CONFIG.API_BASE_URL;
+
 // Export for use
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = PRODUCTION_CONFIG;
