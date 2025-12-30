@@ -134,27 +134,34 @@ let defaultCategories = [
 //];
 
 // Initialize data properly
-let categories, products;
+// ================= SAFE INITIALIZATION =================
+
+let categories = [];
+let products = [];
+
 try {
-  categories = JSON.parse(localStorage.getItem("categories")) || defaultCategories;
-  products = JSON.parse(localStorage.getItem("products")) || defaultProducts;
+  const storedCategories = localStorage.getItem("categories");
+  const storedProducts = localStorage.getItem("products");
+
+  categories = storedCategories ? JSON.parse(storedCategories) : [];
+  products = storedProducts ? JSON.parse(storedProducts) : [];
 } catch (e) {
-  categories = defaultCategories;
-   products   = [];
-  
+  categories = [];
+  products = [];
 }
 
-// Ensure we have data
-if (!categories || categories.length === 0) categories = defaultCategories;
-if (!products || products.length === 0) products = defaultProducts;
+// Categories fallback (UI ke liye allowed)
+if (!Array.isArray(categories) || categories.length === 0) {
+  categories = defaultCategories;
+}
 
+// Products = backend driven ONLY
+if (!Array.isArray(products)) {
+  products = [];
+}
+
+// Persist categories only
 localStorage.setItem("categories", JSON.stringify(categories));
-localStorage.setItem("products", JSON.stringify(products));
-
-let cart = [];
-let quantityMap = {};
-let currentCategoryId = 1;
-
 // Force reload data on startup
 // forceReloadData() {
   // Don't overwrite existing data, just ensure we have defaults if empty
