@@ -1,6 +1,6 @@
 // API Configuration
 // Update this URL after backend deployment on Render
-const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
+const API_BASE = window.APP_CONFIG.API_BASE_URL;
 
 class PharmacyAPI {
   constructor() {
