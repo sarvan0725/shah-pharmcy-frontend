@@ -21,30 +21,7 @@ function applyTheme() {
   }
 }
 
-async function loadUserProducts() {
-  try {
-    console.log("📦 Loading products via PharmacyAPI...");
 
-    const products = await window.pharmacyAPI.getProducts();
-
-    console.log("✅ Products received:", products);
-
-    const container = document.getElementById("productList");
-    if (!container) return;
-
-    container.innerHTML = "";
-
-    products.forEach(p => {
-      container.innerHTML += `
-        <div class="product-card">
-          <h4>${p.name}</h4>
-          <p>₹${p.price}</p>
-          <p>Stock: ${p.stock}</p>
-          <p>Category: ${p.category || "N/A"}</p>
-          <button>Add to Cart</button>
-        </div>
-      `;
-    });
 
   } catch (err) {
     console.error("❌ Product load failed", err);
@@ -2894,7 +2871,10 @@ function initializePWA() {
   try {
     console.log("🟢 Loading products via pharmacyAPI...");
 
-    const products = await window.pharmacyAPI.getProducts();
+    const response = await window.pharmacyAPI.getProducts();
+    const products = response?.products || [];
+
+    console.log("🟢 Products array:", products);
 
     const container = document.getElementById("productList");
     if (!container) {
@@ -2904,20 +2884,25 @@ function initializePWA() {
 
     container.innerHTML = "";
 
+    if (products.length === 0) {
+      container.innerHTML = "<p>No products available</p>";
+      return;
+    }
+
     products.forEach(p => {
       container.innerHTML += `
         <div class="product-card">
           <h4>${p.name}</h4>
           <p>₹${p.price}</p>
           <p>Stock: ${p.stock}</p>
-          <p>Category: ${p.category || "N/A"}</p>
-          <button>Add to Cart</button>
+          <p>Category: ${CATEGORY_MAP[p.category_id] || "N/A"}</p>
+          <button onclick="addToCart(${p.id})">Add to Cart</button>
         </div>
       `;
     });
 
   } catch (err) {
-    console.error("❌ Backend error", err);
+    console.error("❌ Product load failed", err);
   }
 }
 
