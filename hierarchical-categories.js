@@ -4,6 +4,8 @@
 *************************************************/
 
 // API base from config.js
+console.log("✅ hierarchical-categories.js loaded");
+
 const API_BASE_URL = window.APP_CONFIG.API_BASE_URL;
 
 let products = [];   // ✅ GLOBAL PRODUCTS CACHE
@@ -619,16 +621,16 @@ window.decreaseQty = function (id) {
   document.getElementById(`qty-${id}`).innerText = quantityMap[id];
 };
 
-window.addToCart = function (id) {
-  const product = products.find(p => (p._id || p.id) === id);
+//window.addToCart = function (id) {
+ // const product = products.find(p => (p._id || p.id) === id);
 
-  if (!product) {
-    console.error('❌ Product not found');
-    return;
-  }
+ // if (!product) {
+  //  console.error('❌ Product not found');
+ //   return;
+ // }
 
-  const qty = quantityMap[id] || 1;
-  console.log('🛒 Added:', product.name, 'Qty:', qty);
-};
-  // next step: backend order API
-}
+//  const qty = quantityMap[id] || 1;
+//  console.log('🛒 Added:', product.name, 'Qty:', qty);
+//};
+  
+
