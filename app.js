@@ -2913,7 +2913,7 @@ function initializePWA() {
           <h4>${p.name}</h4>
           <p>₹${p.price}</p>
           <p>Stock: ${p.stock}</p>
-          <p>Category: ${CATEGORY_MAP[p.category_id] || "N/A"}</p>
+          <p>Category: ${p.category || "N/A"}</p>
           <button>Add to Cart</button>
         </div>
       `;
