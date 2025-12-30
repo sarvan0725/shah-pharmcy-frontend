@@ -2918,3 +2918,22 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("ℹ️ productList not on this page, skipping product load");
   }
 });
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM loaded, fetching products...");
+  console.log("API_BASE_URL =", API_BASE_URL);
+
+  fetch(`${API_BASE_URL}/products`)
+    .then(res => {
+      console.log("Products API status:", res.status);
+      return res.json();
+    })
+    .then(data => {
+      console.log("Products received:", data);
+      products = data;
+      renderProducts(products);
+    })
+    .catch(err => console.error("❌ Product load error", err));
+});
