@@ -2929,6 +2929,14 @@ function initializePWA() {
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🚀 App initializing...");
+  // Core app init
   initApp();
-});
 
+  // 🔥 FORCE CATEGORY LOAD (SAFE)
+  if (typeof loadHierarchicalCategories === "function") {
+    loadHierarchicalCategories();
+    console.log("✅ Categories loaded from app.js");
+  } else {
+    console.warn("⚠️ loadHierarchicalCategories function not found");
+  }
+});
