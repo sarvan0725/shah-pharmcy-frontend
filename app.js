@@ -15,6 +15,23 @@ const CATEGORY_MAP = {
   4: "Bulk"
 };
 
+// ===============================
+// THEME HANDLER (SAFE)
+// ===============================
+function applyTheme() {
+  try {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.body.setAttribute("data-theme", savedTheme);
+    console.log("🎨 Theme applied:", savedTheme);
+  } catch (err) {
+    console.warn("Theme error ignored:", err);
+  }
+}
+
+
+
+
+
 // Configuration is now loaded from config.js
 // Update config.js file for deployment settings
 const RAZORPAY_KEY = RAZORPAY_KEY_ID;
