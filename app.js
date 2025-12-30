@@ -2863,12 +2863,12 @@ const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
 //====================================================
  //==USER SITE - LOAD PRODUCTS 
 //===================================================
+
 async function loadUserProducts() {
   try {
-    console.log("🟢 Loading products from backend...");
+    console.log("🟢 Loading products via pharmacyAPI...");
 
-    const res = await fetch(`${API_BASE_URL}/products`);
-    const products = await res.json();
+    const products = await window.pharmacyAPI.getProducts();
 
     const container = document.getElementById("productList");
     if (!container) {
@@ -2884,7 +2884,7 @@ async function loadUserProducts() {
           <h4>${p.name}</h4>
           <p>₹${p.price}</p>
           <p>Stock: ${p.stock}</p>
-          <p>Category: ${CATEGORY_MAP[p.category_id]}</p>
+          <p>Category: ${CATEGORY_MAP[p.category_id] || "N/A"}</p>
           <button>Add to Cart</button>
         </div>
       `;
