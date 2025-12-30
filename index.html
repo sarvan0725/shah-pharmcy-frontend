@@ -38,10 +38,28 @@
   <!-- Razorpay (ONLY library, config body me jayega) -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
-  
- </head>
 <body>
 
+  <!-- ================= CATEGORIES ================= -->
+  <section class="categories">
+    <div class="category-scroll" id="categoryContainer">
+      <!-- Categories will load here -->
+    </div>
+  </section>
+
+  <!-- ================= SUBCATEGORIES ================= -->
+  <section class="subcategories" id="subcategoryContainer" style="display:none;">
+    <div class="subcategory-scroll"></div>
+  </section>
+
+  <!-- ================= PRODUCTS ================= -->
+  <main class="main-content">
+    <div id="productList" class="product-grid">
+      <!-- Products will load here -->
+    </div>
+  </main>
+
+  
 <script src="./config-production.js"></script>
 <script src="./config.js"></script>
 <script src="./api.js"></script>
