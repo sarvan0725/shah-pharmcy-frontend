@@ -633,5 +633,6 @@ window.decreaseQty = function (id) {
 //  const qty = quantityMap[id] || 1;
 //  console.log('🛒 Added:', product.name, 'Qty:', qty);
 //};
+
   
 
