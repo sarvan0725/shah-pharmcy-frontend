@@ -361,7 +361,8 @@ async function loadAllProducts() {
     const response = await fetch(`${API_BASE_URL}/products`);
     if (response.ok) {
       const data = await response.json();
-      displayProducts(data.products);
+     products = data;
+     displayProducts(products);
       
     } else {
       console.error('Failed to load products');
