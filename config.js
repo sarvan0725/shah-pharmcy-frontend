@@ -9,7 +9,9 @@
 
 // BACKEND API BASE URL (PRODUCTION)
  
-const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
+window.APP_CONFIG = {
+  API_BASE_URL: "https://shah-pharmacy-backend.onrender.com/api"
+};
 
 // PAYMENT CONFIGURATION
 // Replace with your actual Razorpay Key ID from dashboard
