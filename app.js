@@ -140,7 +140,8 @@ try {
   products = JSON.parse(localStorage.getItem("products")) || defaultProducts;
 } catch (e) {
   categories = defaultCategories;
-  products = defaultProducts;
+   products   = [];
+  
 }
 
 // Ensure we have data
