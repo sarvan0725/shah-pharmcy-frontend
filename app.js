@@ -2912,4 +2912,13 @@ async function loadUserProducts() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", loadUserProducts);
+document.addEventListener("DOMContentLoaded", () => {
+  const productContainer = document.getElementById("productList");
+
+  if (productContainer) {
+    console.log("✅ productList found, loading products...");
+    loadUserProducts();
+  } else {
+    console.log("ℹ️ productList not on this page, skipping product load");
+  }
+});
