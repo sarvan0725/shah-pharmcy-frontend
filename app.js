@@ -6,7 +6,9 @@
 /* ===============================
    CONFIGURATION (from config.js)
 ================================*/
-const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
+
+
+
 
 const CATEGORY_MAP = {
   1: "Grocery",
@@ -99,17 +101,7 @@ let defaultCategories = [
   //    subcategoryId: p.subcategory_id || null
     //}));
 
-    renderProducts();
-  } catch (err) {
-    console.error("❌ Failed to load backend products", err);
-  }
-}
-
-
-
-
-
-
+ 
 //let defaultProducts = [
  // { id: 1, name: "Paracetamol", price: 25, stock: 100, categoryId: 1, subcategoryId: 11, image: "", weight: "10 tablets" },
   //{ id: 2, name: "Crocin", price: 30, stock: 80, categoryId: 1, subcategoryId: 11, image: "", weight: "15 tablets" },
@@ -2933,15 +2925,16 @@ const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
 
 
 document.addEventListener("DOMContentLoaded", () => {
+  applyTheme();
+
   const productContainer = document.getElementById("productList");
 
   if (productContainer) {
-    console.log("✅ productList found, loading products...");
-   // loadUserProducts();
+    console.log("🟢 productList found, loading products...");
+    loadUserProducts();
   } else {
-    console.log("ℹ️ productList not on this page, skipping product load");
+    console.log("⚠️ productList not on this page, skipping product load");
   }
 });
-
 
 
