@@ -15,6 +15,8 @@ const CATEGORY_MAP = {
   4: "Bulk"
 };
 
+let products = [];
+
 // ===============================
 // THEME HANDLER (SAFE)
 // ===============================
@@ -27,6 +29,27 @@ function applyTheme() {
     console.warn("Theme error ignored:", err);
   }
 }
+
+async function loadUserProducts() {
+  try {
+    console.log("🟢 Loading products via pharmacyAPI...");
+
+    products = await window.pharmacyAPI.getProducts();
+
+    const container = document.getElementById("productList");
+    if (!container) {
+      console.error("❌ productList not found");
+      return;
+    }
+
+    container.innerHTML = "";
+    renderProducts(products);
+
+  } catch (err) {
+    console.error("❌ Backend error", err);
+  }
+}
+
 
 
 
@@ -2908,6 +2931,7 @@ const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
   }
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {
   const productContainer = document.getElementById("productList");
 
@@ -2921,19 +2945,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM loaded, fetching products...");
-  console.log("API_BASE_URL =", API_BASE_URL);
-
-  fetch(`${API_BASE_URL}/products`)
-    .then(res => {
-      console.log("Products API status:", res.status);
-      return res.json();
-    })
-    .then(data => {
-      console.log("Products received:", data);
-      products = data;
-      renderProducts(products);
-    })
-    .catch(err => console.error("❌ Product load error", err));
-});
