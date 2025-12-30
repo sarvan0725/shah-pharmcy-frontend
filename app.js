@@ -23,10 +23,7 @@ function applyTheme() {
 
 
 
-  } catch (err) {
-    console.error("❌ Product load failed", err);
-  }
-}
+  
 /* =========================
    ✅ ADD initApp RIGHT HERE
    ========================= */
