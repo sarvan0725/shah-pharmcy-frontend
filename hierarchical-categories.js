@@ -19,7 +19,7 @@ let currentLevel = 1; // Current navigation level
 ================================*/
 async function loadHierarchicalCategories() {
   try {
-    const response = await fetch(`${API_BASE_URL}/products/categories/tree`);
+    const response = await fetch(`${API_BASE_URL}/api/products/categories/tree`);
     if (response.ok) {
       categoryTree = await response.json();
       renderCategoryNavigation();
