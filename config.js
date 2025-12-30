@@ -68,5 +68,3 @@ const RAZORPAY_CONFIG = {
     color: '#00B761'
   }
 };
-
-
