@@ -3,10 +3,16 @@
  Shah Pharmacy & Mini Mart
 *************************************************/
 
+// API base from config.js
+const API_BASE_URL = window.API_BASE_URL;
+
+
+
+//////////////////////////////////////////
 let categoryTree = [];
 let currentCategoryPath = []; // Breadcrumb path
 let currentLevel = 1; // Current navigation level
-const API_BASE_URL = window.location.origin; // Use current domain
+
 
 /* ===============================
    LOAD HIERARCHICAL CATEGORIES
