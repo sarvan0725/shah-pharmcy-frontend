@@ -8,6 +8,7 @@ const API_BASE_URL = window.APP_CONFIG.API_BASE_URL;
 
 let products = [];   // ✅ GLOBAL PRODUCTS CACHE
 let quantityMap = {};
+let cart = [];
 
 //////////////////////////////////////////
 let categoryTree = [];
@@ -518,3 +519,82 @@ window.navigateToCategory = navigateToCategory;
 window.navigateToRoot = navigateToRoot;
 window.navigateToBreadcrumb = navigateToBreadcrumb;
 window.searchProductsHierarchical = searchProductsHierarchical;
+
+
+// ================= PRODUCT DISPLAY =================
+
+function displayProducts(productList) {
+  const container = document.getElementById('productList');
+  if (!container) {
+    console.error('❌ productList container not found');
+    return;
+  }
+
+  container.innerHTML = '';
+
+  if (!productList || productList.length === 0) {
+    container.innerHTML = `
+      <div class="no-products">
+        <h3>No Products Found</h3>
+      </div>
+    `;
+    return;
+  }
+
+  productList.forEach(product => {
+    const productElement = createProductElement(product);
+    container.appendChild(productElement);
+  });
+}
+
+
+function createProductElement(product) {
+  const div = document.createElement('div');
+  div.className = 'product-card';
+
+  const id = product._id || product.id;
+
+  div.innerHTML = `
+    <div class="product-info">
+      <h4>${product.name}</h4>
+      <p>₹${product.price}</p>
+
+      <div class="quantity-control">
+        <button onclick="decreaseQty('${id}')">-</button>
+        <span id="qty-${id}">1</span>
+        <button onclick="increaseQty('${id}')">+</button>
+      </div>
+
+      <button class="btn-primary"
+        onclick="addToCart('${id}')">
+        + Add to Cart
+      </button>
+    </div>
+  `;
+
+  return div;
+}
+
+function increaseQty(id) {
+  quantityMap[id] = (quantityMap[id] || 1) + 1;
+  document.getElementById(`qty-${id}`).innerText = quantityMap[id];
+}
+
+function decreaseQty(id) {
+  if (!quantityMap[id] || quantityMap[id] <= 1) return;
+  quantityMap[id]--;
+  document.getElementById(`qty-${id}`).innerText = quantityMap[id];
+}
+
+function addToCart(id) {
+  const product = products.find(p => (p._id || p.id) === id);
+  if (!product) {
+    console.error('❌ Product not found');
+    return;
+  }
+
+  const qty = quantityMap[id] || 1;
+  console.log('🛒 Added:', product.name, 'Qty:', qty);
+
+  // next step: backend order API
+}
