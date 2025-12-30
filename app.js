@@ -2877,7 +2877,7 @@ const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
  //==USER SITE - LOAD PRODUCTS 
 //===================================================
 
-async function loadUserProducts() {
+ async function loadUserProducts() {
   try {
     console.log("🟢 Loading products via pharmacyAPI...");
 
@@ -2913,7 +2913,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (productContainer) {
     console.log("✅ productList found, loading products...");
-    loadUserProducts();
+   // loadUserProducts();
   } else {
     console.log("ℹ️ productList not on this page, skipping product load");
   }
