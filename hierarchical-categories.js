@@ -10,7 +10,7 @@ const API_BASE_URL =
  window.APP_CONFIG.API_BASE_URL;
 
 //let products = [];   // ✅ GLOBAL PRODUCTS CACHE
-let quantityMap = {};
+//let quantityMap = {};
 let cart = [];
 
 //////////////////////////////////////////
