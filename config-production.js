@@ -1,8 +1,8 @@
 // Production Configuration
 const PRODUCTION_CONFIG = {
   // API Base URL (Update with your backend URL)
-  API_BASE_URL: 'https://shah-pharmacy-backend.onrender.com/api',
-  
+  // ✅ API Base URL (NO /api here)
+  API_BASE_URL: 'https://shah-pharmacy-backend.onrender.com',
   // Razorpay Configuration
   RAZORPAY_KEY_ID: 'rzp_test_Rt82KwTYuXIf63',
   
