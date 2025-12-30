@@ -6,6 +6,7 @@
 // API base from config.js
 const API_BASE_URL = window.APP_CONFIG.API_BASE_URL;
 
+let products = [];   // ✅ GLOBAL PRODUCTS CACHE
 
 
 //////////////////////////////////////////
@@ -341,9 +342,9 @@ async function loadProductsByCategory(categoryId) {
   try {
     const response = await fetch(`${API_BASE_URL}/products?category=${categoryId}`);
     if (response.ok) {
-      const data = await response.json();
-      displayProducts(data.products);
-      updatePagination(data.pagination);
+    const data = await response.json();
+    products = data;          // ✅ global variable set
+    displayProducts(products);  
     } else {
       console.error('Failed to load products');
     }
@@ -361,7 +362,7 @@ async function loadAllProducts() {
     if (response.ok) {
       const data = await response.json();
       displayProducts(data.products);
-      updatePagination(data.pagination);
+      
     } else {
       console.error('Failed to load products');
     }
@@ -462,8 +463,9 @@ async function searchInCurrentContext(query) {
     const response = await fetch(searchUrl);
     if (response.ok) {
       const data = await response.json();
-      displayProducts(data.products);
-      updatePagination(data.pagination);
+      products = data;          // optional but better
+      displayProducts(products);
+     
     }
   } catch (error) {
     console.error('Search error:', error);
