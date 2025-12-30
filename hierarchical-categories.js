@@ -6,7 +6,8 @@
 // API base from config.js
 console.log("✅ hierarchical-categories.js loaded");
 
-window.APP_CONFIG.API_BASE_URL
+const API_BASE_URL =
+ window.APP_CONFIG.API_BASE_URL;
 
 let products = [];   // ✅ GLOBAL PRODUCTS CACHE
 let quantityMap = {};
