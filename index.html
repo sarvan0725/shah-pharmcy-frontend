@@ -75,16 +75,6 @@
   
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
   
 
 <!-- TOP BAR -->
@@ -615,39 +605,6 @@
 <script src="./slide-menu-fix.js"></script>
 <script src="./zomato-menu.js"></script>
 <script src="./overflow-menu.js"></script>
-
-
-<script>
-[
-  "toggleCart",
-  "toggleWishlist",
-  "toggleAIChat",
-  "showQRCodes",
-  "showAccountManagement",
-  "showSettings",
-  "showPaymentMethods",
-  "showColorCustomizer",
-  "showAddressBook",
-  "getCurrentLocation",
-  "showOrderHistory",
-  "showPrescriptionUpload",
-  "showShopChat",
-  "whatsappShop",
-  "callShop"
-].forEach(fn => {
-  if (typeof window[fn] !== "function") {
-    window[fn] = function () {
-      console.warn(fn + " not implemented yet");
-    };
-  }
-});
-</script>
-
-
-
-  
-
-
 
 </body>
 </html>
