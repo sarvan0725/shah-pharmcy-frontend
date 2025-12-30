@@ -8,17 +8,6 @@
 ================================*/
 
 
-
-
-const CATEGORY_MAP = {
-  1: "Grocery",
-  2: "Medicine",
-  3: "Personal Care",
-  4: "Bulk"
-};
-
-let products = [];
-
 // ===============================
 // THEME HANDLER (SAFE)
 // ===============================
@@ -34,25 +23,33 @@ function applyTheme() {
 
 async function loadUserProducts() {
   try {
-    console.log("🟢 Loading products via pharmacyAPI...");
+    console.log("📦 Loading products via PharmacyAPI...");
 
-    products = await window.pharmacyAPI.getProducts();
+    const products = await window.pharmacyAPI.getProducts();
+
+    console.log("✅ Products received:", products);
 
     const container = document.getElementById("productList");
-    if (!container) {
-      console.error("❌ productList not found");
-      return;
-    }
+    if (!container) return;
 
     container.innerHTML = "";
-    renderProducts(products);
+
+    products.forEach(p => {
+      container.innerHTML += `
+        <div class="product-card">
+          <h4>${p.name}</h4>
+          <p>₹${p.price}</p>
+          <p>Stock: ${p.stock}</p>
+          <p>Category: ${p.category || "N/A"}</p>
+          <button>Add to Cart</button>
+        </div>
+      `;
+    });
 
   } catch (err) {
-    console.error("❌ Backend error", err);
+    console.error("❌ Product load failed", err);
   }
 }
-
-
 /* =========================
    ✅ ADD initApp RIGHT HERE
    ========================= */
