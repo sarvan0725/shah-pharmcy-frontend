@@ -556,6 +556,37 @@
 <script src="./overflow-menu.js"></script>
 
 
+<script>
+[
+  "toggleCart",
+  "toggleWishlist",
+  "toggleAIChat",
+  "showQRCodes",
+  "showAccountManagement",
+  "showSettings",
+  "showPaymentMethods",
+  "showColorCustomizer",
+  "showAddressBook",
+  "getCurrentLocation",
+  "showOrderHistory",
+  "showPrescriptionUpload",
+  "showShopChat",
+  "whatsappShop",
+  "callShop"
+].forEach(fn => {
+  if (typeof window[fn] !== "function") {
+    window[fn] = function () {
+      console.warn(fn + " not implemented yet");
+    };
+  }
+});
+</script>
+
+
+
+  
+
+
 
 </body>
 </html>
