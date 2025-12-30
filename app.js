@@ -53,6 +53,45 @@ async function loadUserProducts() {
 }
 
 
+/* =========================
+   ✅ ADD initApp RIGHT HERE
+   ========================= */
+function initApp() {
+  // Theme & UI
+  applyTheme();
+  loadCustomColors();
+
+  // Products
+  const productContainer = document.getElementById("productList");
+  if (productContainer) {
+    console.log("✅ productList found, loading products");
+    loadUserProducts();
+  }
+
+  // Cart & User
+  updateCart();
+  initializeUser();
+  loadUserTheme();
+
+  // Shop info
+  loadShopBanner();
+  initializeContactInfo();
+  checkDeliveryHours();
+
+  // Enhancements
+  updateSEOTags();
+  optimizeImages();
+  updateWishlistCount();
+
+  // PWA
+  initializePWA();
+
+  // Analytics
+  trackEvent("page_view", { page: "home" });
+}
+
+
+
 
 
 
@@ -166,27 +205,8 @@ let customerLocation = null;
 let deliveryDistance = 0;
 let deliveryCharge = 0;
 
-/* ===============================
-   LOAD
-================================*/
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  // forceReloadData(); ❌ OFF
-   applyTheme(); // ✅ YAHI HOGA (ONLY ONCE)
-  loadCustomColors();
-
-  loadCategories();
-  loadBackendProducts(); // ✅ BACKEND SE PRODUCTS
-  renderProducts();
-  updateCart();
-
-  initializeUser();
-  loadUserTheme();
-  loadShopBanner();
-  initializeContactInfo();
-  checkDeliveryHours();
-});
 
 
 /* ===============================
@@ -2864,29 +2884,10 @@ function initializePWA() {
   }
 }
 
-// Initialize all enhancements
-document.addEventListener('DOMContentLoaded', () => {
-  updateSEOTags();
-  optimizeImages();
-  requestNotificationPermission();
-  initializePWA();
-  updateWishlistCount();
   
   // Track page view
   trackEvent('page_view', {page: 'home'});
   
-  // Admin shortcut: Ctrl+Shift+A
-  document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-      e.preventDefault();
-      showAdminLogin();
-    }
-  });
-});
-
-
-
-const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
 
 //====================================================
  //==USER SITE - LOAD PRODUCTS 
@@ -2925,16 +2926,7 @@ const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  applyTheme();
-
-  const productContainer = document.getElementById("productList");
-
-  if (productContainer) {
-    console.log("🟢 productList found, loading products...");
-    loadUserProducts();
-  } else {
-    console.log("⚠️ productList not on this page, skipping product load");
-  }
+  console.log("🚀 App initializing...");
+  initApp();
 });
-
 
