@@ -4,7 +4,7 @@
 *************************************************/
 
 // API base from config.js
-const API_BASE_URL = window.API_BASE_URL;
+const API_BASE_URL = window.APP_CONFIG.API_BASE_URL;
 
 
 
