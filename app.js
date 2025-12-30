@@ -6,6 +6,15 @@
 /* ===============================
    CONFIGURATION (from config.js)
 ================================*/
+const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
+
+const CATEGORY_MAP = {
+  1: "Grocery",
+  2: "Medicine",
+  3: "Personal Care",
+  4: "Bulk"
+};
+
 // Configuration is now loaded from config.js
 // Update config.js file for deployment settings
 const RAZORPAY_KEY = RAZORPAY_KEY_ID;
@@ -2854,7 +2863,6 @@ const API_BASE_URL = "https://shah-pharmacy-backend.onrender.com/api";
 //====================================================
  //==USER SITE - LOAD PRODUCTS 
 //===================================================
-
 async function loadUserProducts() {
   try {
     console.log("🟢 Loading products from backend...");
@@ -2874,9 +2882,9 @@ async function loadUserProducts() {
       container.innerHTML += `
         <div class="product-card">
           <h4>${p.name}</h4>
-          <p>${p.weight || ""}</p>
           <p>₹${p.price}</p>
-          <p>Category: ${p.category}</p>
+          <p>Stock: ${p.stock}</p>
+          <p>Category: ${CATEGORY_MAP[p.category_id]}</p>
           <button>Add to Cart</button>
         </div>
       `;
