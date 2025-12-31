@@ -2094,7 +2094,7 @@ function sendOTP() {
   }
   
   // Production mode - send to backend
-  const apiUrl = `${API_BASE_URL}/auth/send-otp`;
+ const apiUrl = `${window.APP_CONFIG.API_BASE_URL}/auth/send-otp`;
  
   fetch(apiUrl, {
     method: 'POST',
@@ -2176,8 +2176,8 @@ function verifyOTP() {
   }
   
   // Production mode - verify with backend
-    const apiUrl = `${API_BASE_URL}/auth/verify-otp`;
-  
+   const apiUrl = `${window.APP_CONFIG.API_BASE_URL}/auth/verify-otp`;
+ 
   fetch(apiUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
