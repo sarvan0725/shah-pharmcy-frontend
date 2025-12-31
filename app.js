@@ -14,7 +14,19 @@ const CATEGORY_MAP = {
   5: "Health Devices"
 };
 
+// ==============================
+// APP BOOTSTRAP (VERY IMPORTANT)
+// ==============================
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("🟢 App loaded");
 
+  // Load products on page load
+  if (typeof loadUserProducts === "function") {
+    loadUserProducts();
+  } else {
+    console.error("❌ loadUserProducts() not found");
+  }
+});
 
 
 // ===============================
@@ -2880,13 +2892,42 @@ function initializePWA() {
 //====================================================
  //==USER SITE - LOAD PRODUCTS 
 //===================================================
-
- async function loadUserProducts() {
+async function loadUserProducts() {
   try {
     console.log("🟢 Loading products via pharmacyAPI...");
 
     const response = await window.pharmacyAPI.getProducts();
-    const products = response?.products || [];
+    console.log("🔎 Raw products API response:", response);
+
+    let products = [];
+
+    if (Array.isArray(response)) {
+      products = response;
+    } else if (Array.isArray(response?.products)) {
+      products = response.products;
+    } else {
+      console.error("❌ Unexpected products response:", response);
+      return;
+    }
+
+    console.log("🟢 Products array:", products);
+
+    renderProducts(products);
+
+  } catch (err) {
+    console.error("❌ Product load failed:", err);
+  }
+}
+ 
+    
+  
+if (Array.isArray(response)) {
+  products = response;
+} else if (Array.isArray(response?.products)) {
+  products = response.products;
+} else {
+  console.error("❌ Unexpected products response:", response);
+}
 
     console.log("🟢 Products array:", products);
 
@@ -2926,17 +2967,34 @@ function initializePWA() {
   }
 }
 
+function renderProducts(products) {
+  const container = document.getElementById("productList");
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("🚀 App initializing...");
-  // Core app init
-  initApp();
-
-  // 🔥 FORCE CATEGORY LOAD (SAFE)
-  if (typeof loadHierarchicalCategories === "function") {
-    loadHierarchicalCategories();
-    console.log("✅ Categories loaded from app.js");
-  } else {
-    console.warn("⚠️ loadHierarchicalCategories function not found");
+  if (!container) {
+    console.error("❌ productList not found");
+    return;
   }
-});
+
+  container.innerHTML = "";
+
+  if (!products.length) {
+    container.innerHTML = "<p>No products available</p>";
+    return;
+  }
+
+  products.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    card.innerHTML = `
+      <img src="${p.image}" alt="${p.name}" />
+      <h4>${p.name}</h4>
+      <p>₹${p.price}</p>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+
+
