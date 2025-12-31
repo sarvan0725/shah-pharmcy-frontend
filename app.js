@@ -2889,15 +2889,20 @@ function initializePWA() {
   trackEvent('page_view', {page: 'home'});
   
 
-//====================================================
- //==USER SITE - LOAD PRODUCTS 
-//===================================================
+// ================================
+// USER SITE - LOAD PRODUCTS
+// ================================
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadUserProducts();
+});
+
 async function loadUserProducts() {
   try {
     console.log("🟢 Loading products via pharmacyAPI...");
 
     const response = await window.pharmacyAPI.getProducts();
-    console.log("🔎 Raw products API response:", response);
+    console.log("🔍 Raw products API response:", response);
 
     let products = [];
 
@@ -2911,67 +2916,22 @@ async function loadUserProducts() {
     }
 
     console.log("🟢 Products array:", products);
-
     renderProducts(products);
 
   } catch (err) {
     console.error("❌ Product load failed:", err);
   }
 }
- 
-    
-  
-if (Array.isArray(response)) {
-  products = response;
-} else if (Array.isArray(response?.products)) {
-  products = response.products;
-} else {
-  console.error("❌ Unexpected products response:", response);
-}
 
-    console.log("🟢 Products array:", products);
-
-   if (!Array.isArray(products)) {
-  console.error("❌ Products is not an array:", products);
-  return;
-}
-   
-
-    const container = document.getElementById("productList");
-    if (!container) {
-      console.error("❌ productList not found");
-      return;
-    }
-
-    container.innerHTML = "";
-
-    if (products.length === 0) {
-      container.innerHTML = "<p>No products available</p>";
-      return;
-    }
-
-    products.forEach(p => {
-  container.innerHTML += `
-    <div class="product-card">
-      <h4>${p.name}</h4>
-      <p>₹${p.price}</p>
-      <p>Stock: ${p.stock}</p>
-      <p>Category: ${CATEGORY_MAP[p.category_id] ?? "N/A"}</p>
-      <button onclick="addToCart(${p.id})">Add to Cart</button>
-    </div>
-  `;
-});
-
-  } catch (err) {
-    console.error("❌ Product load failed", err);
-  }
-}
+// ================================
+// RENDER PRODUCTS (UI ONLY)
+// ================================
 
 function renderProducts(products) {
   const container = document.getElementById("productList");
 
   if (!container) {
-    console.error("❌ productList not found");
+    console.error("❌ productList not found in HTML");
     return;
   }
 
@@ -2987,14 +2947,13 @@ function renderProducts(products) {
     card.className = "product-card";
 
     card.innerHTML = `
-      <img src="${p.image}" alt="${p.name}" />
       <h4>${p.name}</h4>
       <p>₹${p.price}</p>
+      <p>Stock: ${p.stock}</p>
+      <p>Category: ${CATEGORY_MAP?.[p.category_id] ?? "N/A"}</p>
+      <button onclick="addToCart(${p.id})">Add to Cart</button>
     `;
 
     container.appendChild(card);
   });
 }
-
-
-
