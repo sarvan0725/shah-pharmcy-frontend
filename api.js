@@ -1,179 +1,177 @@
 // API Configuration
-// Update this URL after backend deployment on Render
-
-
 class PharmacyAPI {
   constructor() {
     this.baseURL = window.APP_CONFIG.API_BASE_URL;
   }
-}
 
+  // =========================
   // Helper method for API calls
+  // =========================
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        ...options.headers
+        ...(options.headers || {})
       },
       ...options
     };
 
-    try {
-      const response = await fetch(url, config);
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'API request failed');
-      }
-      
-      return data;
-    } catch (error) {
-      console.error('API Error:', error);
-      throw error;
+    const response = await fetch(url, config);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'API request failed');
     }
+
+    return data;
   }
 
+  // =========================
   // Authentication APIs
-  async sendOTP(phone) {
+  // =========================
+  sendOTP(phone) {
     return this.request('/auth/send-otp', {
       method: 'POST',
       body: JSON.stringify({ phone })
     });
   }
 
-  async verifyOTP(phone, otp) {
+  verifyOTP(phone, otp) {
     return this.request('/auth/verify-otp', {
       method: 'POST',
       body: JSON.stringify({ phone, otp })
     });
   }
 
-  async getUserProfile(userId) {
+  getUserProfile(userId) {
     return this.request(`/auth/profile/${userId}`);
   }
 
-  async updateUserProfile(userId, profileData) {
+  updateUserProfile(userId, profileData) {
     return this.request(`/auth/profile/${userId}`, {
       method: 'PUT',
       body: JSON.stringify(profileData)
     });
   }
 
+  // =========================
   // Product APIs
-  async getProducts(params = {}) {
+  // =========================
+  getProducts(params = {}) {
     const queryString = new URLSearchParams(params).toString();
     return this.request(`/products?${queryString}`);
   }
 
-  async getCategories() {
+  getCategories() {
     return this.request('/products/categories');
   }
 
-  async getProduct(id) {
+  getProduct(id) {
     return this.request(`/products/${id}`);
   }
 
-  async addProduct(productData) {
+  addProduct(productData) {
     return this.request('/products', {
       method: 'POST',
       body: JSON.stringify(productData)
     });
   }
 
-  async updateProduct(id, productData) {
+  updateProduct(id, productData) {
     return this.request(`/products/${id}`, {
       method: 'PUT',
       body: JSON.stringify(productData)
     });
   }
 
-  async deleteProduct(id) {
+  deleteProduct(id) {
     return this.request(`/products/${id}`, {
       method: 'DELETE'
     });
   }
 
-  async bulkImportProducts(products) {
+  bulkImportProducts(products) {
     return this.request('/products/bulk-import', {
       method: 'POST',
       body: JSON.stringify({ products })
     });
   }
 
+  // =========================
   // Order APIs
-  async createOrder(orderData) {
+  // =========================
+  createOrder(orderData) {
     return this.request('/orders', {
       method: 'POST',
       body: JSON.stringify(orderData)
     });
   }
 
-  async getUserOrders(userId, params = {}) {
+  getUserOrders(userId, params = {}) {
     const queryString = new URLSearchParams(params).toString();
     return this.request(`/orders/user/${userId}?${queryString}`);
   }
 
-  async getOrderDetails(orderId) {
+  getOrderDetails(orderId) {
     return this.request(`/orders/${orderId}`);
   }
 
-  async updateOrderStatus(orderId, status) {
+  updateOrderStatus(orderId, status) {
     return this.request(`/orders/${orderId}/status`, {
       method: 'PUT',
       body: JSON.stringify({ status })
     });
   }
 
-  async deleteOrder(orderId, userId = null) {
+  deleteOrder(orderId, userId = null) {
     const params = userId ? `?userId=${userId}` : '';
     return this.request(`/orders/${orderId}${params}`, {
       method: 'DELETE'
     });
   }
 
-  async getAllOrders(params = {}) {
+  getAllOrders(params = {}) {
     const queryString = new URLSearchParams(params).toString();
     return this.request(`/orders?${queryString}`);
   }
 
+  // =========================
   // Admin APIs
-  async getDashboardAnalytics() {
+  // =========================
+  getDashboardAnalytics() {
     return this.request('/admin/dashboard');
   }
 
-  async getSalesAnalytics(params = {}) {
+  getSalesAnalytics(params = {}) {
     const queryString = new URLSearchParams(params).toString();
     return this.request(`/admin/analytics/sales?${queryString}`);
   }
 
-  async getProductAnalytics() {
+  getProductAnalytics() {
     return this.request('/admin/analytics/products');
   }
 
-  async getUserAnalytics() {
+  getUserAnalytics() {
     return this.request('/admin/analytics/users');
   }
 
-  async getSettings() {
+  getSettings() {
     return this.request('/admin/settings');
   }
 
-  async updateSettings(settings) {
+  updateSettings(settings) {
     return this.request('/admin/settings', {
       method: 'PUT',
       body: JSON.stringify(settings)
     });
   }
 
-  async exportData(type, params = {}) {
-    const queryString = new URLSearchParams(params).toString();
-    const response = await fetch(`${this.baseURL}/admin/export/${type}?${queryString}`);
-    return response.blob();
-  }
-
+  // =========================
   // Upload APIs
-  async uploadImage(file, type = 'products') {
+  // =========================
+  uploadImage(file, type = 'products') {
     const formData = new FormData();
     formData.append('image', file);
 
@@ -183,7 +181,7 @@ class PharmacyAPI {
     }).then(res => res.json());
   }
 
-  async uploadMultipleImages(files, type = 'products') {
+  uploadMultipleImages(files, type = 'products') {
     const formData = new FormData();
     files.forEach(file => formData.append('images', file));
 
@@ -193,16 +191,16 @@ class PharmacyAPI {
     }).then(res => res.json());
   }
 
-  async deleteUploadedFile(type, filename) {
+  deleteUploadedFile(type, filename) {
     return this.request(`/upload/${type}/${filename}`, {
       method: 'DELETE'
     });
   }
 
-  async getUploadedFiles(type) {
+  getUploadedFiles(type) {
     return this.request(`/upload/${type}`);
   }
 }
 
-// Create global API instance
+// ✅ GLOBAL INSTANCE (VERY IMPORTANT)
 window.pharmacyAPI = new PharmacyAPI();
