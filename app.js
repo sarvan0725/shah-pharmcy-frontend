@@ -2889,20 +2889,14 @@ function initializePWA() {
   trackEvent('page_view', {page: 'home'});
   
 
-// ================================
-// USER SITE - LOAD PRODUCTS
-// ================================
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadUserProducts();
-});
 
 async function loadUserProducts() {
   try {
     console.log("🟢 Loading products via pharmacyAPI...");
 
     const response = await window.pharmacyAPI.getProducts();
-    console.log("🔍 Raw products API response:", response);
+    console.log("📦 Raw products API response:", response);
 
     let products = [];
 
@@ -2915,14 +2909,12 @@ async function loadUserProducts() {
       return;
     }
 
-    console.log("🟢 Products array:", products);
     renderProducts(products);
 
   } catch (err) {
     console.error("❌ Product load failed:", err);
   }
 }
-
 // ================================
 // RENDER PRODUCTS (UI ONLY)
 // ================================
@@ -2930,30 +2922,37 @@ async function loadUserProducts() {
 function renderProducts(products) {
   const container = document.getElementById("productList");
 
+  // Safety check
   if (!container) {
     console.error("❌ productList not found in HTML");
     return;
   }
 
+  // Clear old products
   container.innerHTML = "";
 
-  if (!products.length) {
+  // No products case
+  if (!Array.isArray(products) || products.length === 0) {
     container.innerHTML = "<p>No products available</p>";
     return;
   }
 
+  // Render each product
   products.forEach(p => {
     const card = document.createElement("div");
     card.className = "product-card";
 
     card.innerHTML = `
       <h4>${p.name}</h4>
-      <p>₹${p.price}</p>
+      <p><strong>₹${p.price}</strong></p>
       <p>Stock: ${p.stock}</p>
-      <p>Category: ${CATEGORY_MAP?.[p.category_id] ?? "N/A"}</p>
-      <button onclick="addToCart(${p.id})">Add to Cart</button>
+      <p>Category: ${window.CATEGORY_MAP?.[p.category_id] || "N/A"}</p>
+      <button onclick="addToCart(${p.id})">
+        Add to Cart
+      </button>
     `;
 
+    // VERY IMPORTANT
     container.appendChild(card);
   });
 }
