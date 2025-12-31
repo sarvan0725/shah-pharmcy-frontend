@@ -1,11 +1,12 @@
 // API Configuration
 // Update this URL after backend deployment on Render
-const API_BASE = window.APP_CONFIG.API_BASE_URL;
+
 
 class PharmacyAPI {
   constructor() {
-    this.baseURL = API_BASE;
+    this.baseURL = window.APP_CONFIG.API_BASE_URL;
   }
+}
 
   // Helper method for API calls
   async request(endpoint, options = {}) {
