@@ -48,7 +48,7 @@
 =============================== */
 .product-card {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .product-card .discount-badge {
