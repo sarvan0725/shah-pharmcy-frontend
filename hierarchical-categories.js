@@ -13,14 +13,14 @@ const API_BASE_URL = window.location.origin; // Use current domain
 ================================*/
 async function loadHierarchicalCategories() {
   try {
-  //  const response = await fetch(`${API_BASE_URL}/api/products/categories/tree`);
- //   if (response.ok) {
- ////     categoryTree = await response.json();
-  //    renderCategoryNavigation();
-   // } else {
+   const response = await fetch(`${API_BASE_URL}/api/products/categories/tree`);
+     if (response.ok) {
+      categoryTree = await response.json();
+      renderCategoryNavigation();
+   } else {
        Fallback to default categories
        initializeDefaultCategories();
-    //}
+   }
      
     
   } catch (error) {
