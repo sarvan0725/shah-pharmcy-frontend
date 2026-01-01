@@ -3,6 +3,11 @@
  Shah Pharmacy & Mini Mart
 *************************************************/
 
+console.warn("Hierarchical categories disabled (tree API not available)");
+return;
+
+
+
 let categoryTree = [];
 let currentCategoryPath = []; // Breadcrumb path
 let currentLevel = 1; // Current navigation level
