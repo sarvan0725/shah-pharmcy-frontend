@@ -14,11 +14,21 @@ const CATEGORY_MAP = {
   5: "Health Devices"
 };
 
+
+let categories = [];
+let currentCategoryId = null;
+
+
+
 // ==============================
 // APP BOOTSTRAP (VERY IMPORTANT)
 // ==============================
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🟢 App loaded");
+
+  loadUserProducts();   // products
+  loadCategories();     // 🔥 categories (THIS WAS MISSING)
+});
 
   // Load products on page load
   if (typeof loadUserProducts === "function") {
@@ -2572,6 +2582,8 @@ function loadCategories() {
   
   // Load categories from localStorage (updated by admin)
   const adminCategories = JSON.parse(localStorage.getItem('categories')) || [];
+
+ 
   
   // If admin categories exist, use them; otherwise use default
   if (adminCategories.length > 0) {
@@ -2587,7 +2599,26 @@ function loadCategories() {
       })) : []
     }));
   }
-  
+
+ // 🔥 FALLBACK DEFAULT CATEGORIES
+if (adminCategories.length === 0) {
+  categories = [
+    { id: 1, name: "Medicine", icon: "💊", active: true, subcategories: [] },
+    { id: 2, name: "Grocery", icon: "🛒", active: true, subcategories: [] },
+    { id: 3, name: "Personal Care", icon: "🧴", active: true, subcategories: [] },
+    { id: 4, name: "Bulk", icon: "📦", active: true, subcategories: [] }
+  ];
+  console.warn("Using fallback categories");
+}
+
+
+
+
+
+
+
+
+ 
   container.innerHTML = '';
   
   categories.filter(cat => cat.active).forEach((cat, index) => {
