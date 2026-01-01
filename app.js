@@ -2946,7 +2946,7 @@ function renderProducts(products) {
       <h4>${p.name}</h4>
       <p><strong>₹${p.price}</strong></p>
       <p>Stock: ${p.stock}</p>
-      <p>Category: ${window.CATEGORY_MAP?.[p.category_id] || "N/A"}</p>
+      <p>Category: ${p.category_name || "General"}</p>
       <button onclick="addToCart(${p.id})">
         Add to Cart
       </button>
