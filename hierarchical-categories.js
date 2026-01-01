@@ -4,8 +4,7 @@
 *************************************************/
 
 
-console.warn("Hierarchical categories disabled (tree API not available)");
-// return ❌ HATA DO
+console.warn("Hierarchical categories disabled");
 
 
 let categoryTree = [];
