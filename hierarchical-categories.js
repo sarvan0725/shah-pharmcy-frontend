@@ -11,21 +11,23 @@ const API_BASE_URL = window.location.origin; // Use current domain
 /* ===============================
    LOAD HIERARCHICAL CATEGORIES
 ================================*/
-//async function loadHierarchicalCategories() {
-  //try {
+async function loadHierarchicalCategories() {
+  try {
   //  const response = await fetch(`${API_BASE_URL}/api/products/categories/tree`);
  //   if (response.ok) {
  ////     categoryTree = await response.json();
   //    renderCategoryNavigation();
    // } else {
-      // Fallback to default categories
-     // initializeDefaultCategories();
+       Fallback to default categories
+       initializeDefaultCategories();
     //}
-  //} catch (error) {
-    //console.error('Error loading categories:', error);
-    //initializeDefaultCategories();
-  //}
-//}
+     
+    
+  } catch (error) {
+    console.error('Error loading categories:', error);
+    initializeDefaultCategories();
+  }
+}
 
 function initializeDefaultCategories() {
   categoryTree = [
