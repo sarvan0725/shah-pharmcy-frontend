@@ -6,9 +6,39 @@
 // API base from config.js
 console.log("✅ hierarchical-categories.js loaded");
 
-const API_BASE_URL =
- window.APP_CONFIG.API_BASE_URL;
+const API_BASE_URL = window.APP_CONFIG.API_BASE_URL;
 
+async function loadHierarchicalCategories() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/products/categories`);
+    const categories = await res.json();
+
+    console.log("Categories:", categories);
+
+    const container = document.getElementById("subcategoryContainer");
+    const scroll = container.querySelector(".subcategory-scroll");
+
+    scroll.innerHTML = "";
+
+    categories.forEach(cat => {
+      const div = document.createElement("div");
+      div.className = "subcategory-item";
+      div.innerText = cat.name;
+
+      div.onclick = () => {
+        filterProductsByCategory(cat.id);
+      };
+
+      scroll.appendChild(div);
+    });
+
+    container.style.display = "block";
+  } catch (err) {
+    console.error("Category load failed", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadHierarchicalCategories);
 //let products = [];   // ✅ GLOBAL PRODUCTS CACHE
 //let quantityMap = {};
 let cart = [];
@@ -27,21 +57,7 @@ const breadcrumbContainer = document.getElementById("breadcrumbContainer");
 /* ===============================
    LOAD HIERARCHICAL CATEGORIES
 ================================*/
-async function loadHierarchicalCategories() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/products/categories/tree`);
-    if (response.ok) {
-      categoryTree = await response.json();
-      renderCategoryNavigation();
-    } else {
-      // Fallback to default categories
-      initializeDefaultCategories();
-    }
-  } catch (error) {
-    console.error('Error loading categories:', error);
-    initializeDefaultCategories();
-  }
-}
+
 
 function initializeDefaultCategories() {
   categoryTree = [
