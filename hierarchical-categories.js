@@ -3,8 +3,7 @@
  Shah Pharmacy & Mini Mart
 *************************************************/
 
-console.warn("Hierarchical categories disabled (tree API not available)");
-return;
+
 
 
 
