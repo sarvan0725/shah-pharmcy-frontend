@@ -136,3 +136,16 @@ document.addEventListener("DOMContentLoaded", () => {
   loadCategories();
   renderProducts();
 });
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 App Loaded");
+
+  if (typeof loadUserProducts === "function") {
+    console.log("📦 Loading products...");
+    loadUserProducts();
+  } else {
+    console.error("❌ loadUserProducts not found");
+  }
+});
