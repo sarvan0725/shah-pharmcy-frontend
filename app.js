@@ -2656,7 +2656,3 @@ async function loadUserProducts() {
 
 
 
-    // VERY IMPORTANT
-    container.appendChild(card);
-  });
-}
