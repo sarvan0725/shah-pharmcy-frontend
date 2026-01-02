@@ -143,12 +143,6 @@ let defaultCategories = [
   { id: 4, name: "Bulk", icon: "📦", active: true, subcategories: [] }
 ];
 
-let categories = [];
-let products = [];
-
-let currentCategoryId = 1;
-let currentSubcategoryId = null;
-
 
 // ===============================
 // SAFE LOCAL STORAGE INIT
