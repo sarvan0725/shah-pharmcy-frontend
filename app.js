@@ -2640,9 +2640,14 @@ async function loadUserProducts() {
       products = [];
     }
 
-    console.log("✅ Products loaded:", products.length);
-    renderProducts(products);
+    console.log("📦 Products loaded:", products.length);
 
+// 👇 YE LINE ADD KAR
+renderCategories(products);
+
+// 👇 YE PEHLE SE HAI
+renderProducts(products);
+   
   } catch (err) {
     console.error("❌ Product load failed:", err);
     products = [];
