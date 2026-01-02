@@ -2676,8 +2676,9 @@ async function loadUserProducts() {
 
     container.appendChild(card); // ✅ YAHI HONA CHAHIYE
   });
-} //
+}
 
+ console.log("✅ app.js reached end safely");
 
 
 
