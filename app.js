@@ -5,15 +5,13 @@
 /* ===============================
    CONFIGURATION (from config.js)
 ================================*/
-
-
-const CATEGORY_MAP = {
-  1: "Medicine",
-  2: "Grocery",
-  3: "Baby Care",
-  4: "Personal Care",
-  5: "Health Devices"
+window.CATEGORY_MAP = window.CATEGORY_MAP || {
+  Healthcare: "healthcare",
+  Groceries: "groceries",
+  "Personal Care": "personal-care",
+  "Baby Care": "baby-care"
 };
+
 
 /* ===============================
    GLOBAL APP STATE (🔥 YAHI PE)
