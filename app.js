@@ -1185,7 +1185,9 @@ function deleteCategory() {
   if (!confirm(`Delete "${currentCategory?.name}" category?`)) return;
   
   categories = categories.filter(c => c.id !== currentCategoryId);
-  products = products.filter(p => p.categoryId !== currentCategoryId);
+  products = products.filter(
+  p => Number(p.category_id) !== Number(currentCategoryId)
+);
   
   currentCategoryId = categories[0].id;
   localStorage.setItem('categories', JSON.stringify(categories));
