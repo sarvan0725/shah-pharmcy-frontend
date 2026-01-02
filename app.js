@@ -2651,7 +2651,7 @@ async function loadUserProducts() {
     products = [];
     renderProducts();
   }
-}
+} //
 
 
 
