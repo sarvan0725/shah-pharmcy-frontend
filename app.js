@@ -30,15 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadCategories();     // 🔥 categories (THIS WAS MISSING)
 });
 
-  // Load products on page load
-  if (typeof loadUserProducts === "function") {
-    loadUserProducts();
-  } else {
-    console.error("❌ loadUserProducts() not found");
-  }
-});
-
-
+  
 // ===============================
 // THEME HANDLER (SAFE)
 // ===============================
