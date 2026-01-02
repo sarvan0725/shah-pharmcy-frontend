@@ -5,6 +5,8 @@
 /* ===============================
    CONFIGURATION (from config.js)
 ================================*/
+
+
 const CATEGORY_MAP = {
   1: "Medicine",
   2: "Grocery",
