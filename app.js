@@ -217,11 +217,13 @@ function renderProducts() {
     return;
   }
 
-  let filteredProducts = products.filter(p => p.categoryId === currentCategoryId);
+  let filteredProducts = products.filter(p => Number(p.category_id) === Number(currentCategoryId))
 
+
+   
   if (currentSubcategoryId) {
     filteredProducts = filteredProducts.filter(
-      p => p.subcategoryId === currentSubcategoryId
+     Number(p.subcategory_id) === Number(currentSubcategoryId)
     );
   }
 
