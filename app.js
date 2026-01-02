@@ -161,40 +161,7 @@ try {
 }
 
 
-// ===============================
-// 🔥 LOAD PRODUCTS FROM BACKEND (MAIN FIX)
-// ===============================
-async function loadBackendProducts() {
-  try {
-    console.log("🔄 Loading products from backend...");
 
-    const res = await fetch(
-      `${window.APP_CONFIG.API_BASE_URL}/products`
-    );
-
-    if (!res.ok) throw new Error("API error");
-
-    const data = await res.json();
-
-    products = Array.isArray(data)
-      ? data.map(p => ({
-          id: p.id || p._id,
-          name: p.name,
-          price: p.price,
-          stock: p.stock || 0,
-          weight: p.weight || "",
-          image: p.image || p.image_url || "",
-          categoryId: p.category_id || p.categoryId,
-          subcategoryId: p.subcategory_id || null
-        }))
-      : [];
-
-    console.log("✅ Products loaded:", products.length);
-  } catch (err) {
-    console.error("❌ Backend product load failed", err);
-    products = [];
-  }
-}
 
 
 // ===============================
@@ -1713,17 +1680,7 @@ function showAbout() {
   document.body.appendChild(modal);
 }
 
-/* ===============================
-   USER AUTHENTICATION SYSTEM
-================================*/
-let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-let userOrders = JSON.parse(localStorage.getItem('userOrders')) || [];
-let userCoins = parseInt(localStorage.getItem('userCoins')) || 0;
-let coinsUsed = 0;
-let activeDiscount = JSON.parse(localStorage.getItem('activeDiscount')) || null;
-let autoDiscount = null;
-let discountAmount = 0;
-let autoDiscountAmount = 0;
+
 
 function initializeUser() {
   if (currentUser) {
@@ -1877,93 +1834,100 @@ function verifyOTP() {
     alert('Please enter OTP');
     return;
   }
-  
-  // For local testing
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    const storedOTP = localStorage.getItem('testOTP_' + contact);
-    
-    if (otp === storedOTP) {
-      // Login successful
-      currentUser = {
-        id: Date.now(),
-        name: name,
-        phone: window.currentLoginType === 'phone' ? contact : null,
-        email: window.currentLoginType === 'email' ? contact : null,
-        coins: 0,
-        loginDate: new Date().toISOString()
-      };
-      
-      localStorage.setItem('currentUser', JSON.stringify(currentUser));
-      localStorage.removeItem('testOTP_' + contact);
-      
-      // Update UI
-      document.getElementById('loginBtn').style.display = 'none';
-      document.getElementById('userProfile').style.display = 'flex';
-      document.getElementById('userName').textContent = currentUser.name;
-      
-      // Update coins
-      userCoins = currentUser.coins;
-      updateCoinsDisplay();
-      
-      // Close modal
-      document.querySelector('[style*="position:fixed"]').remove();
-      
-      alert(`Welcome ${currentUser.name}! You are now logged in. (Local testing mode)`);
-    } else {
-      alert('Invalid OTP');
-    }
-    return;
+
+ /* ===============================
+   COMMON USER UI & MODAL HELPERS
+================================*/
+
+function syncUserUI() {
+  const loginBtn = document.getElementById('loginBtn');
+  const userProfile = document.getElementById('userProfile');
+  const userNameEl = document.getElementById('userName');
+
+  if (currentUser) {
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (userProfile) userProfile.style.display = 'flex';
+    if (userNameEl) userNameEl.textContent = currentUser.name;
+    updateCoinsDisplay();
+  } else {
+    if (loginBtn) loginBtn.style.display = 'flex';
+    if (userProfile) userProfile.style.display = 'none';
   }
-  
-  // Production mode - verify with backend
-   const apiUrl = `${window.APP_CONFIG.API_BASE_URL}/auth/verify-otp`;
- 
-  fetch(apiUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-      contact: contact, 
-      otp: otp 
-    })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      // Login successful
-      currentUser = {
-        id: data.user.id,
-        name: data.user.name || name,
-        phone: data.user.phone,
-        email: data.user.email,
-        coins: data.user.coins || 0,
-        loginDate: new Date().toISOString()
-      };
-      
-      localStorage.setItem('currentUser', JSON.stringify(currentUser));
-      
-      // Update UI
-      document.getElementById('loginBtn').style.display = 'none';
-      document.getElementById('userProfile').style.display = 'flex';
-      document.getElementById('userName').textContent = currentUser.name;
-      
-      // Update coins
-      userCoins = currentUser.coins;
-      updateCoinsDisplay();
-      
-      // Close modal
-      document.querySelector('[style*="position:fixed"]').remove();
-      
-      alert(`Welcome ${currentUser.name}! You are now logged in.`);
-    } else {
-      alert(data.error || 'Invalid OTP');
-    }
-  })
-  .catch(error => {
-    console.error('API Error:', error);
-    alert('Network error. Please check if backend server is running.');
-  });
 }
 
+function closeActiveModal() {
+  const modal = document.querySelector('[style*="position:fixed"]');
+  if (modal) modal.remove();
+}
+
+ function handleLoginSuccess(user, isLocal = false) {
+  currentUser = {
+    id: user.id || Date.now(),
+    name: user.name,
+    phone: user.phone || null,
+    email: user.email || null,
+    coins: user.coins || 0,
+    loginDate: new Date().toISOString()
+  };
+
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+  userCoins = currentUser.coins;
+  localStorage.setItem('userCoins', userCoins.toString());
+
+  syncUserUI();
+  closeActiveModal();
+
+  alert(
+    `Welcome ${currentUser.name}! You are now logged in.` +
+    (isLocal ? ' (Local testing mode)' : '')
+  );
+}
+ // LOCAL TESTING
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  const storedOTP = localStorage.getItem('testOTP_' + contact);
+
+  if (otp === storedOTP) {
+    localStorage.removeItem('testOTP_' + contact);
+
+    handleLoginSuccess({
+      name,
+      phone: window.currentLoginType === 'phone' ? contact : null,
+      email: window.currentLoginType === 'email' ? contact : null,
+      coins: 0
+    }, true);
+  } else {
+    alert('Invalid OTP');
+  }
+  return;
+}
+ // PRODUCTION VERIFY
+const apiUrl = `${window.APP_CONFIG.API_BASE_URL}/auth/verify-otp`;
+
+fetch(apiUrl, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ contact, otp })
+})
+.then(res => res.json())
+.then(data => {
+  if (data.success) {
+    handleLoginSuccess({
+      id: data.user.id,
+      name: data.user.name || name,
+      phone: data.user.phone,
+      email: data.user.email,
+      coins: data.user.coins || 0
+    });
+  } else {
+    alert(data.error || 'Invalid OTP');
+  }
+})
+.catch(err => {
+  console.error(err);
+  alert('Network error. Backend not reachable.');
+});
+  
 function toggleUserMenu() {
   // Redirect to overflow menu
   toggleOverflowMenu();
@@ -2173,8 +2137,15 @@ function placeOrder() {
   }
 
   const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-  const actualDeliveryCharge = deliveryCharge === -1 ? 0 : deliveryCharge;
-  const total = subtotal + actualDeliveryCharge;
+  const summary = calculateOrderSummary({
+  subtotal,
+  deliveryCharge,
+  activeDiscount,
+  autoDiscount,
+  coinsUsed
+});
+
+const total = summary.total;
   
   const order = {
     id: Date.now(),
@@ -2384,10 +2355,11 @@ function setCategory(categoryId) {
   
   // Update active category
   document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
-  if (event && event.target) {
-    event.target.closest('.category-item').classList.add('active');
+ document.querySelectorAll('.category-item').forEach(item => {
+  if (Number(item.onclick?.toString().match(/\d+/)?.[0]) === categoryId) {
+    item.classList.add('active');
   }
-  
+});
   loadSubcategories(categoryId);
   renderProducts();
 }
@@ -2649,9 +2621,9 @@ function initializePWA() {
   // Track page view
   trackEvent('page_view', {page: 'home'});
   
-
-
-
+// ================================
+// LOAD PRODUCTS FROM BACKEND (FINAL – SAFE)
+// ================================
 async function loadUserProducts() {
   try {
     console.log("🟢 Loading products via pharmacyAPI...");
@@ -2659,59 +2631,30 @@ async function loadUserProducts() {
     const response = await window.pharmacyAPI.getProducts();
     console.log("📦 Raw products API response:", response);
 
-    let products = [];
-
+    // ✅ USE GLOBAL products (DO NOT redeclare)
     if (Array.isArray(response)) {
       products = response;
     } else if (Array.isArray(response?.products)) {
       products = response.products;
     } else {
       console.error("❌ Unexpected products response:", response);
-      return;
+      products = [];
     }
 
-    renderProducts(products);
+    console.log("✅ Products loaded:", products.length);
+
+    // 🔥 EXISTING FULL FEATURE RENDER
+    renderProducts();
 
   } catch (err) {
     console.error("❌ Product load failed:", err);
+    products = [];
+    renderProducts();
   }
 }
-// ================================
-// RENDER PRODUCTS (UI ONLY)
-// ================================
 
-function renderProducts(products) {
-  const container = document.getElementById("productList");
 
-  // Safety check
-  if (!container) {
-    console.error("❌ productList not found in HTML");
-    return;
-  }
 
-  // Clear old products
-  container.innerHTML = "";
-
-  // No products case
-  if (!Array.isArray(products) || products.length === 0) {
-    container.innerHTML = "<p>No products available</p>";
-    return;
-  }
-
-  // Render each product
-  products.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "product-card";
-
-    card.innerHTML = `
-      <h4>${p.name}</h4>
-      <p><strong>₹${p.price}</strong></p>
-      <p>Stock: ${p.stock}</p>
-      <p>Category: ${p.category_name || "General"}</p>
-      <button onclick="addToCart(${p.id})">
-        Add to Cart
-      </button>
-    `;
 
     // VERY IMPORTANT
     container.appendChild(card);
