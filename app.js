@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initializeContactInfo();
 
   
-  await loadBackendProducts(); // 🔥 products from backend
+  await loadUserProducts();
 
   renderProducts();     // UI render
   updateCart();
