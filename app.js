@@ -2651,7 +2651,32 @@ async function loadUserProducts() {
     products = [];
     renderProducts();
   }
-} //
+} 
+ function renderProducts(products = []) {
+  const container = document.getElementById("productList");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (!products.length) {
+    container.innerHTML = "<p>No products available</p>";
+    return;
+  }
+
+  products.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    card.innerHTML = `
+      <h4>${p.name}</h4>
+      <p><strong>₹${p.price}</strong></p>
+      <p>Stock: ${p.stock}</p>
+      <button onclick="addToCart(${p.id})">Add to Cart</button>
+    `;
+
+    container.appendChild(card); // ✅ YAHI HONA CHAHIYE
+  });
+}
 
 
 
