@@ -2,7 +2,6 @@
  FULL & FINAL USER WEBSITE LOGIC
  Shah Pharmacy & Mini Mart
 *************************************************/
-
 /* ===============================
    CONFIGURATION (from config.js)
 ================================*/
@@ -14,22 +13,54 @@ const CATEGORY_MAP = {
   5: "Health Devices"
 };
 
-
+/* ===============================
+   GLOBAL APP STATE (🔥 YAHI PE)
+================================*/
 let categories = [];
+let products = [];
+
 let currentCategoryId = null;
+let currentSubcategoryId = null;
 
+/* 🔐 USER STATE (YAHI PE) */
+let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
+/* 🛒 CART & DISCOUNT STATE */
+let cart = [];
+let activeDiscount = null;
+let autoDiscount = null;
+let autoDiscountAmount = 0;
+let coinsUsed = 0;
 
+/* ❤️ WISHLIST */
+let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+/* ⭐ RATINGS */
+let productRatings = JSON.parse(localStorage.getItem("productRatings")) || {};
 // ==============================
 // APP BOOTSTRAP (VERY IMPORTANT)
 // ==============================
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   console.log("🟢 App loaded");
 
-  loadUserProducts();   // products
-  loadCategories();     // 🔥 categories (THIS WAS MISSING)
-});
+  applyTheme();          // theme
+  loadCustomColors();    // colors
 
+  loadShopBanner();     // 🔥 banner FIRST
+  initializeContactInfo();
+
+  loadCategories();     // categories UI
+  await loadBackendProducts(); // 🔥 products from backend
+
+  renderProducts();     // UI render
+  updateCart();
+
+  initializeUser();
+  loadUserTheme();
+  checkDeliveryHours();
+
+  updateWishlistCount();
+});
   
 // ===============================
 // THEME HANDLER (SAFE)
@@ -84,123 +115,97 @@ function initApp() {
   trackEvent("page_view", { page: "home" });
 }
 
-
-
-
-
-
-
-// Configuration is now loaded from config.js
-// Update config.js file for deployment settings
+// ===============================
+// CONFIG (already loaded via config.js)
+// ===============================
 const RAZORPAY_KEY = RAZORPAY_KEY_ID;
 const MIN_ORDER_AMOUNT = BUSINESS_CONFIG.minOrderAmount;
-// Load delivery settings from localStorage or config
-let MAX_DELIVERY_DISTANCE = parseFloat(localStorage.getItem('maxDeliveryDistance')) || BUSINESS_CONFIG.maxDeliveryDistance;
-let FREE_DELIVERY_DISTANCE = parseFloat(localStorage.getItem('freeDeliveryDistance')) || 3;
-let DELIVERY_CHARGE_PER_KM = parseFloat(localStorage.getItem('deliveryChargePerKm')) || BUSINESS_CONFIG.deliveryChargePerKm;
 
-/* ===============================
-   CATEGORY & PRODUCT DATA
-================================*/
+let MAX_DELIVERY_DISTANCE =
+  parseFloat(localStorage.getItem("maxDeliveryDistance")) ||
+  BUSINESS_CONFIG.maxDeliveryDistance;
+
+let FREE_DELIVERY_DISTANCE =
+  parseFloat(localStorage.getItem("freeDeliveryDistance")) || 3;
+
+let DELIVERY_CHARGE_PER_KM =
+  parseFloat(localStorage.getItem("deliveryChargePerKm")) ||
+  BUSINESS_CONFIG.deliveryChargePerKm;
+
+
+// ===============================
+// CATEGORY & PRODUCT DATA
+// ===============================
 let defaultCategories = [
-  { id: 1, name: "Medicine", icon: "💊", active: true, subcategories: [
-    { id: 11, name: "Pain Relief", parentId: 1 },
-    { id: 12, name: "Cold & Flu", parentId: 1 }
-  ]},
-  { id: 2, name: "Grocery", icon: "🛒", active: true, subcategories: [
-    { id: 21, name: "Rice & Grains", parentId: 2 },
-    { id: 22, name: "Oil & Spices", parentId: 2 }
-  ]},
+  { id: 1, name: "Medicine", icon: "💊", active: true, subcategories: [] },
+  { id: 2, name: "Grocery", icon: "🛒", active: true, subcategories: [] },
   { id: 3, name: "Personal Care", icon: "🧴", active: true, subcategories: [] },
   { id: 4, name: "Bulk", icon: "📦", active: true, subcategories: [] }
 ];
 
-// ===============================
-// LOAD PRODUCTS FROM BACKEND
-// ===============================
-//async function loadBackendProducts() {
-//  try {
-//    const res = await fetch("https://shah-pharmacy-backend.onrender.com/api/products");
-//    const data = await res.json();
-
- //   products = data.map(p => ({
- //     id: p.id,
-//name: p.name,
-  //    price: p.price,
-  //    stock: p.stock,
-  //    weight: p.weight || "",
-   //   image: p.image_url || p.image || p.imageUrl || p.secure_url,
-   //   categoryId: p.category_id,
-  //    subcategoryId: p.subcategory_id || null
-    //}));
-
- 
-//let defaultProducts = [
- // { id: 1, name: "Paracetamol", price: 25, stock: 100, categoryId: 1, subcategoryId: 11, image: "", weight: "10 tablets" },
-  //{ id: 2, name: "Crocin", price: 30, stock: 80, categoryId: 1, subcategoryId: 11, image: "", weight: "15 tablets" },
-  //{ id: 3, name: "Rice", price: 60, stock: 50, categoryId: 2, subcategoryId: 21, image: "", weight: "1kg" },
-//  { id: 4, name: "Sugar", price: 45, stock: 40, categoryId: 2, subcategoryId: 21, image: "", weight: "1kg" },
- // { id: 5, name: "Coconut Oil", price: 120, stock: 25, categoryId: 2, subcategoryId: 22, image: "", weight: "500ml" },
-//  { id: 6, name: "Face Cream", price: 85, stock: 15, categoryId: 3, subcategoryId: null, image: "", weight: "50g" },
-  //{ id: 7, name: "Rice Bulk", price: 1350, stock: 10, categoryId: 4, subcategoryId: null, image: "", weight: "25kg" },
-  //{ id: 8, name: "Sugar Bulk", price: 1120, stock: 8, categoryId: 4, subcategoryId: null, image: "", weight: "25kg" },
- // { id: 9, name: "Oil Bulk", price: 850, stock: 15, categoryId: 4, subcategoryId: null, image: "", weight: "5L" }
-//];
-
-// Initialize data properly
-// ================= SAFE INITIALIZATION =================
-
 let categories = [];
 let products = [];
 
+let currentCategoryId = 1;
+let currentSubcategoryId = null;
+
+
+// ===============================
+// SAFE LOCAL STORAGE INIT
+// ===============================
 try {
-  const storedCategories = localStorage.getItem("categories");
-  const storedProducts = localStorage.getItem("products");
-
-  categories = storedCategories ? JSON.parse(storedCategories) : [];
-  products = storedProducts ? JSON.parse(storedProducts) : [];
-} catch (e) {
-  categories = [];
-  products = [];
-}
-
-// Categories fallback (UI ke liye allowed)
-if (!Array.isArray(categories) || categories.length === 0) {
+  const storedCategories = JSON.parse(localStorage.getItem("categories"));
+  if (Array.isArray(storedCategories) && storedCategories.length > 0) {
+    categories = storedCategories;
+  } else {
+    categories = defaultCategories;
+    localStorage.setItem("categories", JSON.stringify(categories));
+  }
+} catch {
   categories = defaultCategories;
+  localStorage.setItem("categories", JSON.stringify(categories));
 }
 
-// Products = backend driven ONLY
-if (!Array.isArray(products)) {
-  products = [];
+
+// ===============================
+// 🔥 LOAD PRODUCTS FROM BACKEND (MAIN FIX)
+// ===============================
+async function loadBackendProducts() {
+  try {
+    console.log("🔄 Loading products from backend...");
+
+    const res = await fetch(
+      `${window.APP_CONFIG.API_BASE_URL}/products`
+    );
+
+    if (!res.ok) throw new Error("API error");
+
+    const data = await res.json();
+
+    products = Array.isArray(data)
+      ? data.map(p => ({
+          id: p.id || p._id,
+          name: p.name,
+          price: p.price,
+          stock: p.stock || 0,
+          weight: p.weight || "",
+          image: p.image || p.image_url || "",
+          categoryId: p.category_id || p.categoryId,
+          subcategoryId: p.subcategory_id || null
+        }))
+      : [];
+
+    console.log("✅ Products loaded:", products.length);
+  } catch (err) {
+    console.error("❌ Backend product load failed", err);
+    products = [];
+  }
 }
 
-// Persist categories only
-localStorage.setItem("categories", JSON.stringify(categories));
-// Force reload data on startup
-// forceReloadData() {
-  // Don't overwrite existing data, just ensure we have defaults if empty
- // const existingProducts = JSON.parse(localStorage.getItem("products")) || [];
-//  const existingCategories = JSON.parse(localStorage.getItem("categories")) || [];
-  
-//  if (existingProducts.length === 0) {
-//    products = defaultProducts;
-//    localStorage.setItem("products", JSON.stringify(products));
-//  } else {
-//    products = existingProducts;
-//  }
-  
-//  if (existingCategories.length === 0) {
-    //categories = defaultCategories;
-  //  localStorage.setItem("categories", JSON.stringify(categories));
- // } else {
-//    categories = existingCategories;
-  //}
-//}
-//let currentSubcategoryId = null;
-//let currentPage = 1;
-//const ITEMS_PER_PAGE = 20;
 
-// Shop location from configuration
+// ===============================
+// SHOP LOCATION
+// ===============================
 const SHOP_LOCATION = BUSINESS_CONFIG.shopLocation;
 
 let customerLocation = null;
@@ -208,63 +213,66 @@ let deliveryDistance = 0;
 let deliveryCharge = 0;
 
 
-
-
-
-/* ===============================
-   INITIALIZE CONTACT INFO
-================================*/
+// ===============================
+// CONTACT INFO
+// ===============================
 function initializeContactInfo() {
-  const contactNumbers = document.getElementById('contactNumbers');
-  if (contactNumbers) {
-    contactNumbers.textContent = `${BUSINESS_CONFIG.phone1} | ${BUSINESS_CONFIG.phone2}`;
+  const el = document.getElementById("contactNumbers");
+  if (el) {
+    el.textContent =
+      `${BUSINESS_CONFIG.phone1} | ${BUSINESS_CONFIG.phone2}`;
   }
 }
 
-/* ===============================
-   SHOP BANNER SYSTEM
-================================*/
+
+// ===============================
+// SHOP BANNER (SAFE)
+// ===============================
 function loadShopBanner() {
-  const bannerImage = localStorage.getItem('shopBannerImage');
-  const bannerElement = document.getElementById('shopBanner');
-  
-  if (bannerImage && bannerElement) {
-    bannerElement.style.backgroundImage = `url(${bannerImage})`;
-    bannerElement.style.display = 'flex';
-    
-    // Hide regular header when banner is active
-    document.querySelector('.header').style.display = 'none';
+  const bannerImage = localStorage.getItem("shopBannerImage");
+  const banner = document.getElementById("shopBanner");
+  const header = document.querySelector(".header");
+
+  if (bannerImage && banner) {
+    banner.style.backgroundImage = `url(${bannerImage})`;
+    banner.style.display = "flex";
+    if (header) header.style.display = "none";
   }
 }
 
+
 /* ===============================
-   RENDER PRODUCTS
+   RENDER PRODUCTS (FIXED)
 ================================*/
 function renderProducts() {
   const list = document.getElementById("productList");
   if (!list) return;
-  
+
   list.innerHTML = "";
 
+  // SAFETY
+  if (!Array.isArray(products) || products.length === 0) {
+    list.innerHTML = `<div style="padding:30px;text-align:center;color:#666;">No products available</div>`;
+    return;
+  }
+
   let filteredProducts = products.filter(p => p.categoryId === currentCategoryId);
+
   if (currentSubcategoryId) {
-    filteredProducts = filteredProducts.filter(p => 
-      p.subcategoryId === currentSubcategoryId || 
-      p.subcategory === currentSubcategoryId
+    filteredProducts = filteredProducts.filter(
+      p => p.subcategoryId === currentSubcategoryId
     );
   }
 
   const currentCategory = categories.find(c => c.id === currentCategoryId);
-  const categoryIcon = currentCategory ? currentCategory.icon : '📦';
+  const categoryIcon = currentCategory ? currentCategory.icon : "📦";
 
   if (filteredProducts.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:40px;color:#666;">No products found in this category</div>';
-    const pagination = document.getElementById('pagination');
-    if (pagination) pagination.style.display = 'none';
+    list.innerHTML = `<div style="padding:30px;text-align:center;color:#666;">No products found</div>`;
     return;
   }
 
-  // Pagination
+  /* ========= PAGINATION ========= */
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -278,35 +286,25 @@ function renderProducts() {
     list.innerHTML += `
       <div class="product-card">
         <div class="product-image">
-          ${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
-          <div class="product-emoji" ${p.image ? 'style="display:none;"' : ''}>${categoryIcon}</div>
+          ${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none'">` : ''}
+          ${!p.image ? `<div class="product-emoji">${categoryIcon}</div>` : ''}
         </div>
+
         <div class="product-info">
           <h4>${p.name}</h4>
           <div class="product-weight">${p.weight || 'N/A'}</div>
           <div class="product-price">₹${p.price}</div>
-          ${p.stock <= 10 ? '<div class="low-stock-warning">⚠️ Limited Stock!</div>' : ''}
+          ${p.stock <= 10 ? `<div class="low-stock-warning">⚠️ Limited Stock</div>` : ''}
         </div>
+
         <div class="quantity-controls">
-          <div class="qty-selector">
-            <button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button>
-            <span class="qty-display" id="qty-${p.id}">${quantityMap[p.id]}</span>
-            <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
-          </div>
+          <button onclick="changeQty(${p.id}, -1)">-</button>
+          <span id="qty-${p.id}">${quantityMap[p.id]}</span>
+          <button onclick="changeQty(${p.id}, 1)">+</button>
         </div>
+
         <div class="product-actions">
-          <button class="add-to-cart" onclick="addToCart(${p.id})">
-            <i class="fas fa-plus"></i> Add to Cart
-          </button>
-          <button class="add-to-wishlist" onclick="addToWishlist(${p.id})">
-            <i class="fas fa-heart"></i>
-          </button>
-        </div>
-        <div class="product-rating">
-          <div class="stars" onclick="showRatingModal(${p.id})">
-            ⭐⭐⭐⭐⭐
-          </div>
-          <small>Click to rate</small>
+          <button class="add-to-cart" onclick="addToCart(${p.id}, this)">Add to Cart</button>
         </div>
       </div>
     `;
@@ -314,7 +312,7 @@ function renderProducts() {
 }
 
 /* ===============================
-   QUANTITY
+   QUANTITY (SAFE)
 ================================*/
 function changeQty(id, delta) {
   const product = products.find(p => p.id === id);
@@ -324,31 +322,32 @@ function changeQty(id, delta) {
   if (quantityMap[id] < 1) quantityMap[id] = 1;
   if (quantityMap[id] > product.stock) quantityMap[id] = product.stock;
 
-  document.getElementById("qty-" + id).innerText = quantityMap[id];
+  const el = document.getElementById("qty-" + id);
+  if (el) el.innerText = quantityMap[id];
 }
 
 /* ===============================
    ADD TO CART (FIXED)
 ================================*/
-function addToCart(id) {
+function addToCart(id, btn) {
   const product = products.find(p => p.id === id);
   if (!product) return;
 
   const qty = quantityMap[id] || 1;
-  
+
   if (qty > product.stock) {
-    alert('Not enough stock available!');
+    alert("Not enough stock");
     return;
   }
 
-  let item = cart.find(c => c.id === id);
+  const existing = cart.find(i => i.id === id);
 
-  if (item) {
-    if (item.qty + qty > product.stock) {
-      alert('Not enough stock available!');
+  if (existing) {
+    if (existing.qty + qty > product.stock) {
+      alert("Not enough stock");
       return;
     }
-    item.qty += qty;
+    existing.qty += qty;
   } else {
     cart.push({
       id: product.id,
@@ -357,24 +356,12 @@ function addToCart(id) {
       qty: qty
     });
   }
-  
-  // AI Features
-  trackCustomerBehavior('add_to_cart', { product: product.name, category: product.category });
-  showSmartSuggestion(product.name);
-  
-  // Show success feedback
-  const button = event.target.closest('.add-to-cart');
-  if (button) {
-    const originalHTML = button.innerHTML;
-    button.innerHTML = '<i class="fas fa-check"></i> Added!';
-    button.style.background = '#28a745';
-    
-    setTimeout(() => {
-      button.innerHTML = originalHTML;
-      button.style.background = '';
-    }, 1500);
+
+  if (btn) {
+    btn.innerText = "Added ✔";
+    setTimeout(() => (btn.innerText = "Add to Cart"), 1200);
   }
-  
+
   updateCart();
 }
 
@@ -382,137 +369,85 @@ function addToCart(id) {
    LOCATION & DELIVERY SYSTEM
 ================================*/
 function getCurrentLocation() {
-  const locationBtn = document.querySelector('.location-btn');
-  locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Location...';
-  locationBtn.disabled = true;
-  
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        customerLocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-        calculateDeliveryDistance();
-        document.getElementById('deliveryAddress').value = `Location: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;
-        locationBtn.innerHTML = '<i class="fas fa-check"></i> Location Set';
-        locationBtn.disabled = false;
-      },
-      (error) => {
-        locationBtn.innerHTML = '<i class="fas fa-crosshairs"></i> Use Current Location';
-        locationBtn.disabled = false;
-        alert('Unable to get location. Please enter address manually.');
-      }
-    );
-  } else {
-    locationBtn.innerHTML = '<i class="fas fa-crosshairs"></i> Use Current Location';
-    locationBtn.disabled = false;
-    alert('Geolocation not supported. Please enter address manually.');
-  }
-}
+  const locationBtn = document.querySelector(".location-btn");
 
-function calculateDelivery() {
-  const address = document.getElementById('deliveryAddress').value;
-  if (address && !address.startsWith('Location:')) {
-    // Simulate coordinates for entered address
-    const addressVariations = {
-      'khalilabad': { lat: 26.7606, lng: 83.0732 },
-      'sant kabir nagar': { lat: 26.7606, lng: 83.0732 },
-      'gorakhpur': { lat: 26.7588, lng: 83.3697 },
-      'basti': { lat: 26.7928, lng: 82.7644 },
-      'maharajganj': { lat: 27.1433, lng: 83.5619 }
-    };
-    
-    const lowerAddress = address.toLowerCase();
-    let foundLocation = null;
-    
-    for (const [key, coords] of Object.entries(addressVariations)) {
-      if (lowerAddress.includes(key)) {
-        foundLocation = coords;
-        break;
-      }
-    }
-    
-    if (foundLocation) {
-      customerLocation = foundLocation;
-    } else {
-      // Default to nearby location with some variation
+  if (locationBtn) {
+    locationBtn.innerHTML = "Getting location...";
+    locationBtn.disabled = true;
+  }
+
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
       customerLocation = {
-        lat: SHOP_LOCATION.lat + (Math.random() - 0.5) * 0.1,
-        lng: SHOP_LOCATION.lng + (Math.random() - 0.5) * 0.1
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude
       };
+
+      calculateDeliveryDistance();
+
+      const addr = document.getElementById("deliveryAddress");
+      if (addr) {
+        addr.value = `Location: ${customerLocation.lat.toFixed(4)}, ${customerLocation.lng.toFixed(4)}`;
+      }
+
+      if (locationBtn) {
+        locationBtn.innerHTML = "Location Set ✔";
+        locationBtn.disabled = false;
+      }
+    },
+    () => {
+      if (locationBtn) {
+        locationBtn.innerHTML = "Use Location";
+        locationBtn.disabled = false;
+      }
+      alert("Unable to fetch location");
     }
-    
-    calculateDeliveryDistance();
-    updateDeliverySummary();
-  }
+  );
 }
 
+/* ===============================
+   DELIVERY CALCULATION
+================================*/
 function calculateDeliveryDistance() {
   if (!customerLocation) return;
-  
-  // Calculate distance using Haversine formula
-  const R = 6371; // Earth's radius in km
+
+  const R = 6371;
   const dLat = (customerLocation.lat - SHOP_LOCATION.lat) * Math.PI / 180;
   const dLng = (customerLocation.lng - SHOP_LOCATION.lng) * Math.PI / 180;
-  
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(SHOP_LOCATION.lat * Math.PI / 180) * Math.cos(customerLocation.lat * Math.PI / 180) *
-    Math.sin(dLng/2) * Math.sin(dLng/2);
-  
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(SHOP_LOCATION.lat * Math.PI / 180) *
+    Math.cos(customerLocation.lat * Math.PI / 180) *
+    Math.sin(dLng / 2) ** 2;
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   deliveryDistance = R * c;
-  
-  // Check if delivery is possible
+
   if (deliveryDistance > MAX_DELIVERY_DISTANCE) {
-    deliveryCharge = -1; // Special value to indicate no delivery
+    deliveryCharge = -1;
   } else if (deliveryDistance <= FREE_DELIVERY_DISTANCE) {
-    deliveryCharge = 0; // Free delivery within free distance
+    deliveryCharge = 0;
   } else {
-    deliveryCharge = Math.ceil((deliveryDistance - FREE_DELIVERY_DISTANCE) * DELIVERY_CHARGE_PER_KM);
+    deliveryCharge = Math.ceil(
+      (deliveryDistance - FREE_DELIVERY_DISTANCE) * DELIVERY_CHARGE_PER_KM
+    );
   }
-  
+
   updateDeliveryInfo();
   updateCart();
 }
-
-function updateDeliveryInfo() {
-  const deliveryInfo = document.getElementById('deliveryInfo');
-  if (!deliveryInfo || !customerLocation) return;
-  
-  const distanceText = deliveryDistance.toFixed(1);
-  
-  if (deliveryDistance > MAX_DELIVERY_DISTANCE) {
-    deliveryInfo.innerHTML = `
-      <div class="distance-info">
-        <i class="fas fa-route"></i> Distance: ${distanceText} km
-      </div>
-      <div class="delivery-not-possible">
-        <i class="fas fa-times-circle"></i> Delivery not possible beyond ${MAX_DELIVERY_DISTANCE}km
-      </div>
-      <small>We deliver within ${MAX_DELIVERY_DISTANCE}km radius only</small>
-    `;
-  } else {
-    const isFree = deliveryDistance <= FREE_DELIVERY_DISTANCE;
-    deliveryInfo.innerHTML = `
-      <div class="distance-info">
-        <i class="fas fa-route"></i> Distance: ${distanceText} km
-      </div>
-      <div class="${isFree ? 'delivery-free' : 'delivery-paid'}">
-        ${isFree ? 
-          '<i class="fas fa-gift"></i> Free Delivery!' : 
-          `<i class="fas fa-truck"></i> Delivery Charge: ₹${deliveryCharge}`
-        }
-      </div>
-      ${!isFree ? `<small>₹${DELIVERY_CHARGE_PER_KM} per km beyond ${FREE_DELIVERY_DISTANCE}km radius</small>` : ''}
-    `;
-  }
-}
-
 /* ===============================
    CART UI
 ================================*/
 function updateCart() {
+  if (!Array.isArray(cart)) cart = [];
+
   const items = document.getElementById("cartItems");
   const totalEl = document.getElementById("cartTotal");
   const subtotalEl = document.getElementById("cartSubtotal");
@@ -553,69 +488,66 @@ function updateCart() {
     });
   }
 
-  // Check for auto discounts
-  checkAutoDiscount(subtotal);
-  
-  // Calculate discounts and coins
+  // Auto discount
+  if (typeof checkAutoDiscount === "function") {
+    checkAutoDiscount(subtotal);
+  }
+
   let currentDiscount = 0;
   if (activeDiscount) {
-    currentDiscount = activeDiscount.type === 'percentage' ? 
-      Math.floor(subtotal * activeDiscount.amount / 100) : activeDiscount.amount;
+    currentDiscount =
+      activeDiscount.type === "percentage"
+        ? Math.floor((subtotal * activeDiscount.amount) / 100)
+        : activeDiscount.amount;
   }
-  
+
   autoDiscountAmount = 0;
   if (autoDiscount) {
-    autoDiscountAmount = autoDiscount.type === 'percentage' ? 
-      Math.floor(subtotal * autoDiscount.amount / 100) : autoDiscount.amount;
+    autoDiscountAmount =
+      autoDiscount.type === "percentage"
+        ? Math.floor((subtotal * autoDiscount.amount) / 100)
+        : autoDiscount.amount;
   }
-  
+
   const coinsDiscount = coinsUsed * 100;
   const actualDeliveryCharge = deliveryCharge === -1 ? 0 : deliveryCharge;
-  const finalTotal = subtotal + actualDeliveryCharge - currentDiscount - autoDiscountAmount - coinsDiscount;
-  
-  // Update display
+  const finalTotal =
+    subtotal +
+    actualDeliveryCharge -
+    currentDiscount -
+    autoDiscountAmount -
+    coinsDiscount;
+
   if (subtotalEl) subtotalEl.innerText = subtotal;
+
   if (deliveryChargeEl) {
     if (deliveryCharge === -1) {
-      deliveryChargeEl.innerText = 'Not Available';
-      deliveryChargeEl.style.color = '#e74c3c';
+      deliveryChargeEl.innerText = "Not Available";
+      deliveryChargeEl.style.color = "#e74c3c";
     } else {
-      deliveryChargeEl.innerText = deliveryCharge === 0 ? 'FREE' : `₹${deliveryCharge}`;
-      deliveryChargeEl.style.color = deliveryCharge === 0 ? 'green' : '#ff9800';
+      deliveryChargeEl.innerText =
+        deliveryCharge === 0 ? "FREE" : `₹${deliveryCharge}`;
+      deliveryChargeEl.style.color =
+        deliveryCharge === 0 ? "green" : "#ff9800";
     }
   }
-  
-  // Show/hide discount lines
-  const discountLine = document.getElementById('discountLine');
-  const autoDiscountLine = document.getElementById('autoDiscountLine');
-  const coinsLine = document.getElementById('coinsLine');
-  
-  if (currentDiscount > 0) {
-    discountLine.style.display = 'flex';
-    document.getElementById('discountAmount').textContent = `-₹${currentDiscount}`;
-  } else {
-    discountLine.style.display = 'none';
-  }
-  
-  if (autoDiscountAmount > 0) {
-    autoDiscountLine.style.display = 'flex';
-    document.getElementById('autoDiscountAmount').textContent = `-₹${autoDiscountAmount}`;
-    document.getElementById('autoDiscountLabel').textContent = `${autoDiscount.title}:`;
-  } else {
-    autoDiscountLine.style.display = 'none';
-  }
-  
-  if (coinsUsed > 0) {
-    coinsLine.style.display = 'flex';
-    document.getElementById('coinsUsedAmount').textContent = `-₹${coinsDiscount}`;
-  } else {
-    coinsLine.style.display = 'none';
-  }
-  
+
+  const discountLine = document.getElementById("discountLine");
+  const autoDiscountLine = document.getElementById("autoDiscountLine");
+  const coinsLine = document.getElementById("coinsLine");
+
+  if (discountLine)
+    discountLine.style.display = currentDiscount > 0 ? "flex" : "none";
+  if (autoDiscountLine)
+    autoDiscountLine.style.display = autoDiscountAmount > 0 ? "flex" : "none";
+  if (coinsLine)
+    coinsLine.style.display = coinsUsed > 0 ? "flex" : "none";
+
   totalEl.innerText = Math.max(0, finalTotal);
+
   if (cartCount) {
     cartCount.innerText = itemCount;
-    cartCount.style.display = itemCount > 0 ? 'flex' : 'none';
+    cartCount.style.display = itemCount > 0 ? "flex" : "none";
   }
 }
 
@@ -628,277 +560,95 @@ function removeFromCart(index) {
 }
 
 /* ===============================
-   CART OPTIONS BOTTOM SHEET
-================================*/
-function toggleCartOptions() {
-  const sheet = document.getElementById('cartOptionsSheet');
-  const overlay = document.getElementById('cartOptionsOverlay');
-  
-  sheet.classList.add('show');
-  overlay.classList.add('show');
-  
-  // Update detailed total
-  const cartTotal = document.getElementById('cartTotal').textContent;
-  const cartTotalDetailed = document.getElementById('cartTotalDetailed');
-  if (cartTotalDetailed) cartTotalDetailed.textContent = cartTotal;
-}
-
-function closeCartOptions() {
-  const sheet = document.getElementById('cartOptionsSheet');
-  const overlay = document.getElementById('cartOptionsOverlay');
-  
-  sheet.classList.remove('show');
-  overlay.classList.remove('show');
-}
-
-function clearCart() {
-  if (confirm('Are you sure you want to clear your cart?')) {
-    cart = [];
-    updateCart();
-    closeCartOptions();
-  }
-}
-
-function saveCartForLater() {
-  if (cart.length === 0) {
-    alert('Your cart is empty!');
-    return;
-  }
-  
-  localStorage.setItem('savedCart', JSON.stringify(cart));
-  alert('Cart saved for later!');
-  closeCartOptions();
-}
-
-function updateDeliverySummary() {
-  const deliverySummary = document.getElementById('deliverySummary');
-  const deliveryAddress = document.getElementById('deliveryAddress').value;
-  
-  if (deliveryAddress && deliverySummary) {
-    const shortAddress = deliveryAddress.length > 30 ? 
-      deliveryAddress.substring(0, 30) + '...' : deliveryAddress;
-    deliverySummary.innerHTML = `<span>${shortAddress}</span>`;
-  }
-}
-
-/* ===============================
    CART TOGGLE
 ================================*/
 function toggleCart() {
-  const sidebar = document.getElementById('cartSidebar');
-  const overlay = document.getElementById('cartOverlay');
-  
-  sidebar.classList.toggle('open');
-  overlay.classList.toggle('active');
+  const sidebar = document.getElementById("cartSidebar");
+  const overlay = document.getElementById("cartOverlay");
+
+  if (sidebar) sidebar.classList.toggle("open");
+  if (overlay) overlay.classList.toggle("active");
 }
 
 /* ===============================
-   AI ASSISTANT FEATURES
+   AI ASSISTANT (SAFE)
 ================================*/
 let aiChatOpen = false;
-let customerData = JSON.parse(localStorage.getItem("customerData")) || {
-  purchaseHistory: [],
-  preferences: [],
-  healthConditions: []
-};
-
-// AI Knowledge Base
-const aiKnowledge = {
-  symptoms: {
-    fever: ["Paracetamol", "Crocin", "Dolo"],
-    headache: ["Paracetamol", "Aspirin", "Ibuprofen"],
-    cough: ["Benadryl", "Ascoril", "Glycodin"],
-    cold: ["Sinarest", "Wikoryl", "Cetrizine"],
-    diabetes: ["Metformin", "Insulin", "Glucometer"],
-    bp: ["Amlodipine", "Telmisartan", "BP Monitor"]
-  },
-  smartSuggestions: {
-    "Rice": ["Dal", "Oil", "Salt"],
-    "Sugar": ["Tea", "Milk", "Biscuits"],
-    "Paracetamol": ["Thermometer", "ORS", "Vitamin C"]
-  }
-};
 
 function toggleAIChat() {
-  const chatbot = document.getElementById('aiChatbot');
-  const overlay = document.getElementById('aiOverlay');
-  
+  const chatbot = document.getElementById("aiChatbot");
+  const overlay = document.getElementById("aiOverlay");
+
   aiChatOpen = !aiChatOpen;
-  
-  if (aiChatOpen) {
-    chatbot.classList.add('open');
-    overlay.classList.add('active');
-  } else {
-    chatbot.classList.remove('open');
-    overlay.classList.remove('active');
-  }
-}
 
-function handleAIEnter(event) {
-  if (event.key === 'Enter') {
-    sendAIMessage();
-  }
-}
-
-function sendAIMessage() {
-  const input = document.getElementById('aiInput');
-  const message = input.value.trim();
-  
-  if (!message) return;
-  
-  addChatMessage(message, 'user');
-  input.value = '';
-  
-  // Process AI response
-  setTimeout(() => {
-    const response = processAIQuery(message);
-    addChatMessage(response, 'ai');
-  }, 1000);
-}
-
-function quickAIQuery(query) {
-  const responses = {
-    fever: "For fever, I recommend Paracetamol or Crocin. Both are effective and safe. Would you like me to add them to your cart?",
-    headache: "For headaches, try Paracetamol or Aspirin. If it's severe, consult a doctor. Shall I show you these medicines?",
-    diabetes: "For diabetes management, we have Metformin and blood glucose monitors. Regular monitoring is important!",
-    vitamins: "Great choice! We have Vitamin D, B-Complex, and Multivitamins. Which specific vitamin are you looking for?"
-  };
-  
-  addChatMessage(responses[query], 'ai');
-}
-
-function addChatMessage(message, sender) {
-  const chatBody = document.getElementById('aiChatBody');
-  
-  const messageDiv = document.createElement('div');
-  messageDiv.className = sender === 'user' ? 'ai-message user-message' : 'ai-message';
-  
-  if (sender === 'ai') {
-    messageDiv.innerHTML = `
-      <div class="ai-avatar">🤖</div>
-      <div class="message-content">
-        <p>${message}</p>
-      </div>
-    `;
-  } else {
-    messageDiv.innerHTML = `
-      <div class="message-content">
-        <p>${message}</p>
-      </div>
-    `;
-  }
-  
-  chatBody.appendChild(messageDiv);
-  chatBody.scrollTop = chatBody.scrollHeight;
+  if (chatbot) chatbot.classList.toggle("open", aiChatOpen);
+  if (overlay) overlay.classList.toggle("active", aiChatOpen);
 }
 
 function processAIQuery(query) {
   const lowerQuery = query.toLowerCase();
-  
-  // Symptom-based recommendations
-  for (const [symptom, medicines] of Object.entries(aiKnowledge.symptoms)) {
-    if (lowerQuery.includes(symptom)) {
-      return `For ${symptom}, I recommend: ${medicines.join(', ')}. These are available in our store. Would you like me to add any to your cart?`;
-    }
-  }
-  
-  // Product search
-  const matchingProducts = products.filter(p => 
-    p.name.toLowerCase().includes(lowerQuery) || 
-    p.category.toLowerCase().includes(lowerQuery)
+
+  const matchingProducts = products.filter(p =>
+    p.name.toLowerCase().includes(lowerQuery)
   );
-  
+
   if (matchingProducts.length > 0) {
-    const productNames = matchingProducts.slice(0, 3).map(p => p.name).join(', ');
-    return `I found these products: ${productNames}. Check them out in the ${matchingProducts[0].category} section!`;
+    return `I found ${matchingProducts[0].name}. Want to add it to cart?`;
   }
-  
-  // General health advice
-  if (lowerQuery.includes('health') || lowerQuery.includes('tip')) {
-    const tips = [
-      "Drink 8 glasses of water daily for better health!",
-      "Take your medicines on time for best results.",
-      "Regular exercise boosts immunity naturally.",
-      "Eat fruits and vegetables for essential vitamins."
-    ];
-    return tips[Math.floor(Math.random() * tips.length)];
-  }
-  
-  return "I'm here to help with medicines, health advice, and shopping suggestions. Try asking about symptoms like 'fever' or 'headache', or ask for health tips!";
-}
 
-// Smart Suggestions System
-function showSmartSuggestion(productName) {
-  const suggestions = aiKnowledge.smartSuggestions[productName];
-  if (!suggestions) return;
-  
-  const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
-  const suggestionText = document.getElementById('suggestionText');
-  const suggestionBanner = document.getElementById('smartSuggestions');
-  
-  suggestionText.textContent = `💡 AI Tip: People who buy ${productName} also buy ${randomSuggestion}!`;
-  suggestionBanner.classList.add('show');
-  
-  // Auto hide after 5 seconds
-  setTimeout(() => {
-    suggestionBanner.classList.remove('show');
-  }, 5000);
-}
-
-function hideSuggestion() {
-  document.getElementById('smartSuggestions').classList.remove('show');
+  return "Ask me about medicines, symptoms or products!";
 }
 
 /* ===============================
-   WISHLIST & RATING SYSTEM
+   SMART SUGGESTION (SAFE)
 ================================*/
-let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-let productRatings = JSON.parse(localStorage.getItem('productRatings')) || {};
+function showSmartSuggestion(productName) {
+  const banner = document.getElementById("smartSuggestions");
+  const text = document.getElementById("suggestionText");
 
-function addToWishlist(id) {
+  if (!banner || !text) return;
+
+  text.textContent = `People also buy related items with ${productName}`;
+  banner.classList.add("show");
+
+  setTimeout(() => banner.classList.remove("show"), 5000);
+}
+
+/* ===============================
+   WISHLIST (EVENT SAFE)
+================================*/
+let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+function addToWishlist(id, evt) {
   const product = products.find(p => p.id === id);
   if (!product) return;
-  
+
   if (!wishlist.find(w => w.id === id)) {
     wishlist.push({
       id: product.id,
       name: product.name,
       price: product.price
     });
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    updateWishlistCount();
-    
-    // Show brief success message without blocking
-    const button = event.target.closest('.add-to-wishlist');
-    const originalHTML = button.innerHTML;
-    button.innerHTML = '<i class="fas fa-check"></i> Added!';
-    button.style.background = '#28a745';
-    
-    setTimeout(() => {
-      button.innerHTML = originalHTML;
-      button.style.background = '';
-    }, 1500);
-  } else {
-    // Item already in wishlist - show feedback
-    const button = event.target.closest('.add-to-wishlist');
-    const originalHTML = button.innerHTML;
-    button.innerHTML = '<i class="fas fa-heart"></i> In Wishlist';
-    button.style.background = '#ffc107';
-    
-    setTimeout(() => {
-      button.innerHTML = originalHTML;
-      button.style.background = '';
-    }, 1500);
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }
+
+  const btn = evt?.target?.closest(".add-to-wishlist");
+  if (btn) {
+    const old = btn.innerHTML;
+    btn.innerHTML = "✔";
+    setTimeout(() => (btn.innerHTML = old), 1200);
   }
 }
+
 
 function toggleWishlist() {
   const sidebar = document.getElementById('wishlistSidebar');
   const overlay = document.getElementById('wishlistOverlay');
-  
+  if (!sidebar || !overlay) return;
+
   sidebar.classList.toggle('open');
   overlay.classList.toggle('active');
-  
+
   if (sidebar.classList.contains('open')) {
     loadWishlistItems();
   }
@@ -1157,11 +907,9 @@ function loadShopChatHistory() {
   
   // Load recent messages (last 10)
   const recentMessages = chatHistory.slice(-10);
-  recentMessages.forEach(msg => {
-    if (msg.user === (currentUser ? currentUser.name : 'Guest')) {
-      addShopChatMessage(msg.message, msg.sender);
-    }
-  });
+ recentMessages.forEach(msg => {
+  addShopChatMessage(msg.message, msg.sender);
+});
 }
 
 function callShop() {
