@@ -2622,7 +2622,7 @@ function initializePWA() {
   trackEvent('page_view', {page: 'home'});
   
 // ================================
-// LOAD PRODUCTS FROM BACKEND (FINAL – SAFE)
+// LOAD PRODUCTS FROM BACKEND (FINAL)
 // ================================
 async function loadUserProducts() {
   try {
@@ -2631,7 +2631,6 @@ async function loadUserProducts() {
     const response = await window.pharmacyAPI.getProducts();
     console.log("📦 Raw products API response:", response);
 
-    // ✅ USE GLOBAL products (DO NOT redeclare)
     if (Array.isArray(response)) {
       products = response;
     } else if (Array.isArray(response?.products)) {
@@ -2642,17 +2641,19 @@ async function loadUserProducts() {
     }
 
     console.log("✅ Products loaded:", products.length);
-
-    // 🔥 EXISTING FULL FEATURE RENDER
-    renderProducts();
+    renderProducts(products);
 
   } catch (err) {
     console.error("❌ Product load failed:", err);
     products = [];
-    renderProducts();
+    renderProducts(products);
   }
-} 
- function renderProducts(products = []) {
+}
+
+// ================================
+// RENDER PRODUCTS
+// ================================
+function renderProducts(products = []) {
   const container = document.getElementById("productList");
   if (!container) return;
 
@@ -2674,11 +2675,28 @@ async function loadUserProducts() {
       <button onclick="addToCart(${p.id})">Add to Cart</button>
     `;
 
-    container.appendChild(card); // ✅ YAHI HONA CHAHIYE
+    container.appendChild(card);
   });
 }
 
- console.log("✅ app.js reached end safely");
+function renderCategories(products = []) {
+  const categorySelect = document.getElementById("categoryFilter");
+  if (!categorySelect) return;
 
+  categorySelect.innerHTML = `<option value="">All Categories</option>`;
 
+  const categories = [
+    ...new Set(
+      products
+        .map(p => p.category || p.categoryName || p.category_name)
+        .filter(Boolean)
+    )
+  ];
 
+  categories.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categorySelect.appendChild(option);
+  });
+}
