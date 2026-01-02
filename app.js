@@ -608,10 +608,6 @@ function showSmartSuggestion(productName) {
   setTimeout(() => banner.classList.remove("show"), 5000);
 }
 
-/* ===============================
-   WISHLIST (EVENT SAFE)
-================================*/
-let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
 function addToWishlist(id, evt) {
   const product = products.find(p => p.id === id);
