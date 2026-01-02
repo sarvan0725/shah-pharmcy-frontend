@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   loadShopBanner();     // 🔥 banner FIRST
   initializeContactInfo();
 
-  loadCategories();     // categories UI
+  
   await loadBackendProducts(); // 🔥 products from backend
 
   renderProducts();     // UI render
