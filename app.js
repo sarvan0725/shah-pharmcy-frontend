@@ -2293,65 +2293,9 @@ function loadUserTheme() {
   // Theme loading
 }
 
-/* ===============================
-   DYNAMIC CATEGORY SYSTEM
-================================*/
-function loadCategories() {
-  const container = document.getElementById('categoryContainer');
-  if (!container) return;
-  
-  // Load categories from localStorage (updated by admin)
-  const adminCategories = JSON.parse(localStorage.getItem('categories')) || [];
-
- 
-  
-  // If admin categories exist, use them; otherwise use default
-  if (adminCategories.length > 0) {
-    categories = adminCategories.map(cat => ({
-      id: cat.id,
-      name: cat.name,
-      icon: getDefaultIcon(cat.name),
-      active: true,
-      subcategories: cat.subcategories ? cat.subcategories.map(sub => ({
-        id: sub.id || Date.now() + Math.random(),
-        name: sub,
-        parentId: cat.id
-      })) : []
-    }));
-  }
-
- // 🔥 FALLBACK DEFAULT CATEGORIES
-if (adminCategories.length === 0) {
-  categories = [
-    { id: 1, name: "Medicine", icon: "💊", active: true, subcategories: [] },
-    { id: 2, name: "Grocery", icon: "🛒", active: true, subcategories: [] },
-    { id: 3, name: "Personal Care", icon: "🧴", active: true, subcategories: [] },
-    { id: 4, name: "Bulk", icon: "📦", active: true, subcategories: [] }
-  ];
-  console.warn("Using fallback categories");
-}
-
-
-
-
-
-
 
 
  
-  container.innerHTML = '';
-  
-  categories.filter(cat => cat.active).forEach((cat, index) => {
-    const isActive = cat.id === currentCategoryId ? 'active' : '';
-    container.innerHTML += `
-      <div class="category-item ${isActive}" onclick="setCategory(${cat.id})">
-        <div class="category-icon">${cat.icon}</div>
-        <span>${cat.name}</span>
-      </div>
-    `;
-  });
-}
-
 function getDefaultIcon(categoryName) {
   const iconMap = {
     'Medicine': '💊',
