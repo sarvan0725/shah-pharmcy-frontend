@@ -2069,8 +2069,9 @@ function searchProducts() {
   const list = document.getElementById("productList");
   
   if (q.trim() === '') {
-    renderProducts();
-    return;
+  renderProducts(getFilteredProducts());
+  return;
+}
   }
   
   list.innerHTML = "";
@@ -2381,8 +2382,9 @@ function setCategory(categoryId) {
     item.classList.add('active');
   }
 });
-  loadSubcategories(categoryId);
-  renderProducts();
+  
+loadSubcategories(categoryId);
+renderProducts(getFilteredProducts());
 }
 
 function loadSubcategories(categoryId) {
@@ -2419,7 +2421,7 @@ function setSubcategory(subcategoryId) {
     event.target.classList.add('active');
   }
   
-  renderProducts();
+  renderProducts(getFilteredProducts());
 }
 
 /* ===============================
@@ -2663,16 +2665,15 @@ async function loadUserProducts() {
 
     console.log("📦 Products loaded:", products.length);
 
-// 👇 YE LINE ADD KAR
-renderCategories(products);
 
-// 👇 YE PEHLE SE HAI
-renderProducts(products);
+   renderCategories(products);
+   renderProducts(getFilteredProducts());
+
    
   } catch (err) {
     console.error("❌ Product load failed:", err);
     products = [];
-    renderProducts(products);
+    renderProducts(getFilteredProducts()); 
   }
 }
 
