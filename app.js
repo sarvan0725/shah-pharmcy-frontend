@@ -199,13 +199,13 @@ function loadShopBanner() {
 function getFilteredProducts() {
   let list = [...products];
 
-  if (currentCategoryId) {
+  if (currentCategoryId !== null && currentCategoryId !== undefined) {
     list = list.filter(
       p => String(p.category_id) === String(currentCategoryId)
     );
   }
 
-  if (currentSubcategoryId) {
+  if (currentSubcategoryId !== null && currentSubcategoryId !== undefined) {
     list = list.filter(
       p => String(p.subcategory_id) === String(currentSubcategoryId)
     );
@@ -213,9 +213,6 @@ function getFilteredProducts() {
 
   return list;
 }
-
-
-
 
 //render products///
 
