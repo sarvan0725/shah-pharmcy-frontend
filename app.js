@@ -2676,18 +2676,31 @@ function renderCategories(products = []) {
 
   container.innerHTML = "";
 
-  const categories = [
-    ...new Map(
-      products
-        .filter(p => p.category_id && p.category_name)
-        .map(p => [p.category_id, {
-          id: p.category_id,
-          name: p.category_name
-        }])
-    ).values()
-  ];
+  const map = new Map();
 
-  categories.forEach(cat => {
+  products.forEach(p => {
+    if (!p.category_id) return;
+
+    const name =
+      p.category_name ||
+      p.category ||
+      `Category ${p.category_id}`;
+
+    if (!map.has(p.category_id)) {
+      map.set(p.category_id, {
+        id: p.category_id,
+        name
+      });
+    }
+  });
+
+  if (map.size === 0) {
+    container.innerHTML =
+      `<div style="padding:10px;color:#888">No categories found</div>`;
+    return;
+  }
+
+  [...map.values()].forEach(cat => {
     const div = document.createElement("div");
     div.className = "category-item";
     div.textContent = cat.name;
