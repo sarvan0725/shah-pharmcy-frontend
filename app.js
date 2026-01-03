@@ -1208,9 +1208,10 @@ function deleteCategory() {
   currentCategoryId = categories[0].id;
   localStorage.setItem('categories', JSON.stringify(categories));
   localStorage.setItem('products', JSON.stringify(products));
-  
+
+ 
   loadCategories();
-  renderProducts();
+  renderProducts(getFilteredProducts());
   alert('Category deleted successfully!');
 }
 
@@ -1272,7 +1273,7 @@ function renderPagination(totalPages, totalItems) {
 function changePage(page) {
   if (page < 1) return;
   currentPage = page;
-  renderProducts();
+  renderProducts(getFilteredProducts());
 }
 
 function changeDeliverySettings() {
