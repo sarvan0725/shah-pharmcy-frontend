@@ -2369,20 +2369,42 @@ function getDefaultIcon(categoryName) {
 }
 
 function setCategory(categoryId) {
+  // ✅ set category
   currentCategoryId = categoryId;
+
+  // ✅ VERY IMPORTANT: subcategory reset
   currentSubcategoryId = null;
-  
-  // Update active category
-  document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
- document.querySelectorAll('.category-item').forEach(item => {
-  if (Number(item.onclick?.toString().match(/\d+/)?.[0]) === categoryId) {
-    item.classList.add('active');
-  }
-});
-  
-loadSubcategories(categoryId);
-renderProducts(getFilteredProducts());
+
+  // ✅ active class reset
+  document.querySelectorAll('.category-item').forEach(item => {
+    item.classList.remove('active');
+  });
+
+  // ✅ active category highlight
+  document.querySelectorAll('.category-item').forEach(item => {
+    const id = Number(item.getAttribute("data-id"));
+    if (id === Number(categoryId)) {
+      item.classList.add('active');
+    }
+  });
+
+  // ✅ load subcategories
+  loadSubcategories(categoryId);
+
+  // ✅ render filtered products
+  renderProducts(getFilteredProducts());
 }
+
+
+
+
+
+
+
+
+
+
+
 
 function loadSubcategories(categoryId) {
   const category = categories.find(cat => cat.id === categoryId);
