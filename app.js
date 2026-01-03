@@ -1184,7 +1184,7 @@ function addCategory() {
   });
   
   localStorage.setItem('categories', JSON.stringify(categories));
-  loadCategories();
+  
   alert('Category added successfully!');
 }
 
@@ -1207,7 +1207,7 @@ function deleteCategory() {
   localStorage.setItem('products', JSON.stringify(products));
 
  
-  loadCategories();
+ 
   renderProducts(getFilteredProducts());
   alert('Category deleted successfully!');
 }
