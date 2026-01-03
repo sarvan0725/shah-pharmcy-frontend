@@ -22,6 +22,18 @@ let products = [];
 let currentCategoryId = null;
 let currentSubcategoryId = null;
 
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("🟢 App loaded");
+  initApp();
+});
+
+
+
+
+
+
+
 /* 🔐 USER STATE (YAHI PE) */
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
@@ -37,31 +49,7 @@ let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
 /* ⭐ RATINGS */
 let productRatings = JSON.parse(localStorage.getItem("productRatings")) || {};
-// ==============================
-// APP BOOTSTRAP (VERY IMPORTANT)
-// ==============================
-document.addEventListener("DOMContentLoaded", async () => {
-  console.log("🟢 App loaded");
 
-  applyTheme();          // theme
-  loadCustomColors();    // colors
-
-  loadShopBanner();     // 🔥 banner FIRST
-  initializeContactInfo();
-
-  
-  await loadUserProducts();
-
-  renderProducts();     // UI render
-  updateCart();
-
-  initializeUser();
-  loadUserTheme();
-  checkDeliveryHours();
-
-  updateWishlistCount();
-});
-  
 // ===============================
 // THEME HANDLER (SAFE)
 // ===============================
@@ -178,10 +166,14 @@ let deliveryCharge = 0;
 // CONTACT INFO
 // ===============================
 function initializeContactInfo() {
+  if (typeof BUSINESS_CONFIG === "undefined") {
+    console.warn("BUSINESS_CONFIG not loaded yet");
+    return;
+  }
+
   const el = document.getElementById("contactNumbers");
   if (el) {
-    el.textContent =
-      `${BUSINESS_CONFIG.phone1} | ${BUSINESS_CONFIG.phone2}`;
+    el.textContent = `${BUSINESS_CONFIG.phone1} | ${BUSINESS_CONFIG.phone2}`;
   }
 }
 
