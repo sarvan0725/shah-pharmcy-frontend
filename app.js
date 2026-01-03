@@ -2727,4 +2727,4 @@ function renderCategories(products = []) {
     categorySelect.appendChild(option);
   });
 }
-}
+
