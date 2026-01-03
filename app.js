@@ -2732,22 +2732,22 @@ function renderCategories(products = []) {
 
   container.innerHTML = "";
 
-  // unique categories (id + name)
-  const map = new Map();
-  products.forEach(p => {
-    if (p.category_id && p.category_name) {
-      map.set(p.category_id, p.category_name);
-    }
-  });
+  const categories = [
+    ...new Map(
+      products
+        .filter(p => p.category_id && p.category_name)
+        .map(p => [p.category_id, {
+          id: p.category_id,
+          name: p.category_name
+        }])
+    ).values()
+  ];
 
-  map.forEach((name, id) => {
+  categories.forEach(cat => {
     const div = document.createElement("div");
     div.className = "category-item";
-    div.setAttribute("data-id", id);
-    div.innerText = name;
-
-    div.onclick = () => setCategory(id);
-
+    div.textContent = cat.name;
+    div.onclick = () => setCategory(cat.id);
     container.appendChild(div);
   });
 }
