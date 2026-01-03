@@ -192,6 +192,31 @@ function loadShopBanner() {
     if (header) header.style.display = "none";
   }
 }
+
+// ===============================
+// PRODUCT FILTERING (IMPORTANT)
+// ===============================
+function getFilteredProducts() {
+  let list = [...products];
+
+  if (currentCategoryId) {
+    list = list.filter(
+      p => String(p.category_id) === String(currentCategoryId)
+    );
+  }
+
+  if (currentSubcategoryId) {
+    list = list.filter(
+      p => String(p.subcategory_id) === String(currentSubcategoryId)
+    );
+  }
+
+  return list;
+}
+
+
+
+
 //render products///
 
 
