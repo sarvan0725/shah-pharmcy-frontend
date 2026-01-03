@@ -2712,7 +2712,7 @@ function renderCategories(products = []) {
 
   categorySelect.innerHTML = `<option value="">All Categories</option>`;
 
-  const categories = [
+  const categoryNames = [
     ...new Set(
       products
         .map(p => p.category || p.categoryName || p.category_name)
@@ -2720,11 +2720,10 @@ function renderCategories(products = []) {
     )
   ];
 
-  categories.forEach(cat => {
+  categoryNames.forEach(cat => {
     const option = document.createElement("option");
     option.value = cat;
     option.textContent = cat;
     categorySelect.appendChild(option);
   });
 }
-
