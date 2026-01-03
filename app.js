@@ -2725,24 +2725,29 @@ function renderProducts(products = []) {
   });
 }
 
+
 function renderCategories(products = []) {
-  const categorySelect = document.getElementById("categoryFilter");
-  if (!categorySelect) return;
+  const container = document.getElementById("categoryContainer");
+  if (!container) return;
 
-  categorySelect.innerHTML = `<option value="">All Categories</option>`;
+  container.innerHTML = "";
 
-  const categoryNames = [
-    ...new Set(
-      products
-        .map(p => p.category || p.categoryName || p.category_name)
-        .filter(Boolean)
-    )
-  ];
+  // unique categories (id + name)
+  const map = new Map();
+  products.forEach(p => {
+    if (p.category_id && p.category_name) {
+      map.set(p.category_id, p.category_name);
+    }
+  });
 
-  categoryNames.forEach(cat => {
-    const option = document.createElement("option");
-    option.value = cat;
-    option.textContent = cat;
-    categorySelect.appendChild(option);
+  map.forEach((name, id) => {
+    const div = document.createElement("div");
+    div.className = "category-item";
+    div.setAttribute("data-id", id);
+    div.innerText = name;
+
+    div.onclick = () => setCategory(id);
+
+    container.appendChild(div);
   });
 }
