@@ -2597,9 +2597,7 @@ async function loadUserProducts() {
     currentCategoryId = null;
     currentSubcategoryId = null;
 
-    // ❌ No success render here
-    renderCategories([]);
-    renderProducts([]);
+    
   }
 }
 
