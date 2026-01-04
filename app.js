@@ -97,7 +97,7 @@ function initApp() {
 // ===============================
 // CONFIG (already loaded via config.js)
 // ===============================
-const RAZORPAY_KEY = RAZORPAY_KEY_ID;
+const RAZORPAY_KEY = window?.BUSINESS_CONFIG?.razorpayKey || null;
 const MIN_ORDER_AMOUNT = BUSINESS_CONFIG.minOrderAmount;
 
 let MAX_DELIVERY_DISTANCE =
