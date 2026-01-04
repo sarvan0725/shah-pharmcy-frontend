@@ -207,28 +207,33 @@ function getFilteredProducts() {
 
 
   /* ========= PAGINATION ========= */
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+ function renderProducts(products = []) {
+  const list = document.getElementById("productList");
+  if (!list) return;
 
-  renderPagination(totalPages, filteredProducts.length);
+  list.innerHTML = "";
 
-  paginatedProducts.forEach(p => {
+  if (!products.length) {
+    list.innerHTML = "<p>No products found</p>";
+    return;
+  }
+
+  products.forEach(p => {
     if (!quantityMap[p.id]) quantityMap[p.id] = 1;
 
     list.innerHTML += `
       <div class="product-card">
         <div class="product-image">
-          ${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none'">` : ''}
-          ${!p.image ? `<div class="product-emoji">${categoryIcon}</div>` : ''}
+          ${p.image
+            ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none'">`
+            : `<div class="product-emoji">${categoryIcon || "🛒"}</div>`}
         </div>
 
         <div class="product-info">
           <h4>${p.name}</h4>
-          <div class="product-weight">${p.weight || 'N/A'}</div>
+          <div class="product-weight">${p.weight || "N/A"}</div>
           <div class="product-price">₹${p.price}</div>
-          ${p.stock <= 10 ? `<div class="low-stock-warning">⚠️ Limited Stock</div>` : ''}
+          ${p.stock <= 10 ? `<div class="low-stock-warning">⚠ Limited Stock</div>` : ""}
         </div>
 
         <div class="quantity-controls">
@@ -238,11 +243,14 @@ function getFilteredProducts() {
         </div>
 
         <div class="product-actions">
-          <button class="add-to-cart" onclick="addToCart(${p.id}, this)">Add to Cart</button>
+          <button onclick="addToCart(${p.id}, this)">Add to Cart</button>
         </div>
       </div>
     `;
   });
+}
+
+      
 
 
 /* ===============================
