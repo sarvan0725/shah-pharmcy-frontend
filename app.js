@@ -98,19 +98,18 @@ function initApp() {
 // CONFIG (already loaded via config.js)
 // ===============================
 const RAZORPAY_KEY = window?.BUSINESS_CONFIG?.razorpayKey || null;
-const MIN_ORDER_AMOUNT = BUSINESS_CONFIG.minOrderAmount;
+const MIN_ORDER_AMOUNT = window.BUSINESS_CONFIG?.minOrderAmount || 0;
 
 let MAX_DELIVERY_DISTANCE =
   parseFloat(localStorage.getItem("maxDeliveryDistance")) ||
-  BUSINESS_CONFIG.maxDeliveryDistance;
+  window.BUSINESS_CONFIG?.maxDeliveryDistance || 0;
 
 let FREE_DELIVERY_DISTANCE =
   parseFloat(localStorage.getItem("freeDeliveryDistance")) || 3;
 
 let DELIVERY_CHARGE_PER_KM =
   parseFloat(localStorage.getItem("deliveryChargePerKm")) ||
-  BUSINESS_CONFIG.deliveryChargePerKm;
-
+  window.BUSINESS_CONFIG?.deliveryChargePerKm || 0;
 
 // ===============================
 // CATEGORY & PRODUCT DATA
@@ -146,7 +145,8 @@ try {
 // ===============================
 // SHOP LOCATION
 // ===============================
-const SHOP_LOCATION = BUSINESS_CONFIG.shopLocation;
+const SHOP_LOCATION = window.BUSINESS_CONFIG?.shopLocation || null;
+
 
 let customerLocation = null;
 let deliveryDistance = 0;
