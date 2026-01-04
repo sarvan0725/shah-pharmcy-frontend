@@ -205,39 +205,6 @@ function getFilteredProducts() {
   return list;
 }
 
-//render products///
-
-
-
-function renderProducts(list = []) {
-  const container = document.getElementById("productList");
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  if (!Array.isArray(list) || list.length === 0) {
-    container.innerHTML =
-      `<div style="padding:30px;text-align:center;color:#666">
-        No products available
-      </div>`;
-    return;
-  }
-
-  list.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "product-card";
-    card.innerHTML = `
-      <div class="product-name">${p.name}</div>
-      <div class="product-price">₹${p.price}</div>
-    `;
-    container.appendChild(card);
-  });
-}
-
-
-
-   
- 
 
   /* ========= PAGINATION ========= */
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
@@ -2626,7 +2593,7 @@ async function loadUserProducts() {
    
   } catch (err) {
     console.error("❌ Product load failed:", err);
-    products = [];
+    renderCategories([]);
     renderProducts(getFilteredProducts()); 
   }
 }
