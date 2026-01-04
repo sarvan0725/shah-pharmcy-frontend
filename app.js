@@ -2584,17 +2584,22 @@ async function loadUserProducts() {
       products = [];
     }
 
-    console.log("📦 Products loaded:", products.length);
+    console.log("✅ Products loaded:", products.length);
 
+    // ✅ SUCCESS RENDER — ONLY HERE
+    renderCategories(products);
+    renderProducts(getFilteredProducts());
 
-   renderCategories(products);
-   renderProducts(getFilteredProducts());
-
-   
   } catch (err) {
     console.error("❌ Product load failed:", err);
+
+    products = [];
+    currentCategoryId = null;
+    currentSubcategoryId = null;
+
+    // ❌ No success render here
     renderCategories([]);
-    renderProducts(getFilteredProducts()); 
+    renderProducts([]);
   }
 }
 
