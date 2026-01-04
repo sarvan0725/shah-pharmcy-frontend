@@ -2601,6 +2601,8 @@ async function loadUserProducts() {
 // ================================
 // RENDER PRODUCTS
 // ================================
+
+
 function renderProducts(products = []) {
   const container = document.getElementById("productList");
   if (!container) return;
@@ -2615,14 +2617,12 @@ function renderProducts(products = []) {
   products.forEach(p => {
     const card = document.createElement("div");
     card.className = "product-card";
-
     card.innerHTML = `
       <h4>${p.name}</h4>
-      <p><strong>₹${p.price}</strong></p>
+      <p><strong>${p.price}</strong></p>
       <p>Stock: ${p.stock}</p>
       <button onclick="addToCart(${p.id})">Add to Cart</button>
     `;
-
     container.appendChild(card);
   });
 }
@@ -2633,6 +2633,12 @@ function renderCategories(products = []) {
   if (!container) return;
 
   container.innerHTML = "";
+
+  if (!Array.isArray(products) || products.length === 0) {
+    container.innerHTML =
+      `<div style="padding:10px;color:#888">No categories found</div>`;
+    return;
+  }
 
   const map = new Map();
 
@@ -2666,3 +2672,28 @@ function renderCategories(products = []) {
     container.appendChild(div);
   });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
