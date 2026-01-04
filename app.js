@@ -28,15 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initApp();
 });
 
-
-
-
-
-
-
-/* 🔐 USER STATE (YAHI PE) */
-let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
-
 /* 🛒 CART & DISCOUNT STATE */
 let cart = [];
 let activeDiscount = null;
