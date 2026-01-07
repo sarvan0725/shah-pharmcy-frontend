@@ -480,9 +480,12 @@ function addProduct() {
   const price = Number(document.getElementById("pPrice").value);
   const stock = Number(document.getElementById("pStock").value);
   const category = document.getElementById("pCategory").value;
-  const subcategory = document.getElementById("pSubcategory").value;
+
+  const subcategoryEl = document.getElementById("pSubcategory");
+  const subcategory = subcategoryEl ? subcategoryEl.value : null;
+
   const image = currentProductImage || "";
-  
+
   if (!name || !weight || !price || !stock) {
     alert("Please fill all required fields!");
     return;
