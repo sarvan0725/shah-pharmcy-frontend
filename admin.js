@@ -474,65 +474,66 @@ function setAsMainBanner() {
   }
 }
 
-function addProduct() {
-  const name = document.getElementById("pName").value;
-  const weight = document.getElementById("pWeight").value;
-  const price = Number(document.getElementById("pPrice").value);
-  const stock = Number(document.getElementById("pStock").value);
-  const category = document.getElementById("pCategory").value;
-
-  const subcategoryEl = document.getElementById("pSubcategory");
-  const subcategory = subcategoryEl ? subcategoryEl.value : null;
-
-  const image = currentProductImage || "";
+async function addProduct() {
+  const name = document.getElementById("pName")?.value;
+  const weight = document.getElementById("pWeight")?.value;
+  const price = Number(document.getElementById("pPrice")?.value);
+  const stock = Number(document.getElementById("pStock")?.value);
+  const category = document.getElementById("pCategory")?.value;
 
   if (!name || !weight || !price || !stock) {
-    alert("Please fill all required fields!");
+    alert("Please fill all required fields");
     return;
   }
-  
-  const categoryMap = {
-    'medicine': 1,
-    'grocery': 2, 
-    'personal': 3,
-    'bulk': 4
+
+  const product = {
+    name,
+    weight,
+    price,
+    stock,
+    category,
+    subcategory: null,
+    image: currentProductImage || ""
   };
-  
-  const newProduct = {
-    id: Date.now(),
-    name: name,
-    weight: weight,
-    price: price,
-    stock: stock,
-    category: category,
-    categoryId: categoryMap[category] || 2,
-    subcategory: subcategory || null,
-    subcategoryId: subcategory ? subcategory : null,
-    image: image
-  };
-  
-  products.push(newProduct);
-  localStorage.setItem("products", JSON.stringify(products));
-  
-  // FORCE SYNC: Update main website products immediately
-  window.parent.postMessage({
-    type: 'PRODUCT_ADDED',
-    product: newProduct
-  }, '*');
-  
-  // Clear form
-  document.getElementById("pName").value = "";
-  document.getElementById("pWeight").value = "";
-  document.getElementById("pPrice").value = "";
-  document.getElementById("pStock").value = "";
-  document.getElementById("pSubcategory").value = "";
-  removeProductImage();
-  
-  loadProducts();
-  loadAnalytics();
-  checkLowStock();
-  alert("✅ Product added successfully! It will appear on the main website immediately.");
+
+  try {
+    const res = await fetch(
+      "https://shah-pharmacy-backend.onrender.com/api/products",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product)
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("API failed");
+    }
+
+    alert("✅ Product added successfully");
+
+    document.getElementById("pName").value = "";
+    document.getElementById("pWeight").value = "";
+    document.getElementById("pPrice").value = "";
+    document.getElementById("pStock").value = "";
+    removeProductImage();
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Product add failed");
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 function deleteProduct(id) {
   if (confirm("Are you sure you want to delete this product?")) {
