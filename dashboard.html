@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -225,7 +225,7 @@
       <h3>Add New Category</h3>
       <div class="form-group">
         <input id="newCategoryName" placeholder="Category Name (e.g., Electronics, Books)">
-        
+        <button onclick="addCategory()">Add Category</button>
       </div>
     </div>
     
@@ -249,13 +249,17 @@
       <input id="pPrice" type="number" placeholder="Price">
       <input id="pStock" type="number" placeholder="Stock">
 
-      <select id="pCategory">
+      <select id="pCategory" onchange="loadSubcategoryOptions()">
         <option value="grocery">Grocery</option>
         <option value="medicine">Medicine</option>
         <option value="personal">Personal Care</option>
         <option value="bulk">Bulk</option>
       </select>
-  
+      
+      <select id="pSubcategory" style="display: none;">
+        <option value="">Select Subcategory</option>
+      </select>
+
       <div class="product-image-upload">
         <input type="file" id="productImageUpload" accept="image/*" onchange="uploadProductImage()" style="display: none;">
         <button onclick="document.getElementById('productImageUpload').click()" class="upload-btn">
@@ -264,17 +268,9 @@
         <div id="productImagePreview" class="product-preview"></div>
       </div>
       
-      <button 
-     id="addProductBtn"
-     type="button"
-     onclick="addProduct()"
->
-  ➕ Add Product
-</button>
+      <button onclick="addProduct()">Add Product</button>
+    </div>
 
-
-
-      
     <table class="table">
       <thead>
         <tr>
@@ -287,7 +283,7 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody id="productTableBody"></tbody>
+      <tbody id="productTable"></tbody>
     </table>
   </section>
 
@@ -446,7 +442,12 @@
   });
 </script>
 
+<!-- ADMIN LOGIC -->
+<script src="../js/api.js"></script>
+<script src="admin.js"></script>
 
+</body>
+</html>
   <!-- ========== SHOP CHAT MESSAGES ========== -->
   <section id="chat-messages" class="section hidden">
     <h2>Shop Chat Messages</h2>
@@ -484,7 +485,6 @@
     </div>
   </section>
 
-
   <!-- ========== ADMIN NOTIFICATIONS ========== -->
   <section id="notifications" class="section hidden">
     <h2>Send Notifications to Users</h2>
@@ -520,35 +520,3 @@
       <div id="sentNotificationsList"></div>
     </div>
   </section>
- 
-<!-- ADMIN LOGIC -->
-<script src="./config.js"></script>
-<script>
-  console.log("CONFIG LOADED");
-</script>
-
-<script src="./admin.js"></script>
-<script>
-  console.log("ADMIN JS TAG HIT");
-</script>
-
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
