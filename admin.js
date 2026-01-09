@@ -487,7 +487,6 @@ async function addProduct() {
       return;
     }
 
-    // ✅ CATEGORY MAP MUST BE HERE
     const categoryMap = {
       medicine: 1,
       grocery: 2,
@@ -497,19 +496,13 @@ async function addProduct() {
 
     const categoryId = categoryMap[category];
 
-    if (!categoryId) {
-      alert("Invalid category selected");
-      return;
-    }
-
     const product = {
       name: name,
       price: price,
       stock: stock,
-      category: category,
-      categoryId: categoryId,     // 🔥 THIS WAS MISSING
+      categoryId: categoryId,
       description: weight,
-      image: "https://dummyimage.com/300x300/000/fff.png"
+      imageUrl: "https://dummyimage.com/300x300/000/fff.png"
     };
 
     console.log("Sending product:", product);
