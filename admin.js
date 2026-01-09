@@ -476,9 +476,10 @@ async function addProduct() {
     return;
   }
 
-  if (!uploadedImageUrl) {
-    alert("Please upload product image first");
-    return;
+  if (!currentProductImageUrl) {
+  alert("Please upload product image first");
+  return;
+}
   }
 
   const categoryMap = {
