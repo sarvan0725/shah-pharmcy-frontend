@@ -4,7 +4,6 @@
 *************************************************/
 
 
-console.warn("Hierarchical categories disabled");
 
 
 let categoryTree = [];
