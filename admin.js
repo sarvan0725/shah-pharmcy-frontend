@@ -474,7 +474,6 @@ function setAsMainBanner() {
   }
 }
 
-
 async function addProduct() {
   try {
     const name = document.getElementById("pName").value.trim();
@@ -488,6 +487,7 @@ async function addProduct() {
       return;
     }
 
+    // ✅ CATEGORY MAP MUST BE HERE
     const categoryMap = {
       medicine: 1,
       grocery: 2,
@@ -495,15 +495,24 @@ async function addProduct() {
       bulk: 4
     };
 
+    const categoryId = categoryMap[category];
+
+    if (!categoryId) {
+      alert("Invalid category selected");
+      return;
+    }
+
     const product = {
       name: name,
       price: price,
       stock: stock,
       category: category,
-      categoryId: categoryMap[category],   // 🔥 REQUIRED
+      categoryId: categoryId,     // 🔥 THIS WAS MISSING
       description: weight,
       image: "https://dummyimage.com/300x300/000/fff.png"
     };
+
+    console.log("Sending product:", product);
 
     const res = await fetch(
       "https://shah-pharmacy-backend.onrender.com/api/products",
@@ -530,16 +539,11 @@ async function addProduct() {
     document.getElementById("pPrice").value = "";
     document.getElementById("pStock").value = "";
 
-    if (typeof loadProducts === "function") {
-      loadProducts();
-    }
-
   } catch (err) {
     console.error(err);
     alert("❌ Product add failed");
   }
 }
-
 
 
 
