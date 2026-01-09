@@ -474,22 +474,33 @@ function setAsMainBanner() {
   }
 }
 
+
 async function addProduct() {
   try {
     const name = document.getElementById("pName").value.trim();
     const weight = document.getElementById("pWeight").value.trim();
     const price = Number(document.getElementById("pPrice").value);
+    const stock = Number(document.getElementById("pStock").value);
     const category = document.getElementById("pCategory").value;
 
-    if (!name || !weight || !price || !category) {
+    if (!name || !weight || !price || !stock || !category) {
       alert("Please fill all required fields");
       return;
     }
 
+    const categoryMap = {
+      medicine: 1,
+      grocery: 2,
+      personal: 3,
+      bulk: 4
+    };
+
     const product = {
       name: name,
       price: price,
+      stock: stock,
       category: category,
+      categoryId: categoryMap[category],   // 🔥 REQUIRED
       description: weight,
       image: "https://dummyimage.com/300x300/000/fff.png"
     };
@@ -505,9 +516,10 @@ async function addProduct() {
       }
     );
 
+    const data = await res.json();
+    console.log("Backend response:", data);
+
     if (!res.ok) {
-      const err = await res.text();
-      console.error("Backend:", err);
       throw new Error("API failed");
     }
 
@@ -516,6 +528,7 @@ async function addProduct() {
     document.getElementById("pName").value = "";
     document.getElementById("pWeight").value = "";
     document.getElementById("pPrice").value = "";
+    document.getElementById("pStock").value = "";
 
     if (typeof loadProducts === "function") {
       loadProducts();
@@ -526,10 +539,6 @@ async function addProduct() {
     alert("❌ Product add failed");
   }
 }
-
-
-
-
 
 
 
