@@ -477,15 +477,10 @@ function setAsMainBanner() {
 async function addProduct() {
   try {
     const name = document.getElementById("pName").value;
-    const price = document.getElementById("pPrice").value;
-    const stock = document.getElementById("pStock").value;
+    const price = Number(document.getElementById("pPrice").value);
+    const stock = Number(document.getElementById("pStock").value);
     const category = document.getElementById("pCategory").value;
     const weight = document.getElementById("pWeight").value;
-
-    if (!name || !price || !stock || !category || !weight) {
-      alert("Please fill all fields");
-      return;
-    }
 
     const categoryMap = {
       grocery: 2,
@@ -495,11 +490,11 @@ async function addProduct() {
     };
 
     const product = {
-      name: String(name),
-      price: Number(price),
-      stock: Number(stock),
-      categoryId: Number(categoryMap[category]),
-      description: String(weight),
+      name,
+      price,
+      stock,
+      categoryId: categoryMap[category],
+      description: weight,
       imageUrl: "https://dummyimage.com/300x300/000/fff.png"
     };
 
@@ -509,9 +504,7 @@ async function addProduct() {
       "https://shah-pharmacy-backend.onrender.com/api/products",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(product)
       }
     );
@@ -519,18 +512,15 @@ async function addProduct() {
     const data = await res.json();
     console.log("Backend response:", data);
 
-    if (!res.ok) {
-      throw new Error("API failed");
-    }
+    if (!res.ok) throw new Error("API failed");
 
-    alert("✅ Product added successfully");
+    alert("✅ Product added");
 
-  } catch (err) {
-    console.error(err);
+  } catch (e) {
+    console.error(e);
     alert("❌ Product add failed");
   }
 }
-
 
 
 
