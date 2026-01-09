@@ -479,22 +479,19 @@ async function addProduct() {
     const name = document.getElementById("pName").value.trim();
     const weight = document.getElementById("pWeight").value.trim();
     const price = Number(document.getElementById("pPrice").value);
-    const stock = Number(document.getElementById("pStock").value);
     const category = document.getElementById("pCategory").value;
 
-    if (!name || !weight || !price || !stock || !category) {
+    if (!name || !weight || !price || !category) {
       alert("Please fill all required fields");
       return;
     }
 
-    // ✅ SINGLE & FINAL PRODUCT OBJECT (API ONLY)
     const product = {
       name: name,
-      weight: weight,
       price: price,
-      stock: stock,
       category: category,
-      image: ""   // image intentionally empty
+      description: weight,
+      image: "https://dummyimage.com/300x300/000/fff.png"
     };
 
     const res = await fetch(
@@ -509,20 +506,17 @@ async function addProduct() {
     );
 
     if (!res.ok) {
-      const text = await res.text();
-      console.error("Backend response:", text);
+      const err = await res.text();
+      console.error("Backend:", err);
       throw new Error("API failed");
     }
 
     alert("✅ Product added successfully");
 
-    // clear form
     document.getElementById("pName").value = "";
     document.getElementById("pWeight").value = "";
     document.getElementById("pPrice").value = "";
-    document.getElementById("pStock").value = "";
 
-    // reload products
     if (typeof loadProducts === "function") {
       loadProducts();
     }
@@ -532,8 +526,6 @@ async function addProduct() {
     alert("❌ Product add failed");
   }
 }
-
-
 
 
 
