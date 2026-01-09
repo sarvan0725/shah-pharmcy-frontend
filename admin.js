@@ -449,25 +449,6 @@ async function uploadShopImage() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 async function addProduct() {
   const name = document.getElementById("pName").value.trim();
   const weight = document.getElementById("pWeight").value.trim();
@@ -478,12 +459,6 @@ async function addProduct() {
   if (!name || !weight || !price || !stock || !categoryKey) {
     alert("Please fill all required fields");
     return;
-  }
-
-  if (!currentProductImageUrl) {
-  alert("Please upload product image first");
-  return;
-}
   }
 
   const categoryMap = {
@@ -502,8 +477,6 @@ async function addProduct() {
     image: currentProductImageUrl || "https://dummyimage.com/300x300/000/fff.png"
   };
 
-  console.log("Sending product:", product);
-
   try {
     const res = await fetch(
       "https://shah-pharmacy-backend.onrender.com/api/products",
@@ -515,24 +488,20 @@ async function addProduct() {
     );
 
     const data = await res.json();
-    console.log("Backend response:", data);
 
     if (!res.ok) throw new Error("API failed");
 
     alert("✅ Product added successfully");
-
-    // reset
-    uploadedImageUrl = "";
-    document.getElementById("pName").value = "";
-    document.getElementById("pWeight").value = "";
-    document.getElementById("pPrice").value = "";
-    document.getElementById("pStock").value = "";
+    console.log("Backend response:", data);
 
   } catch (err) {
     console.error(err);
     alert("❌ Product add failed");
   }
 }
+
+
+
 
 
 function deleteProduct(id) {
