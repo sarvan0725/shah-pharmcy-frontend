@@ -476,34 +476,32 @@ function setAsMainBanner() {
 
 async function addProduct() {
   try {
-    const name = document.getElementById("pName").value.trim();
-    const weight = document.getElementById("pWeight").value.trim();
-    const price = Number(document.getElementById("pPrice").value);
-    const stock = Number(document.getElementById("pStock").value);
+    const name = document.getElementById("pName").value;
+    const price = document.getElementById("pPrice").value;
+    const stock = document.getElementById("pStock").value;
     const category = document.getElementById("pCategory").value;
+    const weight = document.getElementById("pWeight").value;
 
-    if (!name || !weight || !price || !stock || !category) {
-      alert("Please fill all required fields");
+    if (!name || !price || !stock || !category || !weight) {
+      alert("Please fill all fields");
       return;
     }
 
     const categoryMap = {
-      medicine: 1,
       grocery: 2,
+      medicine: 1,
       personal: 3,
       bulk: 4
     };
 
-    const categoryId = categoryMap[category];
-
-   const product = {
-  name: String(name),
-  price: Number(price),
-  stock: Number(stock),
-  categoryId: Number(categoryId),
-  description: String(weight), // 🔥 MUST BE STRING
-  imageUrl: "https://dummyimage.com/300x300/000/fff.png" // 🔥 REQUIRED
-};
+    const product = {
+      name: String(name),
+      price: Number(price),
+      stock: Number(stock),
+      categoryId: Number(categoryMap[category]),
+      description: String(weight),
+      imageUrl: "https://dummyimage.com/300x300/000/fff.png"
+    };
 
     console.log("Sending product:", product);
 
@@ -526,11 +524,6 @@ async function addProduct() {
     }
 
     alert("✅ Product added successfully");
-
-    document.getElementById("pName").value = "";
-    document.getElementById("pWeight").value = "";
-    document.getElementById("pPrice").value = "";
-    document.getElementById("pStock").value = "";
 
   } catch (err) {
     console.error(err);
