@@ -2,6 +2,18 @@ console.log("admin.js loaded");
 
 const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
 
+
+// ===== Cloudinary Config =====
+const CLOUD_NAME = "detu15x8u";
+const UPLOAD_PRESET = "shah_upload";
+
+// store uploaded URLs
+let currentProductImageUrl = "";
+let currentShopBannerUrl = "";
+
+
+
+
 // Load products from main app
 let products = JSON.parse(localStorage.getItem("products")) || [
   { id: 1, name: "Rice", price: 60, stock: 50, category: "grocery", image: "", weight: "1kg" },
@@ -348,158 +360,146 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-/* ===============================
-   PRODUCT MANAGEMENT
-================================*/
-function loadSubcategoryOptions() {
-  const categorySelect = document.getElementById('pCategory');
-  const subcategorySelect = document.getElementById('pSubcategory');
-  const selectedCategory = categorySelect.value;
-  
-  // Map category names to IDs
-  const categoryMap = {
-    'medicine': 1,
-    'grocery': 2, 
-    'personal': 3,
-    'bulk': 4
-  };
-  
-  const categoryId = categoryMap[selectedCategory];
-  const categories = JSON.parse(localStorage.getItem('categories')) || [];
-  const category = categories.find(c => c.id === categoryId);
-  
-  subcategorySelect.innerHTML = '<option value="">Select Subcategory (Optional)</option>';
-  
-  if (category && category.subcategories && category.subcategories.length > 0) {
-    category.subcategories.forEach(sub => {
-      const subName = typeof sub === 'string' ? sub : sub.name || sub;
-      subcategorySelect.innerHTML += `<option value="${subName}">${subName}</option>`;
-    });
-    subcategorySelect.style.display = 'block';
-  } else {
-    subcategorySelect.style.display = 'none';
-  }
-}
 
-let currentProductImage = '';
-
-// Product image upload function
-function uploadProductImage() {
-  const fileInput = document.getElementById('productImageUpload');
+async function uploadProductImage() {
+  const fileInput = document.getElementById("productImageUpload");
   const file = fileInput.files[0];
-  
+
   if (!file) return;
-  
-  // Check file type
-  if (!file.type.startsWith('image/')) {
-    alert('Please select an image file');
+
+  if (!file.type.startsWith("image/")) {
+    alert("Please select an image file");
     return;
   }
-  
-  // Check file size (max 5MB)
+
   if (file.size > 5 * 1024 * 1024) {
-    alert('Image size should be less than 5MB');
+    alert("Image size should be less than 5MB");
     return;
   }
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    currentProductImage = e.target.result;
-    
-    // Show preview
-    const preview = document.getElementById('productImagePreview');
-    preview.innerHTML = `
-      <div class="image-preview-container">
-        <img src="${currentProductImage}" alt="Product Preview" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid #ddd;">
-        <button onclick="removeProductImage()" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-top: 5px;">Remove Image</button>
-      </div>
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  try {
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData
+      }
+    );
+
+    const data = await res.json();
+    currentProductImageUrl = data.secure_url;
+
+    // Preview
+    document.getElementById("productImagePreview").innerHTML = `
+      <img src="${currentProductImageUrl}" 
+           style="max-width:150px;max-height:150px;border-radius:8px;border:1px solid #ddd;" />
+      <br/>
+      <button onclick="removeProductImage()">Remove</button>
     `;
-  };
-  
-  reader.readAsDataURL(file);
+
+  } catch (err) {
+    console.error(err);
+    alert("Product image upload failed");
+  }
 }
 
-// Remove product image
-function removeProductImage() {
-  currentProductImage = '';
-  document.getElementById('productImagePreview').innerHTML = '';
-  document.getElementById('productImageUpload').value = '';
-}
-
-// Shop image upload function
-function uploadShopImage() {
-  const fileInput = document.getElementById('shopImageUpload');
+async function uploadShopImage() {
+  const fileInput = document.getElementById("shopImageUpload");
   const file = fileInput.files[0];
-  
+
   if (!file) return;
-  
-  if (!file.type.startsWith('image/')) {
-    alert('Please select an image file');
+
+  if (!file.type.startsWith("image/")) {
+    alert("Please select an image file");
     return;
   }
-  
+
   if (file.size > 10 * 1024 * 1024) {
-    alert('Image size should be less than 10MB');
+    alert("Image size should be less than 10MB");
     return;
   }
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const imageData = e.target.result;
-    
-    // Show preview
-    const preview = document.getElementById('currentShopImage');
-    preview.innerHTML = `
-      <img src="${imageData}" alt="Shop Banner" style="max-width: 300px; max-height: 200px; border-radius: 8px; border: 1px solid #ddd;">
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  try {
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData
+      }
+    );
+
+    const data = await res.json();
+    currentShopBannerUrl = data.secure_url;
+
+    document.getElementById("currentShopImage").innerHTML = `
+      <img src="${currentShopBannerUrl}" 
+           style="max-width:300px;max-height:200px;border-radius:8px;border:1px solid #ddd;" />
     `;
-    
-    // Show set banner button
-    document.getElementById('setBannerBtn').style.display = 'block';
-    
-    // Store temporarily
-    localStorage.setItem('tempShopImage', imageData);
-  };
-  
-  reader.readAsDataURL(file);
+
+    document.getElementById("setBannerBtn").style.display = "block";
+
+  } catch (err) {
+    console.error(err);
+    alert("Shop banner upload failed");
+  }
 }
 
-// Set shop banner
-function setAsMainBanner() {
-  const tempImage = localStorage.getItem('tempShopImage');
-  if (tempImage) {
-    localStorage.setItem('shopBannerImage', tempImage);
-    localStorage.removeItem('tempShopImage');
-    alert('Shop banner updated successfully!');
-    document.getElementById('setBannerBtn').style.display = 'none';
-  }
-}
+
+
+
+
+
+
+
+
+
+
+
 
 async function addProduct() {
+  const name = document.getElementById("pName").value.trim();
+  const weight = document.getElementById("pWeight").value.trim();
+  const price = Number(document.getElementById("pPrice").value);
+  const stock = Number(document.getElementById("pStock").value);
+  const categoryKey = document.getElementById("pCategory").value;
+
+  if (!name || !weight || !price || !stock || !categoryKey) {
+    alert("Please fill all required fields");
+    return;
+  }
+
+  if (!uploadedImageUrl) {
+    alert("Please upload product image first");
+    return;
+  }
+
+  const categoryMap = {
+    medicine: 1,
+    grocery: 2,
+    personal: 3,
+    bulk: 4
+  };
+
+  const product = {
+    name,
+    price,
+    stock,
+    categoryId: categoryMap[categoryKey],
+    description: weight,
+    image: currentProductImageUrl || "https://dummyimage.com/300x300/000/fff.png"
+  };
+
+  console.log("Sending product:", product);
+
   try {
-    const name = document.getElementById("pName").value;
-    const price = Number(document.getElementById("pPrice").value);
-    const stock = Number(document.getElementById("pStock").value);
-    const category = document.getElementById("pCategory").value;
-    const weight = document.getElementById("pWeight").value;
-
-    const categoryMap = {
-      grocery: 2,
-      medicine: 1,
-      personal: 3,
-      bulk: 4
-    };
-
-    const product = {
-      name,
-      price,
-      stock,
-      categoryId: categoryMap[category],
-      description: weight,
-      imageUrl: "https://dummyimage.com/300x300/000/fff.png"
-    };
-
-    console.log("Sending product:", product);
-
     const res = await fetch(
       "https://shah-pharmacy-backend.onrender.com/api/products",
       {
@@ -514,15 +514,20 @@ async function addProduct() {
 
     if (!res.ok) throw new Error("API failed");
 
-    alert("✅ Product added");
+    alert("✅ Product added successfully");
 
-  } catch (e) {
-    console.error(e);
+    // reset
+    uploadedImageUrl = "";
+    document.getElementById("pName").value = "";
+    document.getElementById("pWeight").value = "";
+    document.getElementById("pPrice").value = "";
+    document.getElementById("pStock").value = "";
+
+  } catch (err) {
+    console.error(err);
     alert("❌ Product add failed");
   }
 }
-
-
 
 
 function deleteProduct(id) {
