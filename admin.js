@@ -496,14 +496,14 @@ async function addProduct() {
 
     const categoryId = categoryMap[category];
 
-    const product = {
-      name: name,
-      price: price,
-      stock: stock,
-      categoryId: categoryId,
-      description: weight,
-      imageUrl: "https://dummyimage.com/300x300/000/fff.png"
-    };
+   const product = {
+  name: String(name),
+  price: Number(price),
+  stock: Number(stock),
+  categoryId: Number(categoryId),
+  description: String(weight), // 🔥 MUST BE STRING
+  imageUrl: "https://dummyimage.com/300x300/000/fff.png" // 🔥 REQUIRED
+};
 
     console.log("Sending product:", product);
 
