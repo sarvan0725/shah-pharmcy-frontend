@@ -360,7 +360,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-
 async function uploadProductImage() {
   const fileInput = document.getElementById("productImageUpload");
   const file = fileInput.files[0];
@@ -393,14 +392,12 @@ async function uploadProductImage() {
     const data = await res.json();
     currentProductImageUrl = data.secure_url;
 
-    // Preview
     document.getElementById("productImagePreview").innerHTML = `
-      <img src="${currentProductImageUrl}" 
-           style="max-width:150px;max-height:150px;border-radius:8px;border:1px solid #ddd;" />
+      <img src="${currentProductImageUrl}"
+        style="max-width:150px;max-height:150px;border-radius:8px;border:1px solid #ddd;" />
       <br/>
       <button onclick="removeProductImage()">Remove</button>
     `;
-
   } catch (err) {
     console.error(err);
     alert("Product image upload failed");
@@ -440,17 +437,24 @@ async function uploadShopImage() {
     currentShopBannerUrl = data.secure_url;
 
     document.getElementById("currentShopImage").innerHTML = `
-      <img src="${currentShopBannerUrl}" 
-           style="max-width:300px;max-height:200px;border-radius:8px;border:1px solid #ddd;" />
+      <img src="${currentShopBannerUrl}"
+        style="max-width:300px;max-height:200px;border-radius:8px;border:1px solid #ddd;" />
     `;
 
     document.getElementById("setBannerBtn").style.display = "block";
-
   } catch (err) {
     console.error(err);
     alert("Shop banner upload failed");
   }
 }
+
+
+
+
+
+
+
+
 
 
 
