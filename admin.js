@@ -469,14 +469,16 @@ async function addProduct() {
   };
 
   const product = {
-    name,
-    price,
-    stock,
-    categoryId: categoryMap[categoryKey],
-    description: weight,
-    image: currentProductImageUrl || "https://dummyimage.com/300x300/000/fff.png"
-  };
-
+  name: name,
+  price: price,
+  stock: stock,
+  categoryId: Number(categoryMap[categoryKey]),
+  description: weight,
+  image: currentProductImageUrl 
+    ? currentProductImageUrl 
+    : "https://dummyimage.com/300x300/000/fff.png"
+};
+  
   try {
     const res = await fetch(
       "https://shah-pharmacy-backend.onrender.com/api/products",
