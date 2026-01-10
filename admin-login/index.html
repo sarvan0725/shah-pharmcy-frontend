@@ -55,18 +55,53 @@
     <button onclick="login()">Login</button>
   </div>
 
-<script>
-  function login() {
-    const password = document.getElementById("password").value;
+ <script>
+const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
 
-    if (password === "admin123" || password === "shah2024") {
-      localStorage.setItem("admin_logged_in", "true");
-      window.location.href = "../dashboard.html";
-    } else {
-      alert("❌ Invalid password");
-    }
+async function sendOtp() {
+  const contact = document.getElementById("contact").value;
+
+  if (!contact) {
+    alert("Enter phone or email");
+    return;
   }
+
+  const res = await fetch(`${API_BASE}/auth/send-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contact, type: "phone" })
+  });
+
+  const data = await res.json();
+  alert("OTP sent (check backend / console)");
+}
+
+async function verifyOtp() {
+  const contact = document.getElementById("contact").value;
+  const otp = document.getElementById("otp").value;
+
+  const res = await fetch(`${API_BASE}/auth/verify-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contact, otp })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert("OTP invalid");
+    return;
+  }
+
+  // 🔐 SAVE TOKEN + USER
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("user", JSON.stringify(data.user));
+
+  if (data.user.role !== "admin") {
+    alert("Not an admin account");
+    return;
+  }
+
+  window.location.href = "../dashboard.html";
+}
 </script>
-  
-</body>
-</html>
