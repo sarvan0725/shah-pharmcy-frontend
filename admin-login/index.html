@@ -64,7 +64,8 @@
  <script>
 const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
 
-async function sendOtp() {
+
+   async function sendOtp() {
   const contact = document.getElementById("contact").value;
 
   if (!contact) {
@@ -75,12 +76,22 @@ async function sendOtp() {
   const res = await fetch(`${API_BASE}/auth/send-otp`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ contact, type: "phone" })
+    body: JSON.stringify({ contact })
   });
 
-  const data = await res.json();
-  alert("OTP sent (check backend / console)");
+  if (!res.ok) {
+    alert("Failed to send OTP");
+    return;
+  }
+
+  alert("OTP sent");
+
+  document.getElementById("otp").style.display = "block";
+  document.getElementById("verifyOtpBtn").style.display = "block";
+  document.getElementById("sendOtpBtn").style.display = "none";
 }
+
+  
 
 async function verifyOtp() {
   const contact = document.getElementById("contact").value;
