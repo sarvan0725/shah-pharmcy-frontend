@@ -3,6 +3,16 @@ console.log("admin.js loaded");
 const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
 
 
+
+const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user"));
+
+if (!token || !user || user.role !== "admin") {
+  alert("Unauthorized");
+  window.location.href = "./admin-login/index.html";
+}
+
+
 // ===== Cloudinary Config =====
 const CLOUD_NAME = "detu15x8u";
 const UPLOAD_PRESET = "shah_upload";
