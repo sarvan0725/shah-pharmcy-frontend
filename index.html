@@ -40,6 +40,23 @@
 </head>
 <body>
 
+<!-- USER AUTH SECTION -->
+<div id="auth-section" style="max-width:400px;margin:40px auto;padding:20px;border:1px solid #ddd;border-radius:8px;">
+  <h2>User Login / Register</h2>
+
+  <input id="name" placeholder="Full Name" style="width:100%;padding:10px;margin-bottom:10px;">
+  <input id="mobile" placeholder="Mobile Number" style="width:100%;padding:10px;margin-bottom:10px;">
+  <input id="password" type="password" placeholder="Password" style="width:100%;padding:10px;margin-bottom:10px;">
+
+  <button onclick="register()" style="width:100%;padding:10px;margin-bottom:10px;">Register</button>
+  <button onclick="login()" style="width:100%;padding:10px;">Login</button>
+</div>
+
+<!-- MAIN APP SECTION -->
+<div id="app-section" style="display:none;">
+  <!-- existing website content will stay visible after login -->
+</div> 
+
   <!-- ================= MAIN CONTENT ================= -->
 <main class="main-content">
 
