@@ -5,6 +5,13 @@
 /* ===============================
    CONFIGURATION (from config.js)
 ================================*/
+
+function showUserProfile() {
+  console.warn("showUserProfile not implemented yet");
+}
+
+
+
 window.CATEGORY_MAP = window.CATEGORY_MAP || {
   Healthcare: "healthcare",
   Groceries: "groceries",
