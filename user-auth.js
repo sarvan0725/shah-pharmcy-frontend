@@ -2,7 +2,9 @@
 // USER AUTH SYSTEM (FRONTEND)
 // ===============================
 
-let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
+if (!window.currentUser) {
+  window.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+}
 
 // ---------- INIT ----------
 document.addEventListener("DOMContentLoaded", () => {
