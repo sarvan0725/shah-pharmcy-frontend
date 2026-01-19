@@ -502,8 +502,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+
+
+
 // Export functions for global access
 window.navigateToCategory = navigateToCategory;
 window.navigateToRoot = navigateToRoot;
 window.navigateToBreadcrumb = navigateToBreadcrumb;
 window.searchProductsHierarchical = searchProductsHierarchical;
+
+
+
