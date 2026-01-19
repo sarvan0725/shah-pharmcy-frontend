@@ -1685,20 +1685,98 @@ function initializeUser() {
 }
 
 // ===============================
-// TEMP FIXES (to prevent crashes)
+// USER PROFILE
 // ===============================
-
 function showUserProfile() {
-  console.log('showUserProfile not implemented yet');
+  if (!currentUser) return;
+
+  const nameEls = document.querySelectorAll('.user-name');
+  const phoneEls = document.querySelectorAll('.user-phone');
+  const emailEls = document.querySelectorAll('.user-email');
+
+  nameEls.forEach(el => el.textContent = currentUser.name || 'User');
+  phoneEls.forEach(el => el.textContent = currentUser.phone || '');
+  emailEls.forEach(el => el.textContent = currentUser.email || '');
 }
 
-function updateUserStats() {
-  console.log('updateUserStats skipped (temp)');
+// ===============================
+// USER STATS (cart / wishlist)
+// ===============================
+async function updateUserStats() {
+  if (!currentUser?.id) return;
+
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/users/${currentUser.id}/stats`
+    );
+
+    if (!res.ok) return;
+
+    const stats = await res.json();
+
+    const cartEl = document.getElementById('cartCount');
+    const wishEl = document.getElementById('wishlistCount');
+
+    if (cartEl) cartEl.textContent = stats.cartItems || 0;
+    if (wishEl) wishEl.textContent = stats.wishlistItems || 0;
+  } catch (err) {
+    console.error('updateUserStats failed', err);
+  }
 }
 
-function updateCoinsDisplay() {
-  console.log('updateCoinsDisplay skipped (temp)');
+// ===============================
+// USER COINS / WALLET
+// ===============================
+async function updateCoinsDisplay() {
+  if (!currentUser?.id) return;
+
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/users/${currentUser.id}/wallet`
+    );
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const coinEl = document.getElementById('coinBalance');
+
+    if (coinEl) coinEl.textContent = data.coins || 0;
+  } catch (err) {
+    console.error('updateCoinsDisplay failed', err);
+  }
 }
+
+// ===============================
+// ACTIVE DISCOUNT
+// ===============================
+async function checkActiveDiscount() {
+  if (!currentUser?.id) return;
+
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/users/${currentUser.id}/active-discount`
+    );
+
+    if (!res.ok) return;
+
+    const discount = await res.json();
+    if (discount?.percent) {
+      document.body.dataset.userDiscount = discount.percent;
+    }
+  } catch (err) {
+    console.error('checkActiveDiscount failed', err);
+  }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
