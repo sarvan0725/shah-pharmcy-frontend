@@ -9,21 +9,16 @@
 let categoryTree = [];
 let currentCategoryPath = []; // Breadcrumb path
 let currentLevel = 1; // Current navigation level
-const API_BASE_URL = window.location.origin; // Use current domain
 
 /* ===============================
    LOAD HIERARCHICAL CATEGORIES
 ================================*/
 async function loadHierarchicalCategories() {
   try {
-    const response = await fetch(`${API_BASE_URL}/products/categories/tree`);
-    if (response.ok) {
-      categoryTree = await response.json();
-      renderCategoryNavigation();
-    } else {
-      // Fallback to default categories
-      initializeDefaultCategories();
-    }
+    const categoryTree = await window.pharmacyAPI.request(
+      '/products/categories/tree'
+    );
+    renderCategoryNavigation(categoryTree);
   } catch (error) {
     console.error('Error loading categories:', error);
     initializeDefaultCategories();
