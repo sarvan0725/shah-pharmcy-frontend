@@ -1696,6 +1696,12 @@ function updateUserStats() {
   console.log('updateUserStats skipped (temp)');
 }
 
+function updateCoinsDisplay() {
+  console.log('updateCoinsDisplay skipped (temp)');
+}
+
+
+
 
 
 function showLogin() {
