@@ -6,6 +6,7 @@
 window.APP_CONFIG = {
   API_BASE_URL: "https://shah-pharmacy-backend.onrender.com/api",
 
+  
   RAZORPAY_KEY_ID: "rzp_test_Rt82KwTYuXIf63",
 
   BUSINESS_CONFIG: {
