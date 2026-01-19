@@ -1671,15 +1671,11 @@ function showAbout() {
   document.body.appendChild(modal);
 }
 
-
+// ===============================
+// USER INITIALIZATION
+// ===============================
 
 function initializeUser() {
-
-// ===============================
-// TEMP FIXES (to prevent crashes)
-// ===============================
-
-function showUserProfile() {
   if (currentUser) {
     showUserProfile();
     updateUserStats();
@@ -1699,7 +1695,8 @@ function showUserProfile() {
 function updateUserStats() {
   console.log('updateUserStats skipped (temp)');
 }
- 
+
+
 
 function showLogin() {
   const loginModal = document.createElement('div');
