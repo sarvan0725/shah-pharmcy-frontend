@@ -1674,6 +1674,12 @@ function showAbout() {
 
 
 function initializeUser() {
+
+// ===============================
+// TEMP FIXES (to prevent crashes)
+// ===============================
+
+function showUserProfile() {
   if (currentUser) {
     showUserProfile();
     updateUserStats();
@@ -1681,6 +1687,19 @@ function initializeUser() {
     checkActiveDiscount();
   }
 }
+
+// ===============================
+// TEMP FIXES (to prevent crashes)
+// ===============================
+
+function showUserProfile() {
+  console.log('showUserProfile not implemented yet');
+}
+
+function updateUserStats() {
+  console.log('updateUserStats skipped (temp)');
+}
+ 
 
 function showLogin() {
   const loginModal = document.createElement('div');
