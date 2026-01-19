@@ -3,7 +3,9 @@ class PharmacyAPI {
     this.baseURL = window.APP_CONFIG.API_BASE_URL;
   }
 
+  // =====================
   // Helper method for API calls
+  // =====================
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
     const config = {
@@ -24,14 +26,32 @@ class PharmacyAPI {
     return data;
   }
 
-  // Product APIs
+  // =====================
+  // PRODUCT APIs
+  // =====================
   async getProducts(params = {}) {
     const query = new URLSearchParams(params).toString();
     return this.request(`/products${query ? `?${query}` : ''}`);
   }
 
+  // 🔥 FIXED CATEGORY API (IMPORTANT)
   async getCategories() {
-    return this.request('/products/categories');
+    return this.request('/products/categories/tree');
+  }
+
+  // =====================
+  // USER APIs
+  // =====================
+  async getUserStats(userId) {
+    return this.request(`/users/${userId}/stats`);
+  }
+
+  async getUserWallet(userId) {
+    return this.request(`/users/${userId}/wallet`);
+  }
+
+  async getActiveDiscount(userId) {
+    return this.request(`/users/${userId}/active-discount`);
   }
 }
 
