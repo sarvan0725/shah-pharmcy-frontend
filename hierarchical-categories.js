@@ -8,7 +8,6 @@ console.log("✅ hierarchical-categories.js loaded");
 let categoryTree = [];
 let currentCategoryPath = [];
 let currentLevel = 1;
-let currentCategoryId = null;
 
 /* ===============================
    LOAD HIERARCHICAL CATEGORIES
