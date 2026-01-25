@@ -43,9 +43,7 @@ function initializeDefaultCategories() {
 function renderCategoryNavigation() {
 
   // ✅ सही container (categories-scroll के अंदर render होगा)
-  const container = document.querySelector(
-    "#categorySection .categories-scroll"
-  );
+ const container = document.getElementById("categorySection");
 
   if (!container) {
     console.error("❌ #categorySection .categories-scroll not found");
