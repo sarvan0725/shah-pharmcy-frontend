@@ -224,3 +224,32 @@
     transform: translateY(0);
   }
 }
+
+.category-row {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scroll-behavior: smooth;
+}
+
+.category-card {
+  min-width: 110px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.category-icon {
+  font-size: 26px;
+}
+
+.category-name {
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 600;
+}
