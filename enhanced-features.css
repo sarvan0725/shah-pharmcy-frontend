@@ -954,3 +954,59 @@
     padding: 15px;
   }
 }
+
+/* ===============================
+   HIERARCHICAL CATEGORY DISPLAY FIX
+=============================== */
+
+.categories-section {
+  margin-top: 20px;
+}
+
+#categorySection {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 15px;
+  overflow-x: auto;
+  padding: 15px 10px;
+  scroll-behavior: smooth;
+}
+
+#categorySection::-webkit-scrollbar {
+  display: none;
+}
+
+/* Category Card Style */
+.category-card {
+  min-width: 130px;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: 0.2s ease;
+}
+
+.category-card:hover {
+  background: #f7f7f7;
+  transform: translateY(-3px);
+}
+
+/* Category Icon */
+.category-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+/* Category Name */
+.category-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+
+
+
