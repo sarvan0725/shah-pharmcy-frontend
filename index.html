@@ -60,13 +60,7 @@
   <!-- ================= MAIN CONTENT ================= -->
 <main class="main-content">
 
-  <!-- ================= CATEGORIES ================= -->
-<section class="categories-section">
-  <h2 class="section-title">Shop by Category</h2>
-
-  <!-- FIXED CATEGORY ROW -->
-  <div id="categorySection" class="category-row"></div>
-</section>
+ 
   <!-- ================= SUBCATEGORIES ================= -->
   <section class="subcategories" id="subcategoryContainer" style="display:none;">
     <div class="subcategory-scroll"></div>
@@ -170,14 +164,21 @@
 
 
 
-  <!-- CATEGORY + BREADCRUMB -->
+  <main class="main-content">
+
+  <!-- ✅ CATEGORY WILL SHOW HERE -->
+  <section class="categories-section">
+    <h2 class="section-title">Shop by Category</h2>
+    <div id="categorySection" class="category-row"></div>
+  </section>
+
+  <!-- Breadcrumb -->
   <div id="breadcrumbContainer" class="breadcrumb-container"></div>
 
-  <!-- PRODUCTS -->
-  <div id="productList" class="product-grid">
-    <!-- Products will be loaded dynamically -->
-  </div>
+  <!-- Products -->
+  <div id="productList" class="product-grid"></div>
 
+</main>
   <!-- PAGINATION -->
   <div id="pagination" class="pagination" style="display:none;">
     <!-- Pagination will be loaded dynamically -->
