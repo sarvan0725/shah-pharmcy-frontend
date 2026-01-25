@@ -88,13 +88,30 @@ function getCurrentCategories() {
    NAVIGATION
 ================================*/
 function navigateToCategory(category) {
+
+  console.log("✅ Category Clicked:", category);
+
+  // अगर children हैं → अंदर जाओ
   if (category.children && category.children.length > 0) {
+
     currentCategoryPath.push(category);
-    currentLevel++;
+
     renderCategoryNavigation();
+
+    return;
+  }
+
+  // अगर children नहीं हैं → यही final category है
+
+  // अब products filter करो name से
+  if (window.filterProductsByCategory) {
+
+    window.filterProductsByCategory(category.name);
+
   } else {
-    currentCategoryId = category.id;
-    loadProductsByCategory(category.id);
+
+    console.warn("⚠️ filterProductsByCategory() missing in app.js");
+
   }
 }
 
