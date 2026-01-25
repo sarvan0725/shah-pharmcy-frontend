@@ -41,25 +41,35 @@ function initializeDefaultCategories() {
    RENDER CATEGORY NAVIGATION
 ================================*/
 function renderCategoryNavigation() {
-  const container = document.getElementById('categorySection');
+
+  // ✅ सही container (categories-scroll के अंदर render होगा)
+  const container = document.querySelector(
+    "#categorySection .categories-scroll"
+  );
+
   if (!container) {
-    console.error("❌ #categorySection not found");
+    console.error("❌ #categorySection .categories-scroll not found");
     return;
   }
 
-  container.innerHTML = '';
+  // पहले साफ करो
+  container.innerHTML = "";
 
+  // categories दिखाओ
   const categoriesToShow = getCurrentCategories();
 
   categoriesToShow.forEach(category => {
-    const el = document.createElement('div');
-    el.className = 'category-card';
+
+    const el = document.createElement("div");
+    el.className = "category-card";
+
     el.innerHTML = `
       <div class="category-icon">${getCategoryIcon(category.name)}</div>
       <div class="category-name">${category.name}</div>
     `;
 
     el.onclick = () => navigateToCategory(category);
+
     container.appendChild(el);
   });
 }
