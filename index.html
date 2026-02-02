@@ -41,15 +41,37 @@
 <body>
 
 <!-- USER AUTH SECTION -->
-<div id="auth-section" style="max-width:400px;margin:40px auto;padding:20px;border:1px solid #ddd;border-radius:8px;">
-  <h2>User Login / Register</h2>
+<!-- OTP LOGIN SECTION -->
 
-  <input id="name" placeholder="Full Name" style="width:100%;padding:10px;margin-bottom:10px;">
-  <input id="mobile" placeholder="Mobile Number" style="width:100%;padding:10px;margin-bottom:10px;">
-  <input id="password" type="password" placeholder="Password" style="width:100%;padding:10px;margin-bottom:10px;">
+<input
+  id="mobile"
+  placeholder="Enter Mobile Number"
+  style="width:100%;padding:10px;margin-bottom:10px;"
+/>
 
-  <button onclick="register()" style="width:100%;padding:10px;margin-bottom:10px;">Register</button>
-  <button onclick="login()" style="width:100%;padding:10px;">Login</button>
+<button
+  onclick="sendOTP()"
+  style="width:100%;padding:10px;margin-bottom:10px;background:green;color:white;"
+>
+  Send OTP
+</button>
+
+<!-- OTP BOX Hidden Initially -->
+<div id="otpBox" style="display:none;">
+
+  <input
+    id="otp"
+    placeholder="Enter OTP"
+    style="width:100%;padding:10px;margin-bottom:10px;"
+  />
+
+  <button
+    onclick="verifyOTP()"
+    style="width:100%;padding:10px;background:blue;color:white;"
+  >
+    Verify OTP & Login
+  </button>
+
 </div>
 
 <!-- MAIN APP SECTION -->
