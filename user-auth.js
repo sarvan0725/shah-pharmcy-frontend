@@ -1,82 +1,95 @@
 // ===============================
-// USER AUTH SYSTEM (FRONTEND)
+// USER OTP AUTH SYSTEM (Frontend)
 // ===============================
 
-if (!window.currentUser) {
-  window.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-}
+let otpSent = false;
 
-// ---------- INIT ----------
-document.addEventListener("DOMContentLoaded", () => {
-  updateUI();
-  console.log("✅ user-auth.js loaded");
-});
+// Backend URL (Render)
+const API_URL = "https://shah-pharmacy-backend.onrender.com";
 
-// ---------- REGISTER ----------
-function register() {
-  const name = document.getElementById("name").value.trim();
-  const mobile = document.getElementById("mobile").value.trim();
-  const password = document.getElementById("password").value.trim();
+// -----------------------------
+// Send OTP
+// -----------------------------
+async function sendOTP() {
+  const phone = document.getElementById("mobile").value.trim();
 
-  if (!name || !mobile || !password) {
-    alert("❌ All fields required");
+  if (!phone) {
+    alert("Enter Mobile Number");
     return;
   }
 
-  const user = { name, mobile, password };
+  try {
+    const res = await fetch(`${API_URL}/api/otp/send-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phone }),
+    corresponding 
+    });
 
-  localStorage.setItem("currentUser", JSON.stringify(user));
-  currentUser = user;
+    const data = await res.json();
 
-  alert("✅ Registered successfully");
-  updateUI();
+    if (data.message) {
+      alert("OTP Sent Successfully ✅");
+
+      otpSent = true;
+
+      // Show OTP input box
+      document.getElementById("otpBox").style.display = "block";
+    } else {
+      alert("OTP Failed ❌");
+    }
+  } catch (err) {
+    console.log(err);
+    alert("Server Error");
+  }
 }
 
-// ---------- LOGIN ----------
-function login() {
-  const mobile = document.getElementById("mobile").value.trim();
-  const password = document.getElementById("password").value.trim();
+// -----------------------------
+// Verify OTP
+// -----------------------------
+async function verifyOTP() {
+  const phone = document.getElementById("mobile").value.trim();
+  const otp = document.getElementById("otp").value.trim();
 
-  const savedUser = JSON.parse(localStorage.getItem("currentUser"));
-
-  if (!savedUser) {
-    alert("❌ No user found. Please register first");
+  if (!otp) {
+    alert("Enter OTP");
     return;
   }
 
-  if (
-    savedUser.mobile === mobile &&
-    savedUser.password === password
-  ) {
-    currentUser = savedUser;
-    alert("✅ Login successful");
-    updateUI();
-  } else {
-    alert("❌ Invalid credentials");
+  try {
+    const res = await fetch(`${API_URL}/api/otp/verify-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phone, otp }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Login Successful ✅");
+
+      // Save user session
+      localStorage.setItem("currentUser", phone);
+
+      // Redirect to Home / Side Menu page
+      window.location.href = "index.html";
+    } else {
+      alert("Invalid OTP ❌");
+    }
+  } catch (err) {
+    console.log(err);
+    alert("Verification Failed");
   }
 }
 
-// ---------- LOGOUT ----------
-function logout() {
+// -----------------------------
+// Logout
+// -----------------------------
+function logoutUser() {
   localStorage.removeItem("currentUser");
-  currentUser = null;
-  updateUI();
-}
-
-// ---------- UI CONTROL ----------
-function updateUI() {
-  const authSection = document.getElementById("auth-section");
-  const mainContent = document.querySelector(".main-content");
-
-  if (currentUser) {
-    authSection.style.display = "none";
-    mainContent.style.display = "block";
-
-    document
-      .querySelectorAll(".user-name")
-      .forEach(el => (el.textContent = currentUser.name));
-  } else {
-    authSection.style.display = "block";
-    mainContent.style.display = "none";
-  }
+  window.location.href = "login.html";
 }
