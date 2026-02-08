@@ -6,6 +6,12 @@
    CONFIGURATION (from config.js)
 ================================*/
 
+
+let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
+
+
+
+
 function showUserProfile() {
   console.warn("showUserProfile not implemented yet");
 }
