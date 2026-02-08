@@ -4,7 +4,6 @@
 
 // Global state
 let otpSent = false;
-let currentUser = null;
 
 // Backend URL
 const API_URL = "https://shah-pharmacy-backend.onrender.com";
