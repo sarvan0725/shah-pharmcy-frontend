@@ -1,55 +1,28 @@
-// ============================================
-// USER OTP AUTH SYSTEM (Frontend)
-// Shah Pharmacy & Mini Mart
-// ============================================
+// ================================
+// USER OTP AUTH SYSTEM
+// ================================
 
 let otpSent = false;
 
-// Backend URL (Render)
+// Backend URL
 const API_URL = "https://shah-pharmacy-backend.onrender.com";
 
-// ============================================
-// AUTO LOGIN CHECK (Page Load)
-// ============================================
-document.addEventListener("DOMContentLoaded", () => {
-  const user = localStorage.getItem("currentUser");
-
-  if (user) {
-    showAppSection();
-  } else {
-    showAuthSection();
-  }
-});
-
-// ============================================
-// UI SECTION CONTROL
-// ============================================
-function showAuthSection() {
+// Open login modal
+function openLogin() {
   document.getElementById("auth-section").style.display = "block";
-  document.getElementById("app-section").style.display = "none";
 }
 
-function showAppSection() {
+// Close login modal
+function closeLogin() {
   document.getElementById("auth-section").style.display = "none";
-  document.getElementById("app-section").style.display = "block";
-
-  // Update Side Menu Name
-  const userPhone = localStorage.getItem("currentUser");
-  if (userPhone) {
-    document.getElementById("guest-name").innerText = userPhone;
-    document.getElementById("login-btn").style.display = "none";
-    document.getElementById("logout-btn").style.display = "block";
-  }
 }
 
-// ============================================
-// SEND OTP FUNCTION
-// ============================================
+// Send OTP
 async function sendOTP() {
   const phone = document.getElementById("mobile").value.trim();
 
   if (!phone) {
-    alert("Enter Mobile Number");
+    alert("Enter mobile number");
     return;
   }
 
@@ -65,26 +38,23 @@ async function sendOTP() {
     const data = await res.json();
 
     if (data.success) {
+      alert("OTP sent");
+
       otpSent = true;
 
-      alert("OTP Sent Successfully ✅");
-
-      // Show OTP Input Box
       document.getElementById("otp-box").style.display = "block";
-      document.getElementById("send-otp-btn").style.display = "none";
       document.getElementById("verify-otp-btn").style.display = "block";
+      document.getElementById("send-otp-btn").style.display = "none";
     } else {
-      alert("OTP Failed ❌ " + data.error);
+      alert(data.message || "Failed to send OTP");
     }
   } catch (err) {
-    alert("Server Error ❌");
-    console.log(err);
+    console.error(err);
+    alert("Server error");
   }
 }
 
-// ============================================
-// VERIFY OTP FUNCTION
-// ============================================
+// Verify OTP
 async function verifyOTP() {
   const phone = document.getElementById("mobile").value.trim();
   const otp = document.getElementById("otp").value.trim();
@@ -106,38 +76,19 @@ async function verifyOTP() {
     const data = await res.json();
 
     if (data.success) {
-      alert("Login Successful ✅");
+      alert("Login successful");
 
-      // Save User Login
-      localStorage.setItem("currentUser", phone);
+      // Save user
+      const user = { phone };
+      localStorage.setItem("currentUser", JSON.stringify(user));
 
-      // Open Main App
-      showAppSection();
+      closeLogin();
+      location.reload();
     } else {
-      alert("Invalid OTP ❌");
+      alert(data.message || "Invalid OTP");
     }
   } catch (err) {
-    alert("Server Error ❌");
-    console.log(err);
+    console.error(err);
+    alert("Server error");
   }
-}
-
-// ============================================
-// LOGOUT FUNCTION
-// ============================================
-function logoutUser() {
-  localStorage.removeItem("currentUser");
-
-  alert("Logged Out Successfully ✅");
-
-  // Reset UI
-  document.getElementById("otp-box").style.display = "none";
-  document.getElementById("send-otp-btn").style.display = "block";
-  document.getElementById("verify-otp-btn").style.display = "none";
-
-  document.getElementById("guest-name").innerText = "Guest User";
-  document.getElementById("login-btn").style.display = "block";
-  document.getElementById("logout-btn").style.display = "none";
-
-  showAuthSection();
 }
