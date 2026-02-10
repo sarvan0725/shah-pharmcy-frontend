@@ -507,15 +507,14 @@ async function addProduct() {
   const stock = Number(document.getElementById("pStock").value);
   const category = document.getElementById("pCategory").value;
 
- const productData = {
+ const product = {
   name,
   weight,
   price,
   stock,
   category,
-  image: uploadedImageUrl || "https://res.cloudinary.com/demo/image/upload/sample.jpg"
+  image: uploadedImageUrl || "https://dummyimage.com/300x300/cccccc/000000&text=Product"
 };
-
   console.log("Sending product:", productData);
 
   try {
@@ -598,58 +597,6 @@ function loadProducts(searchQuery = '') {
     `;
   });
 }
-//===================================//
-//======UPLOADIMAGE==================//
-
-async function uploadImage() {
-  const fileInput = document.getElementById("pImage");
-  const file = fileInput.files[0];
-
-  if (!file) {
-    alert("Please select an image first");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", "unsigned_preset"); // apna preset name
-
-  try {
-    const res = await fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await res.json();
-    uploadedImageUrl = data.secure_url;
-
-    alert("Image uploaded successfully");
-  } catch (err) {
-    console.error(err);
-    alert("Image upload failed");
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* ===============================
