@@ -473,9 +473,8 @@ async function uploadImage() {
 
  const formData = new FormData();
 formData.append("file", file);
-formData.append("upload_preset", "unsigned_preset"); // preset name
-formData.append("cloud_name", "detu15x8u"); // correct cloud name
-
+formData.append("upload_preset", "shah_upload"); // preset name
+ 
 try {
   const res = await fetch(
     "https://api.cloudinary.com/v1_1/detu15x8u/image/upload",
