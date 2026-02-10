@@ -571,7 +571,16 @@ async function addProduct() {
   if (subInput) {
     subInput.value = "";
 }
-  removeProductImage(); // Clear image preview
+
+function removeProductImage() {
+  currentProductImage = '';
+  const preview = document.getElementById("productImagePreview");
+  if (preview) preview.innerHTML = '';
+}
+
+
+
+  
   
   
 function deleteProduct(id) {
