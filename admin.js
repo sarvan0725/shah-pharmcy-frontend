@@ -500,60 +500,52 @@ function setAsMainBanner() {
   }
 }
 
-function addProduct() {
+async function addProduct() {
+  const name = document.getElementById("pName").value.trim();
+  const weight = document.getElementById("pWeight").value.trim();
+  const price = parseFloat(document.getElementById("pPrice").value);
+  const stock = parseInt(document.getElementById("pStock").value);
+  const category = document.getElementById("pCategory").value;
 
-    const name = document.getElementById("pName").value;
-    const weight = document.getElementById("pWeight").value;
-    const price = Number(document.getElementById("pPrice").value);
-    const stock = Number(document.getElementById("pStock").value);
-    const category = document.getElementById("pCategory").value;
+  if (!name || !weight || !price || !stock || !category) {
+    alert("Please fill all fields");
+    return;
+  }
 
-    const subcategoryInput = document.getElementById("pSubcategory");
-    const subcategory = subcategoryInput ? subcategoryInput.value : null;
+  const productData = {
+    name: name,
+    weight: weight,
+    price: price,
+    stock: stock,
+    category: category,
+    image: ""
+  };
 
-    const image = currentProductImage;
-
-    if (!name || !weight || !price || !stock) {
-        alert("Please fill all required fields!");
-        return;
-    }
-
-    const categoryMap = {
-        medicine: 1,
-        grocery: 2,
-        personal: 3,
-        bulk: 4
-    };
-
-    const newProduct = {
-        id: Date.now(),
-        name: name,
-        weight: weight,
-        price: price,
-        stock: stock,
-        category: category,
-        categoryId: categoryMap[category] || 2,
-        subcategory: subcategory || null,
-        subcategoryId: subcategory ? subcategory : null,
-        image: image
-    };
-
-    fetch("https://shah-pharmacy-backend.onrender.com/api/products", {
+  try {
+    const res = await fetch(
+      "https://shah-pharmacy-backend.onrender.com/api/products",
+      {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify(newProduct)
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert("Product added to backend successfully!");
-        loadProducts();
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Error adding product to backend");
-    });
+        body: JSON.stringify(productData)
+      }
+    );
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Product added successfully");
+      location.reload();
+    } else {
+      console.error(data);
+      alert("Backend rejected product");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
+  }
 }
   // Clear form
   document.getElementById("pName").value = "";
