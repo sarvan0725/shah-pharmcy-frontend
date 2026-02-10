@@ -27,9 +27,6 @@ const ALERT_PHONE = "7905190933";
 const LOW_STOCK_THRESHOLD = 30;
 let alertedProducts = JSON.parse(localStorage.getItem("alertedProducts")) || [];
 
-// Charts
-
-let salesChart;
 
 /* ===============================
    SHOP CHAT MANAGEMENT FOR ADMIN
