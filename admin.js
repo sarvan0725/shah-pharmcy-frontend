@@ -499,57 +499,60 @@ function setAsMainBanner() {
 }
 
 function addProduct() {
-  const name = document.getElementById("pName").value;
-  const weight = document.getElementById("pWeight").value;
-  const price = Number(document.getElementById("pPrice").value);
-  const stock = Number(document.getElementById("pStock").value);
-  const category = document.getElementById("pCategory").value;
-  const subcategoryInput = document.getElementById("pSubcategory");
-  const subcategory = subcategoryInput ? subcategoryInput.value : null;
-  const image = currentProductImage; // Use uploaded image
-  
-  if (!name || !weight || !price || !stock) {
-    alert("Please fill all required fields!");
-    return;
-  }
-  
-  // Map category names to IDs for user site compatibility
-  const categoryMap = {
-    'medicine': 1,
-    'grocery': 2, 
-    'personal': 3,
-    'bulk': 4
-  };
-  
-  const newProduct = {
-    id: Date.now(),
-    name: name,
-    weight: weight,
-    price: price,
-    stock: stock,
-    category: category,
-    categoryId: categoryMap[category] || 2,
-    subcategory: subcategory || null,
-    subcategoryId: subcategory ? subcategory : null,
-    image: image // Store the base64 image data
-  };
-  
- fetch("https://shah-pharmacy-backend.onrender.com/api/products", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(newProduct)
-})
-.then(res => res.json())
-.then(data => {
-  alert("Product added to backend successfully!");
-  loadProducts();
-})
-.catch(err => {
-  console.error(err);
-  alert("Error adding product to backend");
-});
+
+    const name = document.getElementById("pName").value;
+    const weight = document.getElementById("pWeight").value;
+    const price = Number(document.getElementById("pPrice").value);
+    const stock = Number(document.getElementById("pStock").value);
+    const category = document.getElementById("pCategory").value;
+
+    const subcategoryInput = document.getElementById("pSubcategory");
+    const subcategory = subcategoryInput ? subcategoryInput.value : null;
+
+    const image = currentProductImage;
+
+    if (!name || !weight || !price || !stock) {
+        alert("Please fill all required fields!");
+        return;
+    }
+
+    const categoryMap = {
+        medicine: 1,
+        grocery: 2,
+        personal: 3,
+        bulk: 4
+    };
+
+    const newProduct = {
+        id: Date.now(),
+        name: name,
+        weight: weight,
+        price: price,
+        stock: stock,
+        category: category,
+        categoryId: categoryMap[category] || 2,
+        subcategory: subcategory || null,
+        subcategoryId: subcategory ? subcategory : null,
+        image: image
+    };
+
+    fetch("https://shah-pharmacy-backend.onrender.com/api/products", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newProduct)
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("Product added to backend successfully!");
+        loadProducts();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error adding product to backend");
+    });
+}
   // Clear form
   document.getElementById("pName").value = "";
   document.getElementById("pWeight").value = "";
