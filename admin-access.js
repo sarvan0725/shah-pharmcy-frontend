@@ -2,18 +2,11 @@
 // This file protects admin dashboard pages
 
 (function () {
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
+    const isAdmin = localStorage.getItem("isAdmin");
 
-  if (!token || !user) {
-    alert("Please login as admin");
-    window.location.href = "./admin-login/index.html";
-    return;
-  }
-
-  if (user.role !== "admin") {
-    alert("Access denied: Admin only");
-    localStorage.clear();
-    window.location.href = "./admin-login/index.html";
-  }
+    if (isAdmin !== "true") {
+        alert("Please login as admin");
+        window.location.href = "/admin-login.html";
+        return;
+    }
 })();
