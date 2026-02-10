@@ -1,28 +1,6 @@
-console.log("admin.js loaded");
-
-const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
-
-
-
-const token = localStorage.getItem("token");
-const user = JSON.parse(localStorage.getItem("user"));
-
-if (!token || !user || user.role !== "admin") {
-  alert("Unauthorized");
-  window.location.href = "./admin-login/index.html";
-}
-
-
-// ===== Cloudinary Config =====
-const CLOUD_NAME = "detu15x8u";
-const UPLOAD_PRESET = "shah_upload";
-
-// store uploaded URLs
-let currentProductImageUrl = "";
-let currentShopBannerUrl = "";
-
-
-
+/* ===============================
+   ADMIN PANEL - COMPLETE SYSTEM
+================================*/
 
 // Load products from main app
 let products = JSON.parse(localStorage.getItem("products")) || [
@@ -249,41 +227,127 @@ setInterval(() => {
   }
 }, 30000);
 
-// Get saved admin credentials
+/* ===============================
+   ADMIN LOGIN
+================================*/
+// Get admin credentials from localStorage or use defaults
 function getAdminCredentials() {
   const saved = localStorage.getItem('adminCredentials');
-  return saved
-    ? JSON.parse(saved)
-    : { username: 'admin', password: '1234' };
+  return saved ? JSON.parse(saved) : { username: 'admin', password: '1234' };
 }
 
-// Admin login
 function adminLogin() {
-  const user = document.getElementById('adminUser').value;
-  const pass = document.getElementById('adminPass').value;
-
+  const user = document.getElementById("adminUser").value;
+  const pass = document.getElementById("adminPass").value;
+  
+  // Reset to default credentials if needed
+  const defaultCredentials = { username: 'admin', password: '1234' };
+  
+  // Try default credentials first
+  if (user === defaultCredentials.username && pass === defaultCredentials.password) {
+    // Save default credentials to localStorage
+    localStorage.setItem('adminCredentials', JSON.stringify(defaultCredentials));
+    window.location.href = "dashboard.html";
+    return;
+  }
+  
+  // Try saved credentials
   const credentials = getAdminCredentials();
-
   if (user === credentials.username && pass === credentials.password) {
-    localStorage.setItem("isAdmin", "true");
     window.location.href = "dashboard.html";
   } else {
-    alert("Invalid credentials");
+    alert("Invalid credentials! Try: admin / 1234");
   }
 }
 
-// Protect dashboard
-function checkAdmin() {
-  if (localStorage.getItem("isAdmin") !== "true") {
-    window.location.href = "admin-login.html";
+/* ===============================
+   ADMIN PASSWORD CHANGE
+================================*/
+function showPasswordChange() {
+  const modal = document.createElement('div');
+  modal.innerHTML = `
+    <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;" onclick="this.remove()">
+      <div style="background:white;padding:30px;border-radius:15px;max-width:400px;width:90%;" onclick="event.stopPropagation()">
+        <h3 style="color:#DC2626;margin-bottom:20px;"><i class="fas fa-key"></i> Change Admin Password</h3>
+        <div style="margin:15px 0;">
+          <input type="password" id="currentPassword" placeholder="Current Password" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;margin:5px 0;">
+          <input type="password" id="newPassword" placeholder="New Password" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;margin:5px 0;">
+          <input type="password" id="confirmPassword" placeholder="Confirm New Password" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;margin:5px 0;">
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;">
+          <button onclick="changeAdminPassword()" style="background:#DC2626;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;">Change Password</button>
+          <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:#ccc;color:black;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;">Cancel</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+function changeAdminPassword() {
+  const currentPass = document.getElementById('currentPassword').value;
+  const newPass = document.getElementById('newPassword').value;
+  const confirmPass = document.getElementById('confirmPassword').value;
+  const credentials = getAdminCredentials();
+  
+  if (!currentPass || !newPass || !confirmPass) {
+    alert('Please fill all fields');
+    return;
+  }
+  
+  if (currentPass !== credentials.password) {
+    alert('Current password is incorrect');
+    return;
+  }
+  
+  if (newPass.length < 4) {
+    alert('New password must be at least 4 characters');
+    return;
+  }
+  
+  if (newPass !== confirmPass) {
+    alert('New passwords do not match');
+    return;
+  }
+  
+  // Save new credentials
+  const newCredentials = {
+    username: credentials.username,
+    password: newPass
+  };
+  
+  localStorage.setItem('adminCredentials', JSON.stringify(newCredentials));
+  
+  // Close modal
+  document.querySelector('[style*="position:fixed"]').remove();
+  
+  alert('Password changed successfully! Please login again with new password.');
+  
+  // Redirect to login
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 1000);
+}
+
+function changeAdminUsername() {
+  const credentials = getAdminCredentials();
+  const newUsername = prompt('Enter new username:', credentials.username);
+  
+  if (newUsername && newUsername.trim() && newUsername !== credentials.username) {
+    const newCredentials = {
+      username: newUsername.trim(),
+      password: credentials.password
+    };
+    
+    localStorage.setItem('adminCredentials', JSON.stringify(newCredentials));
+    alert('Username changed successfully! Please login again.');
+    
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1000);
   }
 }
 
-// Logout
-function adminLogout() {
-  localStorage.removeItem("isAdmin");
-  window.location.href = "admin-login.html";
-}
 /* ===============================
    LOAD DASHBOARD
 ================================*/
@@ -296,151 +360,183 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-async function uploadProductImage() {
-  const fileInput = document.getElementById("productImageUpload");
+/* ===============================
+   PRODUCT MANAGEMENT
+================================*/
+function loadSubcategoryOptions() {
+  const categorySelect = document.getElementById('pCategory');
+  const subcategorySelect = document.getElementById('pSubcategory');
+  const selectedCategory = categorySelect.value;
+  
+  // Map category names to IDs
+  const categoryMap = {
+    'medicine': 1,
+    'grocery': 2, 
+    'personal': 3,
+    'bulk': 4
+  };
+  
+  const categoryId = categoryMap[selectedCategory];
+  const categories = JSON.parse(localStorage.getItem('categories')) || [];
+  const category = categories.find(c => c.id === categoryId);
+  
+  subcategorySelect.innerHTML = '<option value="">Select Subcategory (Optional)</option>';
+  
+  if (category && category.subcategories && category.subcategories.length > 0) {
+    category.subcategories.forEach(sub => {
+      const subName = typeof sub === 'string' ? sub : sub.name || sub;
+      subcategorySelect.innerHTML += `<option value="${subName}">${subName}</option>`;
+    });
+    subcategorySelect.style.display = 'block';
+  } else {
+    subcategorySelect.style.display = 'none';
+  }
+}
+
+let currentProductImage = '';
+
+// Product image upload function
+function uploadProductImage() {
+  const fileInput = document.getElementById('productImageUpload');
   const file = fileInput.files[0];
-
+  
   if (!file) return;
-
-  if (!file.type.startsWith("image/")) {
-    alert("Please select an image file");
+  
+  // Check file type
+  if (!file.type.startsWith('image/')) {
+    alert('Please select an image file');
     return;
   }
-
+  
+  // Check file size (max 5MB)
   if (file.size > 5 * 1024 * 1024) {
-    alert("Image size should be less than 5MB");
+    alert('Image size should be less than 5MB');
     return;
   }
-
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", UPLOAD_PRESET);
-
-  try {
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      {
-        method: "POST",
-        body: formData
-      }
-    );
-
-    const data = await res.json();
-    currentProductImageUrl = data.secure_url;
-
-    document.getElementById("productImagePreview").innerHTML = `
-      <img src="${currentProductImageUrl}"
-        style="max-width:150px;max-height:150px;border-radius:8px;border:1px solid #ddd;" />
-      <br/>
-      <button onclick="removeProductImage()">Remove</button>
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    currentProductImage = e.target.result;
+    
+    // Show preview
+    const preview = document.getElementById('productImagePreview');
+    preview.innerHTML = `
+      <div class="image-preview-container">
+        <img src="${currentProductImage}" alt="Product Preview" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid #ddd;">
+        <button onclick="removeProductImage()" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-top: 5px;">Remove Image</button>
+      </div>
     `;
-  } catch (err) {
-    console.error(err);
-    alert("Product image upload failed");
-  }
+  };
+  
+  reader.readAsDataURL(file);
 }
 
-async function uploadShopImage() {
-  const fileInput = document.getElementById("shopImageUpload");
+// Remove product image
+function removeProductImage() {
+  currentProductImage = '';
+  document.getElementById('productImagePreview').innerHTML = '';
+  document.getElementById('productImageUpload').value = '';
+}
+
+// Shop image upload function
+function uploadShopImage() {
+  const fileInput = document.getElementById('shopImageUpload');
   const file = fileInput.files[0];
-
+  
   if (!file) return;
-
-  if (!file.type.startsWith("image/")) {
-    alert("Please select an image file");
+  
+  if (!file.type.startsWith('image/')) {
+    alert('Please select an image file');
     return;
   }
-
+  
   if (file.size > 10 * 1024 * 1024) {
-    alert("Image size should be less than 10MB");
+    alert('Image size should be less than 10MB');
     return;
   }
-
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", UPLOAD_PRESET);
-
-  try {
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      {
-        method: "POST",
-        body: formData
-      }
-    );
-
-    const data = await res.json();
-    currentShopBannerUrl = data.secure_url;
-
-    document.getElementById("currentShopImage").innerHTML = `
-      <img src="${currentShopBannerUrl}"
-        style="max-width:300px;max-height:200px;border-radius:8px;border:1px solid #ddd;" />
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const imageData = e.target.result;
+    
+    // Show preview
+    const preview = document.getElementById('currentShopImage');
+    preview.innerHTML = `
+      <img src="${imageData}" alt="Shop Banner" style="max-width: 300px; max-height: 200px; border-radius: 8px; border: 1px solid #ddd;">
     `;
+    
+    // Show set banner button
+    document.getElementById('setBannerBtn').style.display = 'block';
+    
+    // Store temporarily
+    localStorage.setItem('tempShopImage', imageData);
+  };
+  
+  reader.readAsDataURL(file);
+}
 
-    document.getElementById("setBannerBtn").style.display = "block";
-  } catch (err) {
-    console.error(err);
-    alert("Shop banner upload failed");
+// Set shop banner
+function setAsMainBanner() {
+  const tempImage = localStorage.getItem('tempShopImage');
+  if (tempImage) {
+    localStorage.setItem('shopBannerImage', tempImage);
+    localStorage.removeItem('tempShopImage');
+    alert('Shop banner updated successfully!');
+    document.getElementById('setBannerBtn').style.display = 'none';
   }
 }
 
-
-async function addProduct() {
-  const name = document.getElementById("pName").value.trim();
-  const weight = document.getElementById("pWeight").value.trim();
+function addProduct() {
+  const name = document.getElementById("pName").value;
+  const weight = document.getElementById("pWeight").value;
   const price = Number(document.getElementById("pPrice").value);
   const stock = Number(document.getElementById("pStock").value);
-  const categoryKey = document.getElementById("pCategory").value;
-
-  if (!name || !weight || !price || !stock || !categoryKey) {
-    alert("Please fill all required fields");
+  const category = document.getElementById("pCategory").value;
+  const subcategory = document.getElementById("pSubcategory").value;
+  const image = currentProductImage; // Use uploaded image
+  
+  if (!name || !weight || !price || !stock) {
+    alert("Please fill all required fields!");
     return;
   }
-
-  const categoryMap = {
-    medicine: 1,
-    grocery: 2,
-    personal: 3,
-    bulk: 4
-  };
-
-  const product = {
-  name: name,
-  price: price,
-  stock: stock,
-  categoryId: Number(categoryMap[categoryKey]),
-  description: weight,
-  image: currentProductImageUrl 
-    ? currentProductImageUrl 
-    : "https://dummyimage.com/300x300/000/fff.png"
-};
   
-  try {
-    const res = await fetch(
-      "https://shah-pharmacy-backend.onrender.com/api/products",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(product)
-      }
-    );
-
-    const data = await res.json();
-
-    if (!res.ok) throw new Error("API failed");
-
-    alert("✅ Product added successfully");
-    console.log("Backend response:", data);
-
-  } catch (err) {
-    console.error(err);
-    alert("❌ Product add failed");
-  }
+  // Map category names to IDs for user site compatibility
+  const categoryMap = {
+    'medicine': 1,
+    'grocery': 2, 
+    'personal': 3,
+    'bulk': 4
+  };
+  
+  const newProduct = {
+    id: Date.now(),
+    name: name,
+    weight: weight,
+    price: price,
+    stock: stock,
+    category: category,
+    categoryId: categoryMap[category] || 2,
+    subcategory: subcategory || null,
+    subcategoryId: subcategory ? subcategory : null,
+    image: image // Store the base64 image data
+  };
+  
+  products.push(newProduct);
+  localStorage.setItem("products", JSON.stringify(products));
+  
+  // Clear form
+  document.getElementById("pName").value = "";
+  document.getElementById("pWeight").value = "";
+  document.getElementById("pPrice").value = "";
+  document.getElementById("pStock").value = "";
+  document.getElementById("pSubcategory").value = "";
+  removeProductImage(); // Clear image preview
+  
+  loadProducts();
+  loadAnalytics();
+  checkLowStock();
+  alert("Product added successfully with image!");
 }
-
-
-
-
 
 function deleteProduct(id) {
   if (confirm("Are you sure you want to delete this product?")) {
