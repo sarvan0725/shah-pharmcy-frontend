@@ -507,14 +507,14 @@ async function addProduct() {
   const stock = Number(document.getElementById("pStock").value);
   const category = document.getElementById("pCategory").value;
 
-  const productData = {
-    name: name,
-    weight: weight,
-    price: price,
-    stock: stock,
-    category: category,
-    image: "no-image"
-  };
+ const productData = {
+  name,
+  weight,
+  price,
+  stock,
+  category,
+  image: uploadedImageUrl || "https://res.cloudinary.com/demo/image/upload/sample.jpg"
+};
 
   console.log("Sending product:", productData);
 
