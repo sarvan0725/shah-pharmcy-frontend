@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Admin Login | Shah Pharmacy</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,6 +14,7 @@
       align-items: center;
       height: 100vh;
     }
+
     .login-box {
       background: #fff;
       padding: 30px;
@@ -20,89 +22,48 @@
       border-radius: 8px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
+
     h2 {
       text-align: center;
       margin-bottom: 20px;
       color: #2e7d32;
     }
+
     input {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
+      margin-bottom: 12px;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
+
     button {
       width: 100%;
       padding: 10px;
       background: #2e7d32;
-      color: #fff;
+      color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 16px;
     }
+
     button:hover {
-      background: #256428;
+      background: #256628;
     }
   </style>
 </head>
+
 <body>
 
   <div class="login-box">
     <h2>Admin Login</h2>
-    <input type="password" id="password" placeholder="Enter admin password">
-    <button onclick="login()">Login</button>
+
+    <input id="admin-username" placeholder="Username" />
+    <input id="admin-password" type="password" placeholder="Password" />
+
+    <button onclick="adminLogin()">Login</button>
   </div>
 
-  <script>
-    
-const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
-
-async function sendOtp() {
-  const contact = document.getElementById("contact").value;
-
-  if (!contact) {
-    alert("Enter phone or email");
-    return;
-  }
-
-  const res = await fetch(`${API_BASE}/auth/send-otp`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ contact, type: "phone" })
-  });
-
-  const data = await res.json();
-  alert("OTP sent (check backend / console)");
-}
-
-async function verifyOtp() {
-  const contact = document.getElementById("contact").value;
-  const otp = document.getElementById("otp").value;
-
-  const res = await fetch(`${API_BASE}/auth/verify-otp`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ contact, otp })
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    alert("OTP invalid");
-    return;
-  }
-
-  // 🔐 SAVE TOKEN + USER
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("user", JSON.stringify(data.user));
-
-  if (data.user.role !== "admin") {
-    alert("Not an admin account");
-    return;
-  }
-
-  window.location.href = "../dashboard.html";
-}
-</script>
+  <script src="admin.js"></script>
+</body>
+</html>
