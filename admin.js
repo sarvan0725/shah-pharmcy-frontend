@@ -409,48 +409,8 @@ function loadSubcategoryOptions() {
 
 let currentProductImage = '';
 
-// Product image upload function
-function uploadProductImage() {
-  const fileInput = document.getElementById('productImageUpload');
-  const file = fileInput.files[0];
-  
-  if (!file) return;
-  
-  // Check file type
-  if (!file.type.startsWith('image/')) {
-    alert('Please select an image file');
-    return;
-  }
-  
-  // Check file size (max 5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    alert('Image size should be less than 5MB');
-    return;
-  }
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    currentProductImage = e.target.result;
-    
-    // Show preview
-    const preview = document.getElementById('productImagePreview');
-    preview.innerHTML = `
-      <div class="image-preview-container">
-        <img src="${currentProductImage}" alt="Product Preview" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid #ddd;">
-        <button onclick="removeProductImage()" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-top: 5px;">Remove Image</button>
-      </div>
-    `;
-  };
-  
-  reader.readAsDataURL(file);
-}
 
-// Remove product image
-function removeProductImage() {
-  currentProductImage = '';
-  document.getElementById('productImagePreview').innerHTML = '';
-  document.getElementById('productImageUpload').value = '';
-}
+
 
 // Shop image upload function
 function uploadShopImage() {
@@ -500,21 +460,80 @@ function setAsMainBanner() {
   }
 }
 
+let uploadedImageUrl = "";
+
+async function uploadImage() {
+  const fileInput = document.getElementById("pImage");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert("Please select an image first");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "unsigned_preset");
+  formData.append("cloud_name", "YOUR_CLOUD_NAME");
+
+  try {
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+    uploadedImageUrl = data.secure_url;
+
+    alert("Image uploaded successfully");
+  } catch (err) {
+    console.error(err);
+    alert("Image upload failed");
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 async function addProduct() {
-  const name = document.getElementById("pName").value.trim();
-  const weight = document.getElementById("pWeight").value.trim();
-  const price = Number(document.getElementById("pPrice").value);
-  const stock = Number(document.getElementById("pStock").value);
+  const name = document.getElementById("pName").value;
+  const weight = document.getElementById("pWeight").value;
+  const price = document.getElementById("pPrice").value;
+  const stock = document.getElementById("pStock").value;
   const category = document.getElementById("pCategory").value;
 
- const product = {
-  name,
-  weight,
-  price,
-  stock,
-  category,
-  image: uploadedImageUrl || "https://dummyimage.com/300x300/cccccc/000000&text=Product"
-};
+  if (!name || !weight || !price || !stock || !category) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  if (!uploadedImageUrl) {
+    alert("Please upload product image first");
+    return;
+  }
+
+  const product = {
+    name: name,
+    weight: weight,
+    price: Number(price),
+    stock: Number(stock),
+    category: category,
+    image: uploadedImageUrl,
+  };
+
   console.log("Sending product:", product);
 
   try {
@@ -523,9 +542,9 @@ async function addProduct() {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(product)
+        body: JSON.stringify(product),
       }
     );
 
@@ -539,7 +558,7 @@ async function addProduct() {
       alert("Backend rejected product. Check console.");
     }
   } catch (err) {
-    console.error("Error:", err);
+    console.error(err);
     alert("Server error");
   }
 }
