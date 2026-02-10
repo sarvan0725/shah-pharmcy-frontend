@@ -504,7 +504,8 @@ function addProduct() {
   const price = Number(document.getElementById("pPrice").value);
   const stock = Number(document.getElementById("pStock").value);
   const category = document.getElementById("pCategory").value;
-  const subcategory = document.getElementById("pSubcategory").value;
+  const subcategoryInput = document.getElementById("pSubcategory");
+  const subcategory = subcategoryInput ? subcategoryInput.value : null;
   const image = currentProductImage; // Use uploaded image
   
   if (!name || !weight || !price || !stock) {
@@ -541,7 +542,9 @@ function addProduct() {
   document.getElementById("pWeight").value = "";
   document.getElementById("pPrice").value = "";
   document.getElementById("pStock").value = "";
-  document.getElementById("pSubcategory").value = "";
+ if (subcategoryInput) {
+  subcategoryInput.value = "";
+}
   removeProductImage(); // Clear image preview
   
   loadProducts();
