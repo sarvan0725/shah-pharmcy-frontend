@@ -5,7 +5,7 @@
 
 let categoryChart = null;
 let salesChart = null;
-
+let uploadedImageUrl = "";
 
 // Load products from main app
 let products = JSON.parse(localStorage.getItem("products")) || [
