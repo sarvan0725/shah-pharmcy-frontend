@@ -3,10 +3,7 @@
 // ===============================
 
 // Global state
-var otpSent = false;
-
-// Backend URL
-const API_URL = "https://shah-pharmacy-backend.onrender.com";
+let otpSent = false;
 
 // Open login modal
 function openLogin() {
@@ -27,17 +24,15 @@ function closeLogin() {
 // Send OTP
 async function sendOTP() {
   const phoneInput = document.getElementById("mobile");
-  if (!phoneInput) return;
-
   const phone = phoneInput.value.trim();
 
-  if (!phone || phone.length < 10) {
-    alert("Enter valid mobile number");
+  if (!phone || phone.length !== 10) {
+    alert("Enter valid 10 digit mobile number");
     return;
   }
 
   try {
-    const res = await fetch(API_URL + "/api/otp/send-otp", {
+    const res = await fetch(API_URL + "/otp/send-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,16 +45,18 @@ async function sendOTP() {
     if (data.success) {
       otpSent = true;
 
+      // Show OTP box
       document.getElementById("otp-box").style.display = "block";
       document.getElementById("verify-otp-btn").style.display = "block";
+      document.getElementById("send-otp-btn").style.display = "none";
 
       alert("OTP sent successfully");
     } else {
-      alert("Failed to send OTP");
+      alert(data.message || "Failed to send OTP");
     }
   } catch (err) {
     console.error(err);
-    alert("Error sending OTP");
+    alert("Server error while sending OTP");
   }
 }
 
@@ -74,7 +71,7 @@ async function verifyOTP() {
   }
 
   try {
-    const res = await fetch(API_URL + "/api/otp/verify-otp", {
+    const res = await fetch(API_URL + "/otp/verify-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,12 +83,20 @@ async function verifyOTP() {
 
     if (data.success) {
       alert("Login successful");
+
+      // Save user
+      localStorage.setItem("currentUser", phone);
+
+      // Close modal
       closeLogin();
+
+      // Reload app
+      location.reload();
     } else {
-      alert("Invalid OTP");
+      alert(data.message || "Invalid OTP");
     }
   } catch (err) {
     console.error(err);
-    alert("Error verifying OTP");
+    alert("Server error while verifying OTP");
   }
 }
