@@ -252,7 +252,7 @@ function adminLogin() {
   const username = usernameInput.value;
   const password = passwordInput.value;
 
-  if (username === "admin" && password === "admin123") {
+ if (username === "admin" && password === "1234") {
     localStorage.setItem("isAdmin", "true");
     window.location.href = "dashboard.html";
   } else {
