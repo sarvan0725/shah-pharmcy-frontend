@@ -471,32 +471,28 @@ async function uploadImage() {
     return;
   }
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", "unsigned_preset");
-  formData.append("cloud_name", "YOUR_CLOUD_NAME");
+ const formData = new FormData();
+formData.append("file", file);
+formData.append("upload_preset", "unsigned_preset"); // preset name
+formData.append("cloud_name", "detu15x8u"); // correct cloud name
 
-  try {
-    const res = await fetch(
-      "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+try {
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/detu15x8u/image/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
 
-    const data = await res.json();
-    uploadedImageUrl = data.secure_url;
+  const data = await res.json();
+  uploadedImageUrl = data.secure_url;
 
-    alert("Image uploaded successfully");
-  } catch (err) {
-    console.error(err);
-    alert("Image upload failed");
-  }
+  alert("Image uploaded successfully");
+} catch (err) {
+  console.error(err);
+  alert("Image upload failed");
 }
-
-
-
 
 
 
