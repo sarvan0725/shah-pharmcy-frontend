@@ -249,27 +249,34 @@ setInterval(() => {
   }
 }, 30000);
 
-/* ===============================
-   ADMIN LOGIN
-================================*/
-// Get admin credentials from localStorage or use defaults
-function getAdminCredentials() {
-  const saved = localStorage.getItem('adminCredentials');
-  return saved ? JSON.parse(saved) : { username: 'admin', password: '1234' };
-}
+// ===============================
+// ADMIN LOGIN SIMPLE SYSTEM
+// ===============================
 
 function adminLogin() {
-  const user = document.getElementById("adminUser").value;
-  const pass = document.getElementById("adminPass").value;
-  const credentials = getAdminCredentials();
-  
-  if (user === credentials.username && pass === credentials.password) {
+  const username = document.getElementById("admin-username").value;
+  const password = document.getElementById("admin-password").value;
+
+  if (username === "admin" && password === "admin123") {
+    localStorage.setItem("isAdmin", "true");
     window.location.href = "dashboard.html";
   } else {
-    alert("Invalid credentials!");
+    alert("Invalid admin credentials");
   }
 }
 
+// Protect dashboard
+function checkAdmin() {
+  if (localStorage.getItem("isAdmin") !== "true") {
+    window.location.href = "admin.html";
+  }
+}
+
+// Logout
+function adminLogout() {
+  localStorage.removeItem("isAdmin");
+  window.location.href = "admin.html";
+}
 /* ===============================
    ADMIN PASSWORD CHANGE
 ================================*/
