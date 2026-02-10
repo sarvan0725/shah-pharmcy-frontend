@@ -486,9 +486,10 @@ try {
   uploadedImageUrl = data.secure_url;
 
   alert("Image uploaded successfully");
-} catch (err) {
+ } catch (err) {
   console.error(err);
   alert("Image upload failed");
+ }
 }
 
 
