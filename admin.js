@@ -515,7 +515,7 @@ async function addProduct() {
   category,
   image: uploadedImageUrl || "https://dummyimage.com/300x300/cccccc/000000&text=Product"
 };
-  console.log("Sending product:", productData);
+  console.log("Sending product:", product);
 
   try {
     const res = await fetch(
