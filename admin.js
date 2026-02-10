@@ -503,14 +503,9 @@ function setAsMainBanner() {
 async function addProduct() {
   const name = document.getElementById("pName").value.trim();
   const weight = document.getElementById("pWeight").value.trim();
-  const price = parseFloat(document.getElementById("pPrice").value);
-  const stock = parseInt(document.getElementById("pStock").value);
+  const price = Number(document.getElementById("pPrice").value);
+  const stock = Number(document.getElementById("pStock").value);
   const category = document.getElementById("pCategory").value;
-
-  if (!name || !weight || !price || !stock || !category) {
-    alert("Please fill all fields");
-    return;
-  }
 
   const productData = {
     name: name,
@@ -518,8 +513,10 @@ async function addProduct() {
     price: price,
     stock: stock,
     category: category,
-    image: ""
+    image: "no-image"
   };
+
+  console.log("Sending product:", productData);
 
   try {
     const res = await fetch(
@@ -534,16 +531,16 @@ async function addProduct() {
     );
 
     const data = await res.json();
+    console.log("Response:", data);
 
     if (res.ok) {
       alert("Product added successfully");
       location.reload();
     } else {
-      console.error(data);
-      alert("Backend rejected product");
+      alert("Backend rejected product. Check console.");
     }
   } catch (err) {
-    console.error(err);
+    console.error("Error:", err);
     alert("Server error");
   }
 }
