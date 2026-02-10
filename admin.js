@@ -28,7 +28,7 @@ const LOW_STOCK_THRESHOLD = 30;
 let alertedProducts = JSON.parse(localStorage.getItem("alertedProducts")) || [];
 
 // Charts
-let categoryChart;
+
 let salesChart;
 
 /* ===============================
