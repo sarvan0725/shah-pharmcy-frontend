@@ -460,8 +460,6 @@ function setAsMainBanner() {
   }
 }
 
-let uploadedImageUrl = "";
-
 async function uploadImage() {
   const fileInput = document.getElementById("pImage");
   const file = fileInput.files[0];
@@ -471,10 +469,10 @@ async function uploadImage() {
     return;
   }
 
- const formData = new FormData();
-formData.append("file", file);
-formData.append("upload_preset", "shah_upload"); // preset name
- 
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "shah_upload"); // preset name
+
 try {
   const res = await fetch(
     "https://api.cloudinary.com/v1_1/detu15x8u/image/upload",
@@ -492,9 +490,6 @@ try {
   console.error(err);
   alert("Image upload failed");
 }
-
-
-
 
 
 
