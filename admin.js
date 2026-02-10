@@ -558,8 +558,9 @@ function addProduct() {
   document.getElementById("pWeight").value = "";
   document.getElementById("pPrice").value = "";
   document.getElementById("pStock").value = "";
- if (subcategoryInput) {
-  subcategoryInput.value = "";
+  const subInput = document.getElementById("pSubcategory");
+  if (subInput) {
+    subInput.value = "";
 }
   removeProductImage(); // Clear image preview
   
