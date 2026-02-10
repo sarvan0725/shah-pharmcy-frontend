@@ -236,30 +236,42 @@ function getAdminCredentials() {
   return saved ? JSON.parse(saved) : { username: 'admin', password: '1234' };
 }
 
+// ===============================
+// SIMPLE ADMIN LOGIN SYSTEM
+// ===============================
+
 function adminLogin() {
-  const user = document.getElementById("adminUser").value;
-  const pass = document.getElementById("adminPass").value;
-  
-  // Reset to default credentials if needed
-  const defaultCredentials = { username: 'admin', password: '1234' };
-  
-  // Try default credentials first
-  if (user === defaultCredentials.username && pass === defaultCredentials.password) {
-    // Save default credentials to localStorage
-    localStorage.setItem('adminCredentials', JSON.stringify(defaultCredentials));
-    window.location.href = "dashboard.html";
+  const usernameInput = document.getElementById("admin-username");
+  const passwordInput = document.getElementById("admin-password");
+
+  if (!usernameInput || !passwordInput) {
+    alert("Login fields not found");
     return;
   }
-  
-  // Try saved credentials
-  const credentials = getAdminCredentials();
-  if (user === credentials.username && pass === credentials.password) {
+
+  const username = usernameInput.value;
+  const password = passwordInput.value;
+
+  if (username === "admin" && password === "admin123") {
+    localStorage.setItem("isAdmin", "true");
     window.location.href = "dashboard.html";
   } else {
-    alert("Invalid credentials! Try: admin / 1234");
+    alert("Invalid admin credentials");
   }
 }
 
+// Protect dashboard
+function checkAdmin() {
+  if (localStorage.getItem("isAdmin") !== "true") {
+    window.location.href = "admin-login.html";
+  }
+}
+
+// Logout
+function adminLogout() {
+  localStorage.removeItem("isAdmin");
+  window.location.href = "admin-login.html";
+}
 /* ===============================
    ADMIN PASSWORD CHANGE
 ================================*/
