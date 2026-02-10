@@ -258,16 +258,11 @@
       
      
 
-      <div class="product-image-upload">
-        <input type="file" id="productImageUpload" accept="image/*" onchange="uploadProductImage()" style="display: none;">
-        <button onclick="document.getElementById('productImageUpload').click()" class="upload-btn">
-          <i class="fas fa-image"></i> Upload Product Image
-        </button>
-        <div id="productImagePreview" class="product-preview"></div>
-      </div>
-      
+      <input type="file" id="pImage" />
+
+      <button onclick="uploadImage()">Upload Product Image</button>
+
       <button onclick="addProduct()">Add Product</button>
-    </div>
 
     <table class="table">
       <thead>
@@ -518,5 +513,6 @@
       <div id="sentNotificationsList"></div>
     </div>
   </section>
+
 
 
