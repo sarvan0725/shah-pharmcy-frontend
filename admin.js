@@ -2,6 +2,11 @@
    ADMIN PANEL - COMPLETE SYSTEM
 ================================*/
 
+
+let categoryChart = null;
+let salesChart = null;
+
+
 // Load products from main app
 let products = JSON.parse(localStorage.getItem("products")) || [
   { id: 1, name: "Rice", price: 60, stock: 50, category: "grocery", image: "", weight: "1kg" },
