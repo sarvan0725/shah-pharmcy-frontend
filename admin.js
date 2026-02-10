@@ -534,9 +534,22 @@ function addProduct() {
     image: image // Store the base64 image data
   };
   
-  products.push(newProduct);
-  localStorage.setItem("products", JSON.stringify(products));
-  
+ fetch("https://shah-pharmacy-backend.onrender.com/api/products", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(newProduct)
+})
+.then(res => res.json())
+.then(data => {
+  alert("Product added to backend successfully!");
+  loadProducts();
+})
+.catch(err => {
+  console.error(err);
+  alert("Error adding product to backend");
+});
   // Clear form
   document.getElementById("pName").value = "";
   document.getElementById("pWeight").value = "";
@@ -547,12 +560,7 @@ function addProduct() {
 }
   removeProductImage(); // Clear image preview
   
-  loadProducts();
-  loadAnalytics();
-  checkLowStock();
-  alert("Product added successfully with image!");
-}
-
+  
 function deleteProduct(id) {
   if (confirm("Are you sure you want to delete this product?")) {
     products = products.filter(p => p.id !== id);
