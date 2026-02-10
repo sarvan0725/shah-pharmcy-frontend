@@ -525,7 +525,7 @@ async function addProduct() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(productData)
+        body: JSON.stringify(product)
       }
     );
 
