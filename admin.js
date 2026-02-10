@@ -249,122 +249,41 @@ setInterval(() => {
   }
 }, 30000);
 
-// ===============================
-// ADMIN LOGIN SIMPLE SYSTEM
-// ===============================
+// Get saved admin credentials
+function getAdminCredentials() {
+  const saved = localStorage.getItem('adminCredentials');
+  return saved
+    ? JSON.parse(saved)
+    : { username: 'admin', password: '1234' };
+}
 
+// Admin login
 function adminLogin() {
-  const username = document.getElementById("admin-username").value;
-  const password = document.getElementById("admin-password").value;
+  const user = document.getElementById('adminUser').value;
+  const pass = document.getElementById('adminPass').value;
 
-  if (username === "admin" && password === "admin123") {
+  const credentials = getAdminCredentials();
+
+  if (user === credentials.username && pass === credentials.password) {
     localStorage.setItem("isAdmin", "true");
     window.location.href = "dashboard.html";
   } else {
-    alert("Invalid admin credentials");
+    alert("Invalid credentials");
   }
 }
 
 // Protect dashboard
 function checkAdmin() {
   if (localStorage.getItem("isAdmin") !== "true") {
-    window.location.href = "admin.html";
+    window.location.href = "admin-login.html";
   }
 }
 
 // Logout
 function adminLogout() {
   localStorage.removeItem("isAdmin");
-  window.location.href = "admin.html";
+  window.location.href = "admin-login.html";
 }
-/* ===============================
-   ADMIN PASSWORD CHANGE
-================================*/
-function showPasswordChange() {
-  const modal = document.createElement('div');
-  modal.innerHTML = `
-    <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;" onclick="this.remove()">
-      <div style="background:white;padding:30px;border-radius:15px;max-width:400px;width:90%;" onclick="event.stopPropagation()">
-        <h3 style="color:#DC2626;margin-bottom:20px;"><i class="fas fa-key"></i> Change Admin Password</h3>
-        <div style="margin:15px 0;">
-          <input type="password" id="currentPassword" placeholder="Current Password" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;margin:5px 0;">
-          <input type="password" id="newPassword" placeholder="New Password" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;margin:5px 0;">
-          <input type="password" id="confirmPassword" placeholder="Confirm New Password" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;margin:5px 0;">
-        </div>
-        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;">
-          <button onclick="changeAdminPassword()" style="background:#DC2626;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;">Change Password</button>
-          <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:#ccc;color:black;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;">Cancel</button>
-        </div>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(modal);
-}
-
-function changeAdminPassword() {
-  const currentPass = document.getElementById('currentPassword').value;
-  const newPass = document.getElementById('newPassword').value;
-  const confirmPass = document.getElementById('confirmPassword').value;
-  const credentials = getAdminCredentials();
-  
-  if (!currentPass || !newPass || !confirmPass) {
-    alert('Please fill all fields');
-    return;
-  }
-  
-  if (currentPass !== credentials.password) {
-    alert('Current password is incorrect');
-    return;
-  }
-  
-  if (newPass.length < 4) {
-    alert('New password must be at least 4 characters');
-    return;
-  }
-  
-  if (newPass !== confirmPass) {
-    alert('New passwords do not match');
-    return;
-  }
-  
-  // Save new credentials
-  const newCredentials = {
-    username: credentials.username,
-    password: newPass
-  };
-  
-  localStorage.setItem('adminCredentials', JSON.stringify(newCredentials));
-  
-  // Close modal
-  document.querySelector('[style*="position:fixed"]').remove();
-  
-  alert('Password changed successfully! Please login again with new password.');
-  
-  // Redirect to login
-  setTimeout(() => {
-    window.location.href = 'index.html';
-  }, 1000);
-}
-
-function changeAdminUsername() {
-  const credentials = getAdminCredentials();
-  const newUsername = prompt('Enter new username:', credentials.username);
-  
-  if (newUsername && newUsername.trim() && newUsername !== credentials.username) {
-    const newCredentials = {
-      username: newUsername.trim(),
-      password: credentials.password
-    };
-    
-    localStorage.setItem('adminCredentials', JSON.stringify(newCredentials));
-    alert('Username changed successfully! Please login again.');
-    
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 1000);
-  }
-}
-
 /* ===============================
    LOAD DASHBOARD
 ================================*/
