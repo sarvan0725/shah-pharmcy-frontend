@@ -6,6 +6,10 @@
 let categoryChart = null;
 let salesChart = null;
 let demandChart = null;
+let uploadedImageUrl = "";
+
+
+
 
 // Utility function for safe text update
 function setText(id, value) {
