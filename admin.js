@@ -914,7 +914,7 @@ function sendWhatsAppAlert(productName, stock) {
 /* ===============================
    AI BUSINESS INTELLIGENCE
 ================================*/
-let demandChart;
+
 
 function loadAIInsights() {
   const salesTrend = calculateSalesTrend();
