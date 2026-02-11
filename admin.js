@@ -483,93 +483,85 @@ function setAsMainBanner() {
   }
 }
 
-async function uploadImage() {
+async function addProduct() {
+  const name = document.getElementById("pName").value;
+  const weight = document.getElementById("pWeight").value;
+  const price = document.getElementById("pPrice").value;
+  const stock = document.getElementById("pStock").value;
+  const category = document.getElementById("pCategory").value;
+
   const fileInput = document.getElementById("pImage");
   const file = fileInput.files[0];
 
-  if (!file) {
-    alert("Please select an image first");
+  if (!name || !weight || !price || !stock || !category || !file) {
+    alert("Please fill all fields and select an image");
     return;
   }
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", "shah_upload"); // preset name
+  let imageUrl = "";
 
-try {
-  const res = await fetch(
-    "https://api.cloudinary.com/v1_1/detu15x8u/image/upload",
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
+  try {
+    // Step 1: upload image to Cloudinary
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "shah_upload");
 
-  const data = await res.json();
-  uploadedImageUrl = data.secure_url;
+    const cloudRes = await fetch(
+      "https://api.cloudinary.com/v1_1/detu15x8u/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
-  alert("Image uploaded successfully");
- } catch (err) {
-  console.error(err);
-  alert("Image upload failed");
- }
-}
+    const cloudData = await cloudRes.json();
+    imageUrl = cloudData.secure_url;
 
-
-async function addProduct() {
-    const name = document.getElementById("pName").value;
-    const weight = document.getElementById("pWeight").value;
-    const price = document.getElementById("pPrice").value;
-    const stock = document.getElementById("pStock").value;
-    const category = document.getElementById("pCategory").value;
-
-    if (!name || !weight || !price || !stock || !category) {
-        alert("Please fill all fields");
-        return;
-    }
-
-    if (!uploadedImageUrl) {
-        alert("Please upload product image first");
-        return;
-    }
-
+    // Step 2: send product to backend
     const product = {
-        name: name,
-        weight: weight,
-        price: Number(price),
-        stock: Number(stock),
-        category: category,
-        image: uploadedImageUrl,
+      name: name,
+      weight: weight,
+      price: Number(price),
+      stock: Number(stock),
+      category: category,
+      image: imageUrl,
     };
 
     console.log("Sending product:", product);
 
-    try {
-        const res = await fetch(
-            "https://shah-pharmacy-backend.onrender.com/api/products",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(product),
-            }
-        );
+    const res = await fetch(
+      "https://shah-pharmacy-backend.onrender.com/api/products",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+      }
+    );
 
-        const data = await res.json();
+    const data = await res.json();
 
-        if (!res.ok) {
-            alert("Backend rejected product");
-            console.log(data);
-            return;
-        }
-
-        alert("Product added successfully");
-        location.reload();
-    } catch (err) {
-        console.error(err);
-        alert("Error adding product");
+    if (!res.ok) {
+      alert("Backend rejected product");
+      console.log(data);
+      return;
     }
+
+    alert("Product added successfully");
+
+    // reset form
+    document.getElementById("pName").value = "";
+    document.getElementById("pWeight").value = "";
+    document.getElementById("pPrice").value = "";
+    document.getElementById("pStock").value = "";
+    document.getElementById("pCategory").value = "";
+    document.getElementById("pImage").value = "";
+
+  } catch (err) {
+    console.error(err);
+    alert("Error adding product");
+  }
 }
 
 
@@ -577,15 +569,16 @@ async function addProduct() {
 
 
 
-  // Clear form
-  document.getElementById("pName").value = "";
-  document.getElementById("pWeight").value = "";
-  document.getElementById("pPrice").value = "";
-  document.getElementById("pStock").value = "";
-  const subInput = document.getElementById("pSubcategory");
-  if (subInput) {
-    subInput.value = "";
-}
+
+
+
+
+
+
+
+
+
+
 
 function removeProductImage() {
   currentProductImage = '';
