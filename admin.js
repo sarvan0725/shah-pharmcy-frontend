@@ -5,6 +5,7 @@
 
 let categoryChart = null;
 let salesChart = null;
+let demandChart = null;
 
 // Utility function for safe text update
 function setText(id, value) {
