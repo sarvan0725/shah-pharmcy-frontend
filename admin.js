@@ -516,66 +516,67 @@ try {
 }
 
 
-
-
-
-
-
-
 async function addProduct() {
-  const name = document.getElementById("pName").value;
-  const weight = document.getElementById("pWeight").value;
-  const price = document.getElementById("pPrice").value;
-  const stock = document.getElementById("pStock").value;
-  const category = document.getElementById("pCategory").value;
+    const name = document.getElementById("pName").value;
+    const weight = document.getElementById("pWeight").value;
+    const price = document.getElementById("pPrice").value;
+    const stock = document.getElementById("pStock").value;
+    const category = document.getElementById("pCategory").value;
 
-  if (!name || !weight || !price || !stock || !category) {
-    alert("Please fill all fields");
-    return;
-  }
-
-  if (!uploadedImageUrl) {
-    alert("Please upload product image first");
-    return;
-  }
-
-  const product = {
-    name: name,
-    weight: weight,
-    price: Number(price),
-    stock: Number(stock),
-    category: category,
-    image: uploadedImageUrl,
-  };
-
-  console.log("Sending product:", product);
-
-  try {
-    const res = await fetch(
-      "https://shah-pharmacy-backend.onrender.com/api/products",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      }
-    );
-
-    const data = await res.json();
-    console.log("Response:", data);
-
-    if (res.ok) {
-      alert("Product added successfully");
-      location.reload();
-    } else {
-      alert("Backend rejected product. Check console.");
+    if (!name || !weight || !price || !stock || !category) {
+        alert("Please fill all fields");
+        return;
     }
-  } catch (err) {
-    console.error(err);
-    alert("Server error");
-  }
+
+    if (!uploadedImageUrl) {
+        alert("Please upload product image first");
+        return;
+    }
+
+    const product = {
+        name: name,
+        weight: weight,
+        price: Number(price),
+        stock: Number(stock),
+        category: category,
+        image: uploadedImageUrl,
+    };
+
+    console.log("Sending product:", product);
+
+    try {
+        const res = await fetch(
+            "https://shah-pharmacy-backend.onrender.com/api/products",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(product),
+            }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert("Backend rejected product");
+            console.log(data);
+            return;
+        }
+
+        alert("Product added successfully");
+        location.reload();
+    } catch (err) {
+        console.error(err);
+        alert("Error adding product");
+    }
 }
+
+
+
+
+
+
   // Clear form
   document.getElementById("pName").value = "";
   document.getElementById("pWeight").value = "";
