@@ -6,6 +6,16 @@
 let categoryChart = null;
 let salesChart = null;
 
+// Utility function for safe text update
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.innerText = value;
+  }
+}
+
+
+
 
 // Load products from main app
 let products = JSON.parse(localStorage.getItem("products")) || [
