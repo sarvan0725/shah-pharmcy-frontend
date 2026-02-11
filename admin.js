@@ -683,29 +683,33 @@ function loadAnalytics() {
   setText("monthSales", "₹" + month);
   setText("totalOrders", orders.length);
 
- function updateCharts(grocery, medicine, bulk, today, week, month) {
+ function loadAnalytics() {
+   // analytics ka code
+   updateCharts(grocery, medicine, bulk, today, week, month);
+}
 
-    // Category Pie Chart
-    const catCanvas = document.getElementById("categoryChart");
-    if (catCanvas) {
-        if (categoryChart) {
-            categoryChart.destroy();
-        }
+function updateCharts(grocery, medicine, bulk, today, week, month) {
+   const catCanvas = document.getElementById("categoryChart");
+   if (catCanvas) {
+      if (categoryChart) {
+         categoryChart.destroy();
+      }
 
-        categoryChart = new Chart(catCanvas, {
-            type: "pie",
-            data: {
-                labels: ["Grocery", "Medicine", "Bulk"],
-                datasets: [{
-                    data: [grocery, medicine, bulk],
-                    backgroundColor: ["#00B761", "#16a34a", "#f97316"]
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        });
-    }
+      categoryChart = new Chart(catCanvas, {
+         type: "pie",
+         data: {
+            labels: ["Grocery", "Medicine", "Bulk"],
+            datasets: [{
+               data: [grocery, medicine, bulk],
+               backgroundColor: ["#00B761", "#16a34a", "#f97316"]
+            }]
+         },
+         options: {
+            responsive: true
+         }
+      });
+   }
+}
 
     // Sales Bar Chart
     const salesCanvas = document.getElementById("salesChart");
