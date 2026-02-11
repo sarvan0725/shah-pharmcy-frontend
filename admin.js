@@ -675,15 +675,12 @@ function loadAnalytics() {
   setText("monthSales", "₹" + month);
   setText("totalOrders", orders.length);
 
-  // Update charts
-  updateCharts(grocery, medicine, bulk, today, week, month);
-}
+ function updateCharts(grocery, medicine, bulk, today, week, month) {
 
-function updateCharts(grocery, medicine, bulk, today, week, month) {
-
+    // -------- Category Pie Chart --------
     const catCanvas = document.getElementById("categoryChart");
     if (catCanvas) {
-        if (categoryChart !== null) {
+        if (categoryChart) {
             categoryChart.destroy();
         }
 
@@ -702,9 +699,10 @@ function updateCharts(grocery, medicine, bulk, today, week, month) {
         });
     }
 
+    // -------- Sales Bar Chart --------
     const salesCanvas = document.getElementById("salesChart");
     if (salesCanvas) {
-        if (salesChart !== null) {
+        if (salesChart) {
             salesChart.destroy();
         }
 
@@ -719,38 +717,18 @@ function updateCharts(grocery, medicine, bulk, today, week, month) {
                 }]
             },
             options: {
-                responsive: true
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "Sales Overview"
+                    }
+                }
             }
         });
     }
 }
 
-  // Sales bar chart
-  const salesCtx = document.getElementById("salesChart");
-  if (salesCtx) {
-    if (salesChart) salesChart.destroy();
-    salesChart = new Chart(salesCtx, {
-      type: "bar",
-      data: {
-        labels: ["Today", "7 Days", "30 Days"],
-        datasets: [{
-          label: "Sales ₹",
-          data: [today, week, month],
-          backgroundColor: "#00B761"
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Sales Overview'
-          }
-        }
-      }
-    });
-  }
-}
 
 /* ===============================
    ORDERS MANAGEMENT
