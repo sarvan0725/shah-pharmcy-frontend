@@ -677,7 +677,7 @@ function loadAnalytics() {
 
  function updateCharts(grocery, medicine, bulk, today, week, month) {
 
-    // -------- Category Pie Chart --------
+    // Category Pie Chart
     const catCanvas = document.getElementById("categoryChart");
     if (catCanvas) {
         if (categoryChart) {
@@ -699,7 +699,7 @@ function loadAnalytics() {
         });
     }
 
-    // -------- Sales Bar Chart --------
+    // Sales Bar Chart
     const salesCanvas = document.getElementById("salesChart");
     if (salesCanvas) {
         if (salesChart) {
@@ -717,18 +717,11 @@ function loadAnalytics() {
                 }]
             },
             options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: "Sales Overview"
-                    }
-                }
+                responsive: true
             }
         });
     }
 }
-
 
 /* ===============================
    ORDERS MANAGEMENT
