@@ -680,30 +680,50 @@ function loadAnalytics() {
 }
 
 function updateCharts(grocery, medicine, bulk, today, week, month) {
-  // Category pie chart
-  const catCtx = document.getElementById("categoryChart");
-  if (catCtx) {
-    if (categoryChart) categoryChart.destroy();
-    categoryChart = new Chart(catCtx, {
-      type: "pie",
-      data: {
-        labels: ["Grocery", "Medicine", "Bulk"],
-        datasets: [{
-          data: [grocery, medicine, bulk],
-          backgroundColor: ["#00B761", "#16a34a", "#f97316"]
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Products by Category'
-          }
+
+    const catCanvas = document.getElementById("categoryChart");
+    if (catCanvas) {
+        if (categoryChart !== null) {
+            categoryChart.destroy();
         }
-      }
-    });
-  }
+
+        categoryChart = new Chart(catCanvas, {
+            type: "pie",
+            data: {
+                labels: ["Grocery", "Medicine", "Bulk"],
+                datasets: [{
+                    data: [grocery, medicine, bulk],
+                    backgroundColor: ["#00B761", "#16a34a", "#f97316"]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    }
+
+    const salesCanvas = document.getElementById("salesChart");
+    if (salesCanvas) {
+        if (salesChart !== null) {
+            salesChart.destroy();
+        }
+
+        salesChart = new Chart(salesCanvas, {
+            type: "bar",
+            data: {
+                labels: ["Today", "7 Days", "30 Days"],
+                datasets: [{
+                    label: "Sales ₹",
+                    data: [today, week, month],
+                    backgroundColor: "#00B761"
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    }
+}
 
   // Sales bar chart
   const salesCtx = document.getElementById("salesChart");
