@@ -2,8 +2,7 @@
 // USER OTP AUTH SYSTEM
 // ===============================
 
-// Global state
-let otpSent = false;
+
 
 // Open login modal
 function openLogin() {
