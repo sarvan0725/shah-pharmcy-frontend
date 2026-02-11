@@ -421,44 +421,52 @@ function loadSubcategoryOptions() {
 let currentProductImage = '';
 
 
-
-
 // Shop image upload function
 function uploadShopImage() {
-  const fileInput = document.getElementById('shopImageUpload');
-  const file = fileInput.files[0];
-  
-  if (!file) return;
-  
-  if (!file.type.startsWith('image/')) {
-    alert('Please select an image file');
-    return;
-  }
-  
-  if (file.size > 10 * 1024 * 1024) {
-    alert('Image size should be less than 10MB');
-    return;
-  }
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const imageData = e.target.result;
-    
-    // Show preview
-    const preview = document.getElementById('currentShopImage');
-    preview.innerHTML = `
-      <img src="${imageData}" alt="Shop Banner" style="max-width: 300px; max-height: 200px; border-radius: 8px; border: 1px solid #ddd;">
-    `;
-    
-    // Show set banner button
-    document.getElementById('setBannerBtn').style.display = 'block';
-    
-    // Store temporarily
-    localStorage.setItem('tempShopImage', imageData);
-  };
-  
-  reader.readAsDataURL(file);
+    const fileInput = document.getElementById("shopImageUpload");
+    if (!fileInput) return;
+
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image file");
+        return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+        alert("Image size should be less than 10MB");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        const imageData = e.target.result;
+
+        // Show preview
+        const preview = document.getElementById("currentShopImage");
+        if (preview) {
+            preview.innerHTML = `
+                <img src="${imageData}" 
+                     alt="Shop Banner" 
+                     style="max-width:300px; max-height:200px; border-radius:8px;">
+            `;
+        }
+
+        // Show set banner button
+        const btn = document.getElementById("setBannerBtn");
+        if (btn) btn.style.display = "block";
+
+        // Store temporarily
+        localStorage.setItem("tempShopImage", imageData);
+    };
+
+    reader.readAsDataURL(file);
 }
+
+
+
 
 // Set shop banner
 function setAsMainBanner() {
