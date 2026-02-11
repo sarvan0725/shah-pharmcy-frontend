@@ -483,30 +483,21 @@ function setAsMainBanner() {
   }
 }
 
-async function addProduct() {
-  const name = document.getElementById("pName").value;
-  const weight = document.getElementById("pWeight").value;
-  const price = document.getElementById("pPrice").value;
-  const stock = document.getElementById("pStock").value;
-  const category = document.getElementById("pCategory").value;
-
+async function uploadImage() {
   const fileInput = document.getElementById("pImage");
   const file = fileInput.files[0];
 
-  if (!name || !weight || !price || !stock || !category || !file) {
-    alert("Please fill all fields and select an image");
+  if (!file) {
+    alert("Please select an image first");
     return;
   }
 
-  let imageUrl = "";
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "shah_upload");
 
   try {
-    // Step 1: upload image to Cloudinary
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "shah_upload");
-
-    const cloudRes = await fetch(
+    const res = await fetch(
       "https://api.cloudinary.com/v1_1/detu15x8u/image/upload",
       {
         method: "POST",
@@ -514,21 +505,48 @@ async function addProduct() {
       }
     );
 
-    const cloudData = await cloudRes.json();
-    imageUrl = cloudData.secure_url;
+    const data = await res.json();
+    uploadedImageUrl = data.secure_url;
 
-    // Step 2: send product to backend
-    const product = {
-      name: name,
-      weight: weight,
-      price: Number(price),
-      stock: Number(stock),
-      category: category,
-      image: imageUrl,
-    };
+    alert("Image uploaded successfully");
+  } catch (err) {
+    console.error(err);
+    alert("Image upload failed");
+  }
+}
 
-    console.log("Sending product:", product);
 
+
+
+async function addProduct() {
+  const name = document.getElementById("pName").value;
+  const weight = document.getElementById("pWeight").value;
+  const price = document.getElementById("pPrice").value;
+  const stock = document.getElementById("pStock").value;
+  const category = document.getElementById("pCategory").value;
+
+  if (!name || !weight || !price || !stock || !category) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  if (!uploadedImageUrl) {
+    alert("Please upload product image first");
+    return;
+  }
+
+  const product = {
+    name: name,
+    weight: weight,
+    price: Number(price),
+    stock: Number(stock),
+    category: category,
+    image: uploadedImageUrl,
+  };
+
+  console.log("Sending product:", product);
+
+  try {
     const res = await fetch(
       "https://shah-pharmacy-backend.onrender.com/api/products",
       {
@@ -550,25 +568,21 @@ async function addProduct() {
 
     alert("Product added successfully");
 
-    // reset form
+    // reset
     document.getElementById("pName").value = "";
     document.getElementById("pWeight").value = "";
     document.getElementById("pPrice").value = "";
     document.getElementById("pStock").value = "";
     document.getElementById("pCategory").value = "";
     document.getElementById("pImage").value = "";
+    uploadedImageUrl = "";
 
+    loadProducts();
   } catch (err) {
     console.error(err);
     alert("Error adding product");
   }
 }
-
-
-
-
-
-
 
 
 
