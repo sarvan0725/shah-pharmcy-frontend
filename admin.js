@@ -544,7 +544,8 @@ async function addProduct() {
     image: uploadedImageUrl,
   };
 
-  console.log("Sending product:", product);
+  console.log("Sending product object:", product);
+  console.log("Image URL:", uploadedImageUrl);
 
   try {
     const res = await fetch(
