@@ -543,7 +543,7 @@ async function addProduct() {
     price: Number(price),
     stock: Number(stock),
     category: category,
-    image: uploadedImageUrl ||
+    image: uploadedImageUrl,
   };
 
   console.log("Sending product object:", product);
