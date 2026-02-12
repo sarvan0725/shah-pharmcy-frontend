@@ -525,11 +525,13 @@ async function addProduct() {
   const stock = document.getElementById("pStock").value;
   const category = document.getElementById("pCategory").value;
 
+  // basic validation
   if (!name || !weight || !price || !stock || !category) {
     alert("Please fill all fields");
     return;
   }
 
+  // image check
   if (!uploadedImageUrl) {
     alert("Please upload product image first");
     return;
@@ -541,11 +543,10 @@ async function addProduct() {
     price: Number(price),
     stock: Number(stock),
     category: category,
-    image: uploadedImageUrl,
+    image: uploadedImageUrl ||
   };
 
   console.log("Sending product object:", product);
-  console.log("Image URL:", uploadedImageUrl);
 
   try {
     const res = await fetch(
@@ -569,7 +570,7 @@ async function addProduct() {
 
     alert("Product added successfully");
 
-    // reset
+    // reset form
     document.getElementById("pName").value = "";
     document.getElementById("pWeight").value = "";
     document.getElementById("pPrice").value = "";
