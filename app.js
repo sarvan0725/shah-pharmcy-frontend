@@ -227,58 +227,61 @@ function getFilteredProducts() {
 
   /* ========= PAGINATION ========= */
  function renderProducts(products = []) {
-  const list = document.getElementById("productList");
-  if (!list) return;
+    const list = document.getElementById("productList");
+    if (!list) return;
 
-  list.innerHTML = "";
+    list.innerHTML = "";
 
-  if (!products.length) {
-    list.innerHTML = "<p>No products found</p>";
-    return;
-  }
+    if (!products.length) {
+        list.innerHTML = "<p>No products found</p>";
+        return;
+    }
 
-  products.forEach(p => {
-    if (!quantityMap[p.id]) quantityMap[p.id] = 1;
+    products.forEach(p => {
+        if (!quantityMap[p.id]) quantityMap[p.id] = 1;
 
-    list.innerHTML += `
-      <div class="product-card">
-        <div class="product-image">
-          ${p.image
-            ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none'">`
-            : `<div class="product-emoji">${categoryIcon || "🛒"}</div>`}
+        list.innerHTML += `
+        <div class="product-card">
+
+            <div class="product-image">
+                <img src="${p.image}" alt="${p.name}" 
+                     onerror="this.style.display='none'">
+                <div class="product-emoji">${p.categoryIcon || "🛒"}</div>
+            </div>
+
+            <div class="product-info">
+                <h4>${p.name}</h4>
+                <div class="product-weight">${p.weight || "N/A"}</div>
+                <div class="product-price">₹${p.price}</div>
+                ${p.stock <= 10 
+                    ? `<div class="low-stock-warning">⚠ Limited Stock</div>` 
+                    : ""
+                }
+
+                <div class="quantity-controls">
+                    <button onclick="changeQty(${p.id}, -1)">-</button>
+                    <span id="qty-${p.id}">
+                        ${quantityMap[p.id]}
+                    </span>
+                    <button onclick="changeQty(${p.id}, 1)">+</button>
+                </div>
+
+                <div class="product-actions">
+                    <button class="add-cart-btn" 
+                        onclick="addToCart(${p.id}, this)">
+                        Add to Cart
+                    </button>
+                    <button class="wishlist-btn" 
+                        onclick="toggleWishlist(${p.id}, this)">
+                        ❤
+                    </button>
+                </div>
+
+            </div>
         </div>
-
-        <div class="product-info">
-          <h4>${p.name}</h4>
-          <div class="product-weight">${p.weight || "N/A"}</div>
-          <div class="product-price">₹${p.price}</div>
-          ${p.stock <= 10 ? `<div class="low-stock-warning">⚠ Limited Stock</div>` : ""}
-        </div>
-
-        <div class="quantity-controls">
-          <button onclick="changeQty(${p.id}, -1)">-</button>
-          <span id="qty-${p.id}">${quantityMap[p.id]}</span>
-          <button onclick="changeQty(${p.id}, 1)">+</button>
-        </div>
-
-        <div class="product-actions">
-             <button class="add-cart-btn" onclick="addToCart(${p.id}, this)">
-             Add
-            </button>
-
-           <button class="wishlist-btn" onclick="toggleWishlist(${p.id}, this)">
-           ♥
-          </button>
-       </div>
-       </div>
-      </div>
-    `;
-  });
+        `;
+    });
 }
-
-      
-
-
 /* ===============================
    QUANTITY (SAFE)
 ================================*/
