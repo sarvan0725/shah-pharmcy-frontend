@@ -232,28 +232,33 @@ function renderProducts(products = []) {
 
   list.innerHTML = "";
 
-  if (!products.length) {
-    list.innerHTML = "<p>No products found</p>";
-    return;
-  }
+  products.forEach((p) => {
+    const imageUrl = p.image || p.imageUrl || p.photo || "";
 
-  products.forEach(p => {
     list.innerHTML += `
       <div class="product-card">
+        <img 
+          src="${imageUrl}" 
+          alt="${p.name}" 
+          class="product-img"
+          onerror="this.src='https://via.placeholder.com/150'"
+        />
+
         <h4>${p.name}</h4>
-        <p><strong>₹${p.price}</strong></p>
-        <p>Stock: ${p.stock}</p>
+        <div class="product-price">₹${p.price}</div>
+        <div class="product-stock">Stock: ${p.stock}</div>
 
         <button 
-          class="add-cart-btn"
-          onclick="addToCart(${p.id})"
-        >
+          class="add-cart-btn" 
+          onclick="addToCart('${p._id}')">
           Add to Cart
         </button>
       </div>
     `;
   });
 }
+
+ 
 /* ===============================
    QUANTITY (SAFE)
 ================================*/
