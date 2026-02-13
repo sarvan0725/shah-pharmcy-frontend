@@ -226,7 +226,7 @@ function getFilteredProducts() {
 
 
   /* ========= PAGINATION ========= */
- function renderProducts(products = []) {
+function renderProducts(products = []) {
     const list = document.getElementById("productList");
     if (!list) return;
 
@@ -238,48 +238,28 @@ function getFilteredProducts() {
     }
 
     products.forEach(p => {
-        if (!quantityMap[p.id]) quantityMap[p.id] = 1;
+        const card = document.createElement("div");
+        card.className = "product-card";
 
-        list.innerHTML += `
-        <div class="product-card">
-
-            <div class="product-image">
-                <img src="${p.image}" alt="${p.name}" 
-                     onerror="this.style.display='none'">
-                <div class="product-emoji">${p.categoryIcon || "🛒"}</div>
-            </div>
-
+        card.innerHTML = `
             <div class="product-info">
                 <h4>${p.name}</h4>
-                <div class="product-weight">${p.weight || "N/A"}</div>
                 <div class="product-price">₹${p.price}</div>
-                ${p.stock <= 10 
-                    ? `<div class="low-stock-warning">⚠ Limited Stock</div>` 
-                    : ""
-                }
-
-                <div class="quantity-controls">
-                    <button onclick="changeQty(${p.id}, -1)">-</button>
-                    <span id="qty-${p.id}">
-                        ${quantityMap[p.id]}
-                    </span>
-                    <button onclick="changeQty(${p.id}, 1)">+</button>
-                </div>
-
-                <div class="product-actions">
-                    <button class="add-cart-btn" 
-                        onclick="addToCart(${p.id}, this)">
-                        Add to Cart
-                    </button>
-                    <button class="wishlist-btn" 
-                        onclick="toggleWishlist(${p.id}, this)">
-                        ❤
-                    </button>
-                </div>
-
+                <div>Stock: ${p.stock}</div>
             </div>
-        </div>
+
+            <div class="product-actions">
+                <button class="add-cart-btn" onclick="addToCart(${p.id}, this)">
+                    Add to Cart
+                </button>
+
+                <button class="wishlist-btn" onclick="toggleWishlist(${p.id}, this)">
+                    ❤
+                </button>
+            </div>
         `;
+
+        list.appendChild(card);
     });
 }
 /* ===============================
