@@ -40,4 +40,7 @@ window.APP_CONFIG = {
 // Short global alias (READ-ONLY USE)
 window.API_BASE_URL = window.APP_CONFIG.API_BASE_URL;
 
-console.log("✅ config-production loaded:", window.API_BASE_URL);
+// ADD THIS LINE
+window.BUSINESS_CONFIG = window.APP_CONFIG.BUSINESS_CONFIG;
+
+console.log("config-production loaded:", window.API_BASE_URL);
