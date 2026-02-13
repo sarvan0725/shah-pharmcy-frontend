@@ -227,45 +227,32 @@ function getFilteredProducts() {
 
   /* ========= PAGINATION ========= */
 function renderProducts(products = []) {
-    const list = document.getElementById("productList");
+  const list = document.getElementById("productList");
+  if (!list) return;
 
-    if (!list) {
-        console.error("productList element not found");
-        return;
-    }
+  list.innerHTML = "";
 
-    console.log("Rendering products:", products);
+  if (!products.length) {
+    list.innerHTML = "<p>No products found</p>";
+    return;
+  }
 
-    list.innerHTML = "";
+  products.forEach(p => {
+    list.innerHTML += `
+      <div class="product-card">
+        <h4>${p.name}</h4>
+        <p><strong>₹${p.price}</strong></p>
+        <p>Stock: ${p.stock}</p>
 
-    if (!products.length) {
-        list.innerHTML = "<p>No products found</p>";
-        return;
-    }
-
-    products.forEach(p => {
-        const card = document.createElement("div");
-        card.className = "product-card";
-
-        card.innerHTML = `
-            <div class="product-image">
-                <img src="${p.image}" alt="${p.name}">
-            </div>
-
-            <div class="product-info">
-                <h4>${p.name}</h4>
-                <div class="product-price">₹${p.price}</div>
-
-                <div class="product-actions">
-                    <button class="add-cart-btn">
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
-        `;
-
-        list.appendChild(card);
-    });
+        <button 
+          class="add-cart-btn"
+          onclick="addToCart(${p.id})"
+        >
+          Add to Cart
+        </button>
+      </div>
+    `;
+  });
 }
 /* ===============================
    QUANTITY (SAFE)
