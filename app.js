@@ -340,51 +340,51 @@ function loadUserLocation() {
     return loc ? JSON.parse(loc) : null;
 }
 
-
 function getCurrentLocation() {
-  const locationBtn = document.querySelector(".location-btn");
+    const locationBtn = document.querySelector(".location-btn");
 
-  if (locationBtn) {
-    locationBtn.innerHTML = "Getting location...";
-    locationBtn.disabled = true;
-  }
-
-  if (!navigator.geolocation) {
-    alert("Geolocation not supported");
-    return;
-  }
-
-navigator.geolocation.getCurrentPosition(
-    pos => {
-        if (!pos || !pos.coords) return;
-
-        customerLocation = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude
-        };
-
-        console.log("Location set:", customerLocation);
-
-        calculateDeliveryDistance();
-
-        const addr = document.getElementById("deliveryAddress");
-        if (addr) {
-            addr.value = `Location: ${customerLocation.lat.toFixed(4)}, ${customerLocation.lng.toFixed(4)}`;
-        }
-
-        if (locationBtn) {
-            locationBtn.innerHTML = "Location Set ✓";
-            locationBtn.disabled = false;
-        }
-    },
-    () => {
-        if (locationBtn) {
-            locationBtn.innerHTML = "Use Location";
-            locationBtn.disabled = false;
-        }
-        alert("Unable to fetch location");
+    if (locationBtn) {
+        locationBtn.innerHTML = "Getting location...";
+        locationBtn.disabled = true;
     }
-);
+
+    if (!navigator.geolocation) {
+        alert("Geolocation not supported");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            if (!pos || !pos.coords) return;
+
+            customerLocation = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude
+            };
+
+            console.log("Location set:", customerLocation);
+
+            calculateDeliveryDistance();
+
+            const addr = document.getElementById("deliveryAddress");
+            if (addr) {
+                addr.value = `Location: ${customerLocation.lat.toFixed(4)}, ${customerLocation.lng.toFixed(4)}`;
+            }
+
+            if (locationBtn) {
+                locationBtn.innerHTML = "Location Set ✓";
+                locationBtn.disabled = false;
+            }
+        },
+        () => {
+            if (locationBtn) {
+                locationBtn.innerHTML = "Use Location";
+                locationBtn.disabled = false;
+            }
+            alert("Unable to fetch location");
+        }
+    );
+}
 /* ===============================
    DELIVERY CALCULATION
 ================================*/
