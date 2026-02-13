@@ -354,15 +354,16 @@ function getCurrentLocation() {
     return;
   }
 
- navigator.geolocation.getCurrentPosition(
+navigator.geolocation.getCurrentPosition(
     pos => {
+        if (!pos || !pos.coords) return;
+
         customerLocation = {
             lat: pos.coords.latitude,
             lng: pos.coords.longitude
         };
 
-        // save permanently
-        saveUserLocation(customerLocation);
+        console.log("Location set:", customerLocation);
 
         calculateDeliveryDistance();
 
@@ -377,24 +378,25 @@ function getCurrentLocation() {
         }
     },
     () => {
-      if (locationBtn) {
-        locationBtn.innerHTML = "Use Location";
-        locationBtn.disabled = false;
-      }
-      alert("Unable to fetch location");
+        if (locationBtn) {
+            locationBtn.innerHTML = "Use Location";
+            locationBtn.disabled = false;
+        }
+        alert("Unable to fetch location");
     }
-  );
-}
-
+);
 /* ===============================
    DELIVERY CALCULATION
 ================================*/
 function calculateDeliveryDistance() {
-    if (!customerLocation || !customerLocation.lat || !customerLocation.lng) {
-        console.log("Location not available yet");
+    if (
+        !customerLocation ||
+        typeof customerLocation.lat !== "number" ||
+        typeof customerLocation.lng !== "number"
+    ) {
+        console.log("Location not ready");
         return;
     }
-
   const R = 6371;
   const dLat = (customerLocation.lat - SHOP_LOCATION.lat) * Math.PI / 180;
   const dLng = (customerLocation.lng - SHOP_LOCATION.lng) * Math.PI / 180;
