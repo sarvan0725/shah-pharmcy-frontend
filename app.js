@@ -262,14 +262,14 @@ function getFilteredProducts() {
         </div>
 
         <div class="product-actions">
-        <button class="add-btn" onclick="addToCart(${p.id}, this)">
-        Add to Cart
-        </button>
+             <button class="add-cart-btn" onclick="addToCart(${p.id}, this)">
+             Add
+            </button>
 
-        <button class="wishlist-btn"
-        onclick="toggleWishlist(${p.id}, this)">
-        ❤
-       </button>
+           <button class="wishlist-btn" onclick="toggleWishlist(${p.id}, this)">
+           ♥
+          </button>
+       </div>
        </div>
       </div>
     `;
