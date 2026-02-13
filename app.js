@@ -107,7 +107,7 @@ function initApp() {
   updateWishlistCount();
 
   // PWA
-  initializePWA();
+  //initializePWA();
 
   // Analytics
   trackEvent("page_view", { page: "home" });
