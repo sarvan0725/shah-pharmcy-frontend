@@ -2698,13 +2698,13 @@ function trackEvent(eventName, data) {
 }
 
 // PWA Support
-function initializePWA() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(err => {
-      console.log('Service Worker registration failed');
-    });
-  }
-}
+//function initializePWA() {
+ // if ('serviceWorker' in navigator) {
+  //  navigator.serviceWorker.register('/sw.js').catch(err => {
+  //    console.log('Service Worker registration failed');
+    //});
+//  }
+//}
 
   
   // Track page view
