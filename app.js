@@ -371,16 +371,16 @@ function getCurrentLocation() {
                 addr.value = `Location: ${customerLocation.lat.toFixed(4)}, ${customerLocation.lng.toFixed(4)}`;
             }
 
-            if (locationBtn) {
-                locationBtn.innerHTML = "Location Set ✓";
-                locationBtn.disabled = false;
-            }
+           if (locationBtn) {
+           locationBtn.innerHTML = "Location Set ✓";
+           locationBtn.disabled = false;
+       }
         },
         () => {
             if (locationBtn) {
-                locationBtn.innerHTML = "Use Location";
-                locationBtn.disabled = false;
-            }
+           locationBtn.innerHTML = "Use Location";
+           locationBtn.disabled = false;
+          }
             alert("Unable to fetch location");
         }
     );
