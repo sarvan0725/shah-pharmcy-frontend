@@ -359,10 +359,8 @@ function getCurrentLocation() {
       customerLocation = {
     lat: pos.coords.latitude,
     lng: pos.coords.longitude
-};
+   };
 
-// save permanently
-saveUserLocation(customerLocation);
 
       calculateDeliveryDistance();
 
