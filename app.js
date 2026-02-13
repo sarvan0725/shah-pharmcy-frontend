@@ -638,6 +638,22 @@ function toggleWishlist() {
   }
 }
 
+
+
+function toggleWishlistItem(id, btn) {
+    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+    if (wishlist.includes(id)) {
+        wishlist = wishlist.filter(w => w !== id);
+        btn.style.color = "black";
+    } else {
+        wishlist.push(id);
+        btn.style.color = "red";
+    }
+
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+}
+
 function addAllToCart() {
   if (wishlist.length === 0) {
     alert('Your wishlist is empty!');
