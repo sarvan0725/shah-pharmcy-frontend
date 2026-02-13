@@ -328,6 +328,18 @@ function addToCart(id, btn) {
 /* ===============================
    LOCATION & DELIVERY SYSTEM
 ================================*/
+
+// ===== LOCATION STORAGE SYSTEM =====
+function saveUserLocation(location) {
+    localStorage.setItem("userLocation", JSON.stringify(location));
+}
+
+function loadUserLocation() {
+    const loc = localStorage.getItem("userLocation");
+    return loc ? JSON.parse(loc) : null;
+}
+
+
 function getCurrentLocation() {
   const locationBtn = document.querySelector(".location-btn");
 
@@ -344,9 +356,13 @@ function getCurrentLocation() {
   navigator.geolocation.getCurrentPosition(
     pos => {
       customerLocation = {
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude
-      };
+      customerLocation = {
+    lat: pos.coords.latitude,
+    lng: pos.coords.longitude
+};
+
+// save permanently
+saveUserLocation(customerLocation);
 
       calculateDeliveryDistance();
 
