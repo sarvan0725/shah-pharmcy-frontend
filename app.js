@@ -353,26 +353,27 @@ function getCurrentLocation() {
     return;
   }
 
-  navigator.geolocation.getCurrentPosition(
+ navigator.geolocation.getCurrentPosition(
     pos => {
-      customerLocation = {
-      customerLocation = {
-    lat: pos.coords.latitude
-    lng: pos.coords.longitude
-   };
+        customerLocation = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+        };
 
+        // save permanently
+        saveUserLocation(customerLocation);
 
-      calculateDeliveryDistance();
+        calculateDeliveryDistance();
 
-      const addr = document.getElementById("deliveryAddress");
-      if (addr) {
-        addr.value = `Location: ${customerLocation.lat.toFixed(4)}, ${customerLocation.lng.toFixed(4)}`;
-      }
+        const addr = document.getElementById("deliveryAddress");
+        if (addr) {
+            addr.value = `Location: ${customerLocation.lat.toFixed(4)}, ${customerLocation.lng.toFixed(4)}`;
+        }
 
-      if (locationBtn) {
-        locationBtn.innerHTML = "Location Set ✔";
-        locationBtn.disabled = false;
-      }
+        if (locationBtn) {
+            locationBtn.innerHTML = "Location Set ✓";
+            locationBtn.disabled = false;
+        }
     },
     () => {
       if (locationBtn) {
