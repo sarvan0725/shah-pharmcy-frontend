@@ -10,6 +10,11 @@
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
 
+function showAccountManagement() {
+    alert("Account section coming soon");
+}
+
+
 
 
 function showUserProfile() {
