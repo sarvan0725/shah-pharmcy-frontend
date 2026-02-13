@@ -6,7 +6,7 @@
    CONFIGURATION (from config.js)
 ================================*/
 
-let customerLocation = null;
+
 
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
