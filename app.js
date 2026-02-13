@@ -357,7 +357,7 @@ function getCurrentLocation() {
     pos => {
       customerLocation = {
       customerLocation = {
-    lat: pos.coords.latitude,
+    lat: pos.coords.latitude
     lng: pos.coords.longitude
    };
 
