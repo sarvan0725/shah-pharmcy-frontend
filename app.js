@@ -6,6 +6,7 @@
    CONFIGURATION (from config.js)
 ================================*/
 
+let customerLocation = null;
 
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
@@ -389,7 +390,10 @@ function getCurrentLocation() {
    DELIVERY CALCULATION
 ================================*/
 function calculateDeliveryDistance() {
-  if (!customerLocation) return;
+    if (!customerLocation || !customerLocation.lat || !customerLocation.lng) {
+        console.log("Location not available yet");
+        return;
+    }
 
   const R = 6371;
   const dLat = (customerLocation.lat - SHOP_LOCATION.lat) * Math.PI / 180;
