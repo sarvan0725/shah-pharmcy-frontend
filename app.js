@@ -308,7 +308,7 @@ function renderCartControls(productId, qty) {
     if (!container) return;
 
     container.innerHTML = `
-        <div class="qty-control">
+        <div class="qty-box">
             <button onclick="changeQty(${productId}, -1)">-</button>
             <span id="qty-${productId}">${qty}</span>
             <button onclick="changeQty(${productId}, 1)">+</button>
