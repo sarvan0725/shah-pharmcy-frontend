@@ -2348,8 +2348,6 @@ function placeOrder() {
   const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
   const summary = calculateOrderSummary();
   const total = summary.total;
-
-const total = summary.total;
   
   const order = {
     id: Date.now(),
