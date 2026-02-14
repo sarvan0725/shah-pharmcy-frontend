@@ -2383,7 +2383,7 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
     isNextDayOrder: isNextDayOrder,
     items: [...cart],
     subtotal: subtotal,
-    deliveryCharge: actualDeliveryCharge,
+    deliveryCharge: deliveryCharge,
     total: total,
     deliveryAddress: deliveryAddress,
     paymentMethod: paymentMethod,
