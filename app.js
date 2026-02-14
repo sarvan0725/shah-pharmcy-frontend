@@ -278,9 +278,9 @@ function changeQty(id, delta) {
    ADD TO CART (FIXED)
 ================================*/
 function addToCart(id, btn) {
- const product = products.find((p) => 
-  p._id == id || p.id == id
-);
+  const product = products.find(
+    (p) => p._id == id || p.id == id
+  );
 
   if (!product) {
     console.log("Product not found", id);
@@ -295,7 +295,7 @@ function addToCart(id, btn) {
     existing.qty += 1;
   } else {
     cart.push({
-      id: product._id,
+      id: product._id || product.id,
       name: product.name,
       price: product.price,
       qty: 1,
@@ -412,7 +412,7 @@ function calculateDeliveryDistance() {
    CART UI
 ================================*/
 function updateCart() {
-  if (!Array.isArray(cart)) cart = [];
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   const items = document.getElementById("cartItems");
   const totalEl = document.getElementById("cartTotal");
