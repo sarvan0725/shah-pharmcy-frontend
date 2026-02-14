@@ -37,6 +37,7 @@ window.CATEGORY_MAP = window.CATEGORY_MAP || {
 ================================*/
 let categories = [];
 let products = [];
+let quantityMap = {};
 
 let currentCategoryId = null;
 let currentSubcategoryId = null;
