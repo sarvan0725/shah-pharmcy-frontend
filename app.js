@@ -7,6 +7,12 @@
 ================================*/
 
 
+const COIN_CONFIG = {
+    valuePerCoin: 10,   // 1 coin = ₹10
+    maxCoinsPerOrder: 2 // per order max 2 coins
+};
+
+
 
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
@@ -2297,7 +2303,6 @@ function searchProducts() {
 
 function calculateOrderSummary() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
     let subtotal = 0;
 
     cart.forEach(item => {
@@ -2305,15 +2310,33 @@ function calculateOrderSummary() {
     });
 
     let deliveryFee = 0;
-    let total = subtotal + deliveryFee;
+
+    // User coins
+    let userCoins = parseInt(localStorage.getItem("userCoins")) || 0;
+
+    // Coins user wants to use (from checkbox or input)
+    let coinsToUse = parseInt(localStorage.getItem("coinsToUse")) || 0;
+
+    // Apply limits
+    coinsToUse = Math.min(coinsToUse, COIN_CONFIG.maxCoinsPerOrder);
+    coinsToUse = Math.min(coinsToUse, userCoins);
+
+    // Calculate discount
+    let coinDiscount = coinsToUse * COIN_CONFIG.valuePerCoin;
+
+    // Discount should not exceed subtotal
+    coinDiscount = Math.min(coinDiscount, subtotal);
+
+    let total = subtotal + deliveryFee - coinDiscount;
 
     return {
         subtotal,
         deliveryFee,
+        coinDiscount,
+        coinsUsed: coinsToUse,
         total
     };
 }
-
 
 
 
@@ -2461,13 +2484,18 @@ function processOrder(order) {
   }
   
   // Deduct used coins from user balance
-  if (coinsUsed > 0) {
+const summary = calculateOrderSummary();
+const coinsUsed = summary.coinsUsed;
+
+let userCoins = parseInt(localStorage.getItem("userCoins")) || 0;
+
+if (coinsUsed > 0) {
     userCoins -= coinsUsed;
-    localStorage.setItem('userCoins', userCoins.toString());
-    coinsUsed = 0;
+    localStorage.setItem("userCoins", userCoins.toString());
     updateCoinsDisplay();
-  }
-  
+}
+
+ 
   // Send notification
   sendOrderNotification(order);
   
