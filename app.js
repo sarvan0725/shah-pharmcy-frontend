@@ -302,6 +302,20 @@ function addToCart(productId) {
     updateCart();
 }
 
+////////rendercartcontrol/////
+function renderCartControls(productId, qty) {
+    const container = document.getElementById(`cart-control-${productId}`);
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="qty-control">
+            <button onclick="changeQty(${productId}, -1)">-</button>
+            <span id="qty-${productId}">${qty}</span>
+            <button onclick="changeQty(${productId}, 1)">+</button>
+        </div>
+    `;
+}
+
 ///////incresequantity///////
 
 
