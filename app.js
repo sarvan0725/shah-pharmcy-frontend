@@ -2325,7 +2325,7 @@ function placeOrder() {
     }
  
   const summary = calculateOrderSummary();
-  const subtotal = summary.subtotal;
+  const subtotal = orderData.subtotal;
   const deliveryAddress = document.getElementById('deliveryAddress').value;
   
   if (!deliveryAddress) {
