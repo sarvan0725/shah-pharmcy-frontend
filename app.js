@@ -2373,7 +2373,7 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
   }
 
  const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
- const total = summary.total;
+
 
  
   const order = {
