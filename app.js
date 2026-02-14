@@ -248,11 +248,12 @@ function renderProducts(products = []) {
         <div class="product-price">₹${p.price}</div>
         <div class="product-stock">Stock: ${p.stock}</div>
 
-        <button 
-          class="add-cart-btn" 
-          onclick="addToCart('${p._id}')">
-          Add to Cart
-        </button>
+
+       <button
+        class="add-cart-btn"
+        onclick="addToCart('${p._id}', this)">
+        Add to Cart
+      </button>
       </div>
     `;
   });
@@ -278,41 +279,46 @@ function changeQty(id, delta) {
    ADD TO CART (FIXED)
 ================================*/
 function addToCart(id, btn) {
-  const product = products.find(p => p.id == id || p._id == id);
-  if (!product) return;
-
-  const qty = quantityMap[id] || 1;
-
-  if (qty > product.stock) {
-    alert("Not enough stock");
-    return;
-  }
-
-  const existing = cart.find(i => i.id === id);
-
-  if (existing) {
-    if (existing.qty + qty > product.stock) {
-      alert("Not enough stock");
-      return;
+    const product = products.find(p => p.id == id || p._id == id);
+    if (!product) {
+        console.log("Product not found", id);
+        return;
     }
-    existing.qty += qty;
-  } else {
-    cart.push({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      qty: qty
-    });
-  }
 
-  if (btn) {
-    btn.innerText = "Added ✔";
-    setTimeout(() => (btn.innerText = "Add to Cart"), 1200);
-  }
+    // get cart from storage
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  updateCart();
+    const existing = cart.find(i => i.id == id);
+
+    if (existing) {
+        existing.qty += 1;
+    } else {
+        cart.push({
+            id: product.id || product._id,
+            name: product.name,
+            price: product.price || product.product_price,
+            qty: 1
+        });
+    }
+
+    // save cart to storage
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // button feedback
+    if (btn) {
+        btn.innerText = "Added ✓";
+        setTimeout(() => {
+            btn.innerText = "Add to Cart";
+        }, 1000);
+    }
+
+    console.log("Cart:", cart);
+
+    // update UI
+    if (typeof updateCart === "function") {
+        updateCart();
+    }
 }
-
 /* ===============================
    LOCATION & DELIVERY SYSTEM
 ================================*/
