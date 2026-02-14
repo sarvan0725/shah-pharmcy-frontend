@@ -247,19 +247,22 @@ function renderProducts(products = []) {
 
             <h4>${p.name}</h4>
             <div class="product-price">₹${p.price}</div>
-            <div class="product-stock">Stock: ${p.stock}</div>
 
-            <div class="cart-control" id="cart-control-${productId}">
-                <button class="add-cart-btn"
-                    onclick="addToCart(${productId}, this)">
-                    Add to Cart
-                </button>
+            <!-- Quantity control -->
+            <div class="qty-box">
+                <button onclick="changeQty(${productId}, -1)">-</button>
+                <span id="qty-${productId}">1</span>
+                <button onclick="changeQty(${productId}, 1)">+</button>
             </div>
+
+            <!-- Add to cart button -->
+            <button class="add-cart-btn" onclick="addToCart(${productId}, this)">
+                Add to Cart
+            </button>
         </div>
         `;
     });
 }
- 
 /* ===============================
    QUANTITY (SAFE)
 ================================*/
