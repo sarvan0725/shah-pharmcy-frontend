@@ -521,10 +521,11 @@ function updateCart() {
    REMOVE FROM CART
 ================================*/
 function removeFromCart(index) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
   cart.splice(index, 1);
+  localStorage.setItem("cart", JSON.stringify(cart));
   updateCart();
 }
-
 /* ===============================
    CART TOGGLE
 ================================*/
@@ -2218,11 +2219,13 @@ function searchProducts() {
 
 
 function placeOrder() {
-  if (cart.length === 0) {
-    alert("Cart is empty");
-    return;
-  }
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+    if (cart.length === 0) {
+        alert("Cart is empty");
+        return;
+    }
+ 
   const subtotal = Number(document.getElementById("cartSubtotal").innerText);
   const deliveryAddress = document.getElementById('deliveryAddress').value;
   
