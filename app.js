@@ -227,17 +227,16 @@ function getFilteredProducts() {
 
   /* ========= PAGINATION ========= */
 function renderProducts(products = []) {
-  const list = document.getElementById("productList");
-  if (!list) return;
+    const list = document.getElementById("productList");
+    if (!list) return;
 
-  list.innerHTML = "";
+    list.innerHTML = "";
 
- 
-products.forEach((p) => {
-    const imageUrl = p.image || p.imageUrl || p.photo || "";
-    const productId = p._id || p.id;
+    products.forEach((p) => {
+        const imageUrl = p.image || p.imageUrl || p.photo || "";
+        const productId = p._id || p.id;
 
-    list.innerHTML += `
+        list.innerHTML += `
         <div class="product-card">
             <img
                 src="${imageUrl}"
@@ -252,13 +251,14 @@ products.forEach((p) => {
 
             <div class="cart-control" id="cart-control-${productId}">
                 <button class="add-cart-btn"
-                    onclick="addToCart(${productId}', this)">
+                    onclick="addToCart(${productId}, this)">
                     Add to Cart
                 </button>
             </div>
         </div>
-    `;
-});
+        `;
+    });
+}
  
 /* ===============================
    QUANTITY (SAFE)
