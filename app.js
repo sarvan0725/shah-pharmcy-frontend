@@ -408,6 +408,28 @@ function calculateDeliveryDistance() {
   updateDeliveryInfo();
   updateCart();
 }
+
+
+
+////////////UPDATEDELIVERY///////////
+
+function updateDeliveryInfo() {
+    const deliveryText = document.getElementById("deliveryChargeText");
+    if (!deliveryText) return;
+
+    if (deliveryCharge === -1) {
+        deliveryText.innerText = "Delivery not available";
+        deliveryText.style.color = "red";
+    } 
+    else if (deliveryCharge === 0) {
+        deliveryText.innerText = "FREE";
+        deliveryText.style.color = "green";
+    } 
+    else {
+        deliveryText.innerText = "₹" + deliveryCharge;
+        deliveryText.style.color = "#ff9800";
+    }
+}
 /* ===============================
    CART UI
 ================================*/
