@@ -288,30 +288,38 @@ function changeQty(id, delta) {
 /* ===============================
    ADD TO CART (FIXED)
 ================================*/
-function addToCart(productId) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    let product = products.find(p => p.id == productId || p._id == productId);
+function addToCart(id, btn) {
+    const product = products.find(p => (p._id || p.id) == id);
     if (!product) return;
 
-    let existing = cart.find(i => i.id == productId);
+    // Get selected quantity
+    let qty = quantityMap[id] || 1;
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existing = cart.find(i => i.id == id);
 
     if (existing) {
-        existing.qty += 1;
+        existing.qty += qty;
     } else {
         cart.push({
             id: product._id || product.id,
             name: product.name,
             price: product.price,
-            qty: 1
+            qty: qty
         });
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    renderCartControls(productId);
+
+    if (btn) {
+        btn.innerText = "Added ✓";
+        setTimeout(() => {
+            btn.innerText = "Add to Cart";
+        }, 1200);
+    }
+
     updateCart();
 }
-
 ////////rendercartcontrol/////
 function renderCartControls(productId, qty) {
     const container = document.getElementById(`cart-control-${productId}`);
