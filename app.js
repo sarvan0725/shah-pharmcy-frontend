@@ -249,11 +249,11 @@ function renderProducts(products = []) {
       <div class="product-price">₹${p.price}</div>
       <div class="product-stock">Stock: ${p.stock}</div>
 
-      <button
-        class="add-cart-btn"
-        onclick="addToCart('${productId}', this)">
+     <div class="cart-control" id="cart-control-${product.id}">
+    <button class="add-cart-btn" onclick="addToCart(${product.id})">
         Add to Cart
-      </button>
+    </button>
+    </div>
     </div>
   `;
   });
@@ -277,39 +277,28 @@ function changeQty(id, delta) {
 /* ===============================
    ADD TO CART (FIXED)
 ================================*/
-function addToCart(id, btn) {
-  const product = products.find(
-    (p) => p._id == id || p.id == id
-  );
+function addToCart(productId) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  if (!product) {
-    console.log("Product not found", id);
-    return;
-  }
+    let product = products.find(p => p.id == productId || p._id == productId);
+    if (!product) return;
 
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let existing = cart.find(i => i.id == productId);
 
-  const existing = cart.find((i) => i.id == id);
+    if (existing) {
+        existing.qty += 1;
+    } else {
+        cart.push({
+            id: product._id || product.id,
+            name: product.name,
+            price: product.price,
+            qty: 1
+        });
+    }
 
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    cart.push({
-      id: product._id || product.id,
-      name: product.name,
-      price: product.price,
-      qty: 1,
-    });
-  }
-
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  if (btn) {
-    btn.innerText = "Added ✓";
-    setTimeout(() => (btn.innerText = "Add to Cart"), 1200);
-  }
-
-  updateCart();
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCartControls(productId);
+    updateCart();
 }
 /* ===============================
    LOCATION & DELIVERY SYSTEM
