@@ -232,33 +232,31 @@ function renderProducts(products = []) {
 
   list.innerHTML = "";
 
-  products.forEach((p) => {
-    const imageUrl = p.image || p.imageUrl || p.photo || "";
+ products.forEach((p) => {
+  const imageUrl = p.image || p.imageUrl || p.photo || "";
+  const productId = p._id;   // FIXED ID
 
-    list.innerHTML += `
-      <div class="product-card">
-        <img 
-          src="${imageUrl}" 
-          alt="${p.name}" 
-          class="product-img"
-          onerror="this.src='https://via.placeholder.com/150'"
-        />
+  list.innerHTML += `
+    <div class="product-card">
+      <img
+        src="${imageUrl}"
+        alt="${p.name}"
+        class="product-img"
+        onerror="this.src='https://via.placeholder.com/150'"
+      />
 
-        <h4>${p.name}</h4>
-        <div class="product-price">₹${p.price}</div>
-        <div class="product-stock">Stock: ${p.stock}</div>
+      <h4>${p.name}</h4>
+      <div class="product-price">₹${p.price}</div>
+      <div class="product-stock">Stock: ${p.stock}</div>
 
-
-       <button
+      <button
         class="add-cart-btn"
-        onclick="addToCart('${p._id}', this)">
+        onclick="addToCart('${productId}', this)">
         Add to Cart
       </button>
-      </div>
-    `;
-  });
-}
-
+    </div>
+  `;
+});
  
 /* ===============================
    QUANTITY (SAFE)
@@ -279,45 +277,36 @@ function changeQty(id, delta) {
    ADD TO CART (FIXED)
 ================================*/
 function addToCart(id, btn) {
-    const product = products.find(p => p.id == id || p._id == id);
-    if (!product) {
-        console.log("Product not found", id);
-        return;
-    }
+  const product = products.find((p) => p._id == id);
 
-    // get cart from storage
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  if (!product) {
+    console.log("Product not found", id);
+    return;
+  }
 
-    const existing = cart.find(i => i.id == id);
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    if (existing) {
-        existing.qty += 1;
-    } else {
-        cart.push({
-            id: product.id || product._id,
-            name: product.name,
-            price: product.price || product.product_price,
-            qty: 1
-        });
-    }
+  const existing = cart.find((i) => i.id == id);
 
-    // save cart to storage
-    localStorage.setItem("cart", JSON.stringify(cart));
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({
+      id: product._id,
+      name: product.name,
+      price: product.price,
+      qty: 1,
+    });
+  }
 
-    // button feedback
-    if (btn) {
-        btn.innerText = "Added ✓";
-        setTimeout(() => {
-            btn.innerText = "Add to Cart";
-        }, 1000);
-    }
+  localStorage.setItem("cart", JSON.stringify(cart));
 
-    console.log("Cart:", cart);
+  if (btn) {
+    btn.innerText = "Added ✓";
+    setTimeout(() => (btn.innerText = "Add to Cart"), 1200);
+  }
 
-    // update UI
-    if (typeof updateCart === "function") {
-        updateCart();
-    }
+  updateCart();
 }
 /* ===============================
    LOCATION & DELIVERY SYSTEM
