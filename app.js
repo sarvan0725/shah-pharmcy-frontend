@@ -278,7 +278,7 @@ function changeQty(id, delta) {
    ADD TO CART (FIXED)
 ================================*/
 function addToCart(id, btn) {
-  const product = products.find(p => p.id === id);
+  const product = products.find(p => p.id == id || p._id == id);
   if (!product) return;
 
   const qty = quantityMap[id] || 1;
