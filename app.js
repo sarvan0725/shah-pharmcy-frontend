@@ -252,7 +252,7 @@ products.forEach((p) => {
 
             <div class="cart-control" id="cart-control-${productId}">
                 <button class="add-cart-btn"
-                    onclick="addToCart('${productId}', this)">
+                    onclick="addToCart(${productId}', this)">
                     Add to Cart
                 </button>
             </div>
