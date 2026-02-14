@@ -2292,6 +2292,31 @@ function searchProducts() {
 
 
 
+///////CALCULATEORDERSUMMARY////
+
+
+function calculateOrderSummary() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    let subtotal = 0;
+
+    cart.forEach(item => {
+        subtotal += item.price * item.qty;
+    });
+
+    let deliveryFee = 0;
+    let total = subtotal + deliveryFee;
+
+    return {
+        subtotal,
+        deliveryFee,
+        total
+    };
+}
+
+
+
+
 
 /* ===============================
    PAYMENT SYSTEM
@@ -2307,7 +2332,7 @@ function placeOrder() {
     }
  
   const summary = calculateOrderSummary();
-  const subtotal = orderData.subtotal;
+  const subtotal = summary.subtotal;
   const deliveryAddress = document.getElementById('deliveryAddress').value;
   
   if (!deliveryAddress) {
@@ -2468,6 +2493,7 @@ function processOrder(order) {
   
   alert(successMessage);
 }
+
 
 /* ===============================
    THEME & OTHER FUNCTIONS
