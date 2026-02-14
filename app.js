@@ -2345,10 +2345,10 @@ function placeOrder() {
     if (!confirmNextDay) return;
   }
 
-  const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-  const summary = calculateOrderSummary();
-  const total = summary.total;
-  
+ const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+ const total = summary.total;
+
+ 
   const order = {
     id: Date.now(),
     date: new Date().toISOString(),
