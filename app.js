@@ -234,7 +234,7 @@ function renderProducts(products = []) {
 
  products.forEach((p) => {
   const imageUrl = p.image || p.imageUrl || p.photo || "";
-  const productId = p._id;   // FIXED ID
+  const productId = p._id || p.id;  // FIXED ID
 
   list.innerHTML += `
     <div class="product-card">
@@ -278,7 +278,9 @@ function changeQty(id, delta) {
    ADD TO CART (FIXED)
 ================================*/
 function addToCart(id, btn) {
-  const product = products.find((p) => p._id == id);
+ const product = products.find((p) => 
+  p._id == id || p.id == id
+);
 
   if (!product) {
     console.log("Product not found", id);
