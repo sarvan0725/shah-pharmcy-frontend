@@ -3020,3 +3020,25 @@ body {
 }
 
 
+.qty-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ff6b6b;
+    color: white;
+    border-radius: 8px;
+    padding: 4px 8px;
+    width: 90px;
+}
+
+.qty-control button {
+    background: white;
+    color: #ff6b6b;
+    border: none;
+    font-size: 16px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+
