@@ -256,7 +256,8 @@ function renderProducts(products = []) {
       </button>
     </div>
   `;
-});
+  });
+}
  
 /* ===============================
    QUANTITY (SAFE)
