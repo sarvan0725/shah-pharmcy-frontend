@@ -2290,6 +2290,27 @@ function searchProducts() {
   });
 }
 
+
+////orderSummary////////
+function calculateOrderSummary() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    let subtotal = 0;
+
+    cart.forEach(item => {
+        subtotal += item.price * item.qty;
+    });
+
+    let deliveryFee = 0;
+    let total = subtotal + deliveryFee;
+
+    return {
+        subtotal,
+        deliveryFee,
+        total
+    };
+}
+
 /* ===============================
    PAYMENT SYSTEM
 ================================*/
@@ -2303,7 +2324,8 @@ function placeOrder() {
         return;
     }
  
-  const subtotal = Number(document.getElementById("cartSubtotal").innerText);
+  const summary = calculateOrderSummary();
+  const subtotal = summary.subtotal;
   const deliveryAddress = document.getElementById('deliveryAddress').value;
   
   if (!deliveryAddress) {
