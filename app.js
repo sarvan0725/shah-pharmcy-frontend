@@ -268,15 +268,21 @@ function renderProducts(products = []) {
    QUANTITY (SAFE)
 ================================*/
 function changeQty(id, delta) {
-  const product = products.find(p => p.id === id);
-  if (!product) return;
+    const product = products.find(p => (p._id || p.id) == id);
+    if (!product) return;
 
-  quantityMap[id] += delta;
-  if (quantityMap[id] < 1) quantityMap[id] = 1;
-  if (quantityMap[id] > product.stock) quantityMap[id] = product.stock;
+    // Default quantity = 1
+    if (!quantityMap[id]) {
+        quantityMap[id] = 1;
+    }
 
-  const el = document.getElementById("qty-" + id);
-  if (el) el.innerText = quantityMap[id];
+    quantityMap[id] += delta;
+
+    if (quantityMap[id] < 1) quantityMap[id] = 1;
+    if (quantityMap[id] > product.stock) quantityMap[id] = product.stock;
+
+    const el = document.getElementById("qty-" + id);
+    if (el) el.innerText = quantityMap[id];
 }
 
 /* ===============================
