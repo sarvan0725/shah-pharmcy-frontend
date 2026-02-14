@@ -232,32 +232,33 @@ function renderProducts(products = []) {
 
   list.innerHTML = "";
 
- products.forEach((p) => {
-  const imageUrl = p.image || p.imageUrl || p.photo || "";
-  const productId = p._id || p.id;  // FIXED ID
+ 
+products.forEach((p) => {
+    const imageUrl = p.image || p.imageUrl || p.photo || "";
+    const productId = p._id || p.id;
 
-  list.innerHTML += `
-    <div class="product-card">
-      <img
-        src="${imageUrl}"
-        alt="${p.name}"
-        class="product-img"
-        onerror="this.src='https://via.placeholder.com/150'"
-      />
+    list.innerHTML += `
+        <div class="product-card">
+            <img
+                src="${imageUrl}"
+                alt="${p.name}"
+                class="product-img"
+                onerror="this.src='https://via.placeholder.com/150'"
+            />
 
-      <h4>${p.name}</h4>
-      <div class="product-price">₹${p.price}</div>
-      <div class="product-stock">Stock: ${p.stock}</div>
+            <h4>${p.name}</h4>
+            <div class="product-price">₹${p.price}</div>
+            <div class="product-stock">Stock: ${p.stock}</div>
 
-     <div class="cart-control" id="cart-control-${product.id}">
-    <button class="add-cart-btn" onclick="addToCart(${product.id})">
-        Add to Cart
-    </button>
-    </div>
-    </div>
-  `;
-  });
-}
+            <div class="cart-control" id="cart-control-${productId}">
+                <button class="add-cart-btn"
+                    onclick="addToCart('${productId}', this)">
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    `;
+});
  
 /* ===============================
    QUANTITY (SAFE)
