@@ -300,6 +300,39 @@ function addToCart(productId) {
     renderCartControls(productId);
     updateCart();
 }
+
+///////incresequantity///////
+
+
+function increaseQty(productId) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    let item = cart.find(i => i.id == productId);
+    if (!item) return;
+
+    item.qty += 1;
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCartControls(productId);
+    updateCart();
+}
+
+function decreaseQty(productId) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    let index = cart.findIndex(i => i.id == productId);
+    if (index === -1) return;
+
+    cart[index].qty -= 1;
+
+    if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCartControls(productId);
+    updateCart();
+}
 /* ===============================
    LOCATION & DELIVERY SYSTEM
 ================================*/
