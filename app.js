@@ -2330,10 +2330,12 @@ function placeOrder() {
         alert("Cart is empty");
         return;
     }
- 
-  const summary = calculateOrderSummary();
-  const subtotal = summary.subtotal;
-  const deliveryAddress = document.getElementById('deliveryAddress').value;
+ const summary = calculateOrderSummary();
+ const subtotal = summary.subtotal;
+ const deliveryCharge = summary.deliveryFee;
+ const total = summary.total;
+
+const deliveryAddress = document.getElementById('deliveryAddress').value;
   
   if (!deliveryAddress) {
     alert("Please provide delivery address");
