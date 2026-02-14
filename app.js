@@ -2364,13 +2364,8 @@ function placeOrder() {
   }
 
   const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-  const summary = calculateOrderSummary({
-  subtotal,
-  deliveryCharge,
-  activeDiscount,
-  autoDiscount,
-  coinsUsed
-});
+  const summary = calculateOrderSummary();
+  const total = summary.total;
 
 const total = summary.total;
   
