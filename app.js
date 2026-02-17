@@ -263,7 +263,7 @@ function renderProducts(products = []) {
             </div>
 
             <!-- Add to cart button -->
-            <button class="add-cart-btn" onclick="addToCart(${productId}, this)">
+            <button class="add-cart-btn" onclick="addToCart('${productId}', this)"
                 Add to Cart
             </button>
         </div>
