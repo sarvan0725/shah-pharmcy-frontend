@@ -1258,24 +1258,38 @@ function trackSpecificOrder(orderId) {
     sendShopMessage();
   }, 500);
 }
-function addCategory() {
-  const name = prompt('Category Name:');
-  const icon = prompt('Category Icon (emoji):');
-  
-  if (!name || !icon) return;
-  
-  const newId = Math.max(...categories.map(c => c.id)) + 1;
-  categories.push({
-    id: newId,
-    name: name,
-    icon: icon,
-    active: true,
-    subcategories: []
-  });
-  
-  localStorage.setItem('categories', JSON.stringify(categories));
-  
-  alert('Category added successfully!');
+async function addCategory() {
+  const name = prompt("Category Name:");
+
+  if (!name) return;
+
+  try {
+    const res = await fetch(
+      "https://shah-pharmacy-backend.onrender.com/api/categories",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: name,
+          parentId: null
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Category added successfully");
+      location.reload();
+    } else {
+      alert("Failed to add category");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
+  }
 }
 
 function deleteCategory() {
