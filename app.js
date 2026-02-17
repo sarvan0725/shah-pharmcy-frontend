@@ -2475,25 +2475,26 @@ function processOrder(order) {
   // Generate invoice
   generateInvoice(order);
   
-  // Award coins (1 coin per ₹100 spent)
-  const coinsEarned = Math.floor(order.total / 100);
-  if (coinsEarned > 0) {
-    userCoins += coinsEarned;
-    localStorage.setItem('userCoins', userCoins.toString());
-    updateCoinsDisplay();
-  }
-  
-  // Deduct used coins from user balance
+  // Get user coins first
+let userCoins = parseInt(localStorage.getItem("userCoins")) || 0;
+
+// Deduct used coins
 const summary = calculateOrderSummary();
 const coinsUsed = summary.coinsUsed;
 
-let userCoins = parseInt(localStorage.getItem("userCoins")) || 0;
-
 if (coinsUsed > 0) {
     userCoins -= coinsUsed;
-    localStorage.setItem("userCoins", userCoins.toString());
-    updateCoinsDisplay();
 }
+
+// Award coins (1 coin per ₹100 spent)
+const coinsEarned = Math.floor(order.total / 100);
+if (coinsEarned > 0) {
+    userCoins += coinsEarned;
+}
+
+// Save final coins
+localStorage.setItem("userCoins", userCoins.toString());
+updateCoinsDisplay();
 
  
   // Send notification
