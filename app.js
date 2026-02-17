@@ -257,9 +257,9 @@ function renderProducts(products = []) {
 
             <!-- Quantity control -->
             <div class="qty-box">
-                <button onclick="changeQty(${productId}, -1)">-</button>
+                <button onclick="changeQty('${productId}', -1)">-</button>
                 <span id="qty-${productId}">1</span>
-                <button onclick="changeQty(${productId}, 1)">+</button>
+                 <button onclick="changeQty('${productId}', 1)">+</button>
             </div>
 
             <!-- Add to cart button -->
