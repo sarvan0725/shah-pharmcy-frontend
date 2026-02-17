@@ -603,53 +603,61 @@ function removeProductImage() {
 }
 
 
+async function deleteProduct(id) {
+  if (!confirm("Are you sure you want to delete this product?")) return;
 
-  
-  
-  
-function deleteProduct(id) {
-  if (confirm("Are you sure you want to delete this product?")) {
-    products = products.filter(p => p.id !== id);
-    localStorage.setItem("products", JSON.stringify(products));
+  try {
+    await fetch(`https://shah-pharmacy-backend.onrender.com/api/products/${id}`, {
+      method: "DELETE"
+    });
+
     loadProducts();
-    loadAnalytics();
-    checkLowStock();
+  } catch (err) {
+    console.error("Delete failed:", err);
+    alert("Error deleting product");
   }
 }
+  
+  
+  
 
-function loadProducts(searchQuery = '') {
-  const table = document.getElementById("productTable");
+async function loadProducts(searchQuery = '') {
+  const table = document.getElementById('productTable');
   if (!table) return;
-  
-  table.innerHTML = "";
-  
-  let displayProducts = products;
-  if (searchQuery) {
-    displayProducts = products.filter(p => 
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (p.subcategory && p.subcategory.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-  }
-  
-  displayProducts.forEach(p => {
-    const subcategoryText = p.subcategory ? ` (${p.subcategory})` : '';
-    table.innerHTML += `
-      <tr>
-        <td>${p.name}</td>
-        <td>${p.weight || 'N/A'}</td>
-        <td>₹${p.price}</td>
-        <td>${p.stock}</td>
-        <td>${p.category}${subcategoryText}</td>
-        <td>${p.image ? '✅' : '❌'}</td>
-        <td>
-          <button class="delete" onclick="deleteProduct(${p.id})">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
-}
 
+  try {
+    const res = await fetch('https://shah-pharmacy-backend.onrender.com/api/products');
+    let products = await res.json();
+
+    if (searchQuery) {
+      products = products.filter(p =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    table.innerHTML = '';
+
+    products.forEach(p => {
+      const row = `
+        <tr>
+          <td>${p.name}</td>
+          <td>${p.unit || '-'}</td>
+          <td>₹${p.price}</td>
+          <td>${p.stock}</td>
+          <td>${p.category_id}</td>
+          <td>${p.image ? `<img src="${p.image}" width="40">` : 'X'}</td>
+          <td>
+            <button onclick="deleteProduct(${p.id})">Delete</button>
+          </td>
+        </tr>
+      `;
+      table.innerHTML += row;
+    });
+
+  } catch (err) {
+    console.error('Error loading products:', err);
+  }
+}
 
 /* ===============================
    ANALYTICS & CHARTS
