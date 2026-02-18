@@ -554,23 +554,20 @@ async function addProduct() {
   console.log("Sending product object:", product);
 
   try {
-    const res = await fetch(
-      "https://shah-pharmacy-backend.onrender.com/api/products",
-      {
+    const res = await fetch(`${API_BASE}/products`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify(product),
-      }
-    );
+        body: JSON.stringify(product)
+    });
 
     const data = await res.json();
 
     if (!res.ok) {
-      alert("Backend rejected product");
-      console.log(data);
-      return;
+        alert("Backend rejected product");
+        console.log(data);
+        return;
     }
 
     alert("Product added successfully");
@@ -585,10 +582,10 @@ async function addProduct() {
     uploadedImageUrl = "";
 
     loadProducts();
-  } catch (err) {
+
+} catch (err) {
     console.error(err);
     alert("Error adding product");
-  }
 }
 
 
