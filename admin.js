@@ -1602,10 +1602,10 @@ async function loadCategories() {
     categories.forEach(cat => {
       const div = document.createElement("div");
       div.className = "category-item";
-      div.innerHTML = `
-        <span>${cat.name}</span>
-        <button onclick="deleteCategory('${cat._id}')">Delete</button>
-      `;
+     div.innerHTML = `
+     <span>${cat.name}</span>
+     <button onclick="deleteCategory('${cat._id}')">Delete</button>
+   `;
       list.appendChild(div);
     });
 
