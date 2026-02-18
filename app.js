@@ -234,41 +234,50 @@ function getFilteredProducts() {
 
   /* ========= PAGINATION ========= */
 function renderProducts(products = []) {
-    const list = document.getElementById("productList");
-    if (!list) return;
+  const list = document.getElementById("productList");
+  if (!list) return;
 
-    list.innerHTML = "";
+  list.innerHTML = "";
 
-    products.forEach((p) => {
-        const imageUrl = p.image || p.imageUrl || p.photo || "";
-        const productId = p._id || p.id;
+  products.forEach((p) => {
+    const imageUrl = p.image || p.imageUrl || p.photo || "";
+    const productId = p._id || p.id;
 
-        list.innerHTML += `
-        <div class="product-card">
-            <img
-                src="${imageUrl}"
-                alt="${p.name}"
-                class="product-img"
-                onerror="this.src='https://via.placeholder.com/150'"
-            />
+    list.innerHTML += `
+      <div class="product-card">
+        <img
+          src="${imageUrl}"
+          alt="${p.name}"
+          class="product-img"
+          onerror="this.src='https://via.placeholder.com/150'"
+        />
 
-            <h4>${p.name}</h4>
-            <div class="product-price">₹${p.price}</div>
+        <h4>${p.name}</h4>
 
-            <!-- Quantity control -->
-            <div class="qty-box">
-                <button onclick="changeQty('${productId}', -1)">-</button>
-                <span id="qty-${productId}">1</span>
-                 <button onclick="changeQty('${productId}', 1)">+</button>
-            </div>
-
-            <!-- Add to cart button -->
-            <button class="add-cart-btn" onclick="addToCart('${productId}', this)"
-                Add to Cart
-            </button>
+        <div class="product-weight">
+          ${p.weight || ""}
         </div>
-        `;
-    });
+
+        <div class="product-price">₹${p.price}</div>
+
+        <!-- Quantity control -->
+        <div class="qty-box">
+          <button onclick="changeQty('${productId}', -1)">-</button>
+          <span id="qty-${productId}">1</span>
+          <button onclick="changeQty('${productId}', 1)">+</button>
+        </div>
+
+        <!-- Add to cart button -->
+        <button 
+          id="btn-${productId}"
+          class="add-cart-btn"
+          onclick="addToCart('${productId}', this)"
+        >
+          Add to Cart
+        </button>
+      </div>
+    `;
+  });
 }
 /* ===============================
    QUANTITY (SAFE)
