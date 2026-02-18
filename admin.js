@@ -1610,7 +1610,6 @@ function loadAdminSettings() {
    CATEGORY SYSTEM
 ========================= */
 
-const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
 
 async function loadCategories() {
   try {
