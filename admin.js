@@ -667,53 +667,80 @@ async function loadProducts(searchQuery = '') {
 /* ===============================
    ANALYTICS & CHARTS
 ================================*/
-function loadAnalytics() {
-  const totalProducts = products.length;
-  const outOfStock = products.filter(p => p.stock === 0).length;
-  const grocery = products.filter(p => p.category === "grocery").length;
-  const medicine = products.filter(p => p.category === "medicine").length;
-  const bulk = products.filter(p => p.category === "bulk").length;
+async function loadAnalytics() {
+  try {
 
-  const setText = (id, val) => {
-    const el = document.getElementById(id);
-    if (el) el.innerText = val;
-  };
+    // 🔥 FETCH PRODUCTS
+    const productRes = await fetch("https://shah-pharmacy-backend.onrender.com/api/products");
+    const products = await productRes.json();
 
-  setText("totalProducts", totalProducts);
-  setText("outOfStock", outOfStock);
-  setText("groceryCount", grocery);
-  setText("medicineCount", medicine);
-  setText("bulkCount", bulk);
+    // 🔥 FETCH ORDERS
+    const orderRes = await fetch("https://shah-pharmacy-backend.onrender.com/api/orders");
+    const orders = await orderRes.json();
 
-  // Sales calculation
-  let today = 0, week = 0, month = 0;
-  let deliveryRevenue = 0;
-  const now = new Date();
+    // =============================
+    // PRODUCT STATS
+    // =============================
 
-  orders.forEach(o => {
-    const d = new Date(o.date);
-    const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
-    
-    if (o.deliveryCharge) deliveryRevenue += o.deliveryCharge;
+    const totalProducts = products.length;
+    const outOfStock = products.filter(p => p.stock === 0).length;
 
-    if (d.toDateString() === now.toDateString()) today += o.total;
-    if (diff <= 7) week += o.total;
-    if (diff <= 30) month += o.total;
-  });
-  
-  // Add delivery revenue card
-  const deliveryCard = document.getElementById('deliveryRevenue');
-  if (deliveryCard) deliveryCard.innerText = '₹' + deliveryRevenue;
+    const grocery = products.filter(p => p.category_id == 1).length;
+    const medicine = products.filter(p => p.category_id == 2).length;
+    const bulk = products.filter(p => p.category_id == 3).length;
 
-  setText("todaySales", "₹" + today);
-  setText("weekSales", "₹" + week);
-  setText("monthSales", "₹" + month);
-  setText("totalOrders", orders.length);
+    const setText = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.innerText = val;
+    };
 
- function loadAnalytics() {
-   // analytics ka code
-   updateCharts(grocery, medicine, bulk, today, week, month);
+    setText("totalProducts", totalProducts);
+    setText("outOfStock", outOfStock);
+    setText("groceryCount", grocery);
+    setText("medicineCount", medicine);
+    setText("bulkCount", bulk);
+
+    // =============================
+    // SALES CALCULATION (LIVE)
+    // =============================
+
+    let today = 0, week = 0, month = 0;
+    let deliveryRevenue = 0;
+    const now = new Date();
+
+    orders.forEach(o => {
+      const d = new Date(o.createdAt);
+      const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
+
+      if (o.deliveryCharge) deliveryRevenue += o.deliveryCharge;
+
+      if (d.toDateString() === now.toDateString())
+        today += o.totalAmount;
+
+      if (diff <= 7)
+        week += o.totalAmount;
+
+      if (diff <= 30)
+        month += o.totalAmount;
+    });
+
+    setText("todaySales", "₹" + today);
+    setText("weekSales", "₹" + week);
+    setText("monthSales", "₹" + month);
+    setText("totalOrders", orders.length);
+
+    const deliveryCard = document.getElementById("deliveryRevenue");
+    if (deliveryCard)
+      deliveryCard.innerText = "₹" + deliveryRevenue;
+
+    // 🔥 Update Charts
+    updateCharts(grocery, medicine, bulk, today, week, month);
+
+  } catch (err) {
+    console.error("Analytics Load Error:", err);
+  }
 }
+   
 
 function updateCharts(grocery, medicine, bulk, today, week, month) {
    const catCanvas = document.getElementById("categoryChart");
@@ -765,41 +792,48 @@ function updateCharts(grocery, medicine, bulk, today, week, month) {
 /* ===============================
    ORDERS MANAGEMENT
 ================================*/
-function loadOrders() {
+async function loadOrders() {
+
   const orderList = document.getElementById("orderList");
   if (!orderList) return;
-  
-  if (orders.length === 0) {
-    orderList.innerHTML = "<p>No orders yet.</p>";
-    return;
-  }
-  
-  orderList.innerHTML = "";
-  orders.forEach((order, index) => {
-    const hasDeliveryInfo = order.distance !== undefined;
-    orderList.innerHTML += `
-      <div class="box">
-        <h4>Order #${index + 1}</h4>
-        <p><strong>Date:</strong> ${new Date(order.date).toLocaleDateString()}</p>
-        ${hasDeliveryInfo ? `
-          <p><strong>Subtotal:</strong> ₹${order.subtotal || order.total}</p>
-          <p><strong>Delivery:</strong> ${order.deliveryCharge === 0 ? 'FREE' : '₹' + order.deliveryCharge}</p>
-          <p><strong>Distance:</strong> ${order.distance} km</p>
-          <p><strong>Address:</strong> ${order.deliveryAddress}</p>
-        ` : ''}
-        <p><strong>Total:</strong> ₹${order.total}</p>
-        <p><strong>Items:</strong> ${order.items.length}</p>
-        <details>
-          <summary>View Items</summary>
-          ${order.items.map(item => `
-            <p>• ${item.name} × ${item.qty} = ₹${item.price * item.qty}</p>
-          `).join('')}
-        </details>
-      </div>
-    `;
-  });
-}
 
+  try {
+    const res = await fetch("https://shah-pharmacy-backend.onrender.com/api/orders");
+    const orders = await res.json();
+
+    orderList.innerHTML = "";
+
+    if (orders.length === 0) {
+      orderList.innerHTML = "<p>No Orders yet.</p>";
+      return;
+    }
+
+    orders.forEach((order, index) => {
+
+      const hasDeliveryInfo =
+        order.deliveryAddress || order.distance || order.deliveryCharge;
+
+      orderList.innerHTML += `
+        <div class="box">
+          <h4>Order #${index + 1}</h4>
+          <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
+
+          ${hasDeliveryInfo ? `
+            <p><strong>Delivery:</strong> ₹${order.deliveryCharge || 0}</p>
+            <p><strong>Distance:</strong> ${order.distance || 0} km</p>
+            <p><strong>Address:</strong> ${order.deliveryAddress || ""}</p>
+          ` : ""}
+
+          <p><strong>Total:</strong> ₹${order.totalAmount}</p>
+          <p><strong>Items:</strong> ${order.items.length}</p>
+        </div>
+      `;
+    });
+
+  } catch (err) {
+    console.error("Order Load Error:", err);
+  }
+}
 /* ===============================
    THEME SETTINGS
 ================================*/
