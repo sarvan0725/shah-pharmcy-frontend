@@ -1032,13 +1032,28 @@ function createDemandForecastChart() {
   });
 }
 
-function loadCustomerInsights() {
-  const behaviors = JSON.parse(localStorage.getItem('customerBehaviors')) || [];
-  const uniqueCustomers = orders.length;
-  setText('totalCustomers', uniqueCustomers);
-  setText('repeatCustomers', Math.floor(uniqueCustomers * 0.3));
-  const avgOrder = orders.length > 0 ? Math.round(orders.reduce((sum, o) => sum + o.total, 0) / orders.length) : 0;
-  setText('avgOrderValue', `₹${avgOrder}`);
+async function loadCustomerInsights() {
+  try {
+    const res = await fetch(`${API_BASE}/orders`);
+    const orders = await res.json();
+
+    const uniqueCustomers = orders.length;
+    const repeatCustomers = Math.floor(uniqueCustomers * 0.3);
+
+    const avgOrder =
+      orders.length > 0
+        ? Math.round(
+            orders.reduce((sum, o) => sum + o.total, 0) /
+              orders.length
+          )
+        : 0;
+
+    setText("totalCustomers", uniqueCustomers);
+    setText("repeatCustomers", repeatCustomers);
+    setText("avgOrderValue", `₹${avgOrder}`);
+  } catch (err) {
+    console.error("Customer insights error:", err);
+  }
 }
 
 function generateWhatsAppCampaign() {
