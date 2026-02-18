@@ -1530,23 +1530,28 @@ function exportData() {
 }
 
 function clearAllData() {
-  if (!confirm('⚠️ WARNING: This will delete ALL data including products, orders, and settings. This action cannot be undone!')) {
-    return;
-  }
-  
-  if (!confirm('Are you absolutely sure? Type "DELETE" to confirm:') || prompt('Type DELETE to confirm:') !== 'DELETE') {
-    return;
-  }
-  
-  // Clear all localStorage data except admin credentials
-  const credentials = localStorage.getItem('adminCredentials');
-  localStorage.clear();
-  if (credentials) {
-    localStorage.setItem('adminCredentials', credentials);
-  }
-  
-  alert('All data cleared successfully! Page will reload.');
-  window.location.reload();
+
+    const firstConfirm = confirm("⚠️ WARNING: This will delete ALL data including products, orders, and settings. This action cannot be undone!");
+
+    if (!firstConfirm) return;
+
+    const userInput = prompt("Type DELETE to confirm:");
+
+    if (userInput !== "DELETE") {
+        alert("Deletion cancelled.");
+        return;
+    }
+
+    // Clear all localStorage data except admin credentials
+    const credentials = localStorage.getItem("adminCredentials");
+    localStorage.clear();
+
+    if (credentials) {
+        localStorage.setItem("adminCredentials", credentials);
+    }
+
+    alert("All data cleared successfully! Page will reload.");
+    window.location.reload();
 }
 
 function updateStockThreshold() {
