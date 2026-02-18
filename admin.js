@@ -1382,27 +1382,7 @@ function loadCategoryManagement() {
   `).join('');
 }
 
-function addCategory() {
-  const name = document.getElementById('newCategoryName').value.trim();
-  if (!name) {
-    alert('Please enter category name');
-    return;
-  }
-  
-  let categories = JSON.parse(localStorage.getItem('categories')) || [];
-  const newId = Math.max(...categories.map(c => c.id), 0) + 1;
-  
-  categories.push({
-    id: newId,
-    name: name,
-    subcategories: []
-  });
-  
-  localStorage.setItem('categories', JSON.stringify(categories));
-  document.getElementById('newCategoryName').value = '';
-  loadCategoryManagement();
-  alert('Category added successfully!');
-}
+f
 
 function deleteCategory(id) {
   if (!confirm('Are you sure? This will affect products in this category.')) return;
@@ -1443,17 +1423,6 @@ function addSubcategory(categoryId) {
   }
 }
 
-function deleteSubcategory(categoryId, subName) {
-  if (!confirm(`Delete subcategory "${subName}"?`)) return;
-  
-  let categories = JSON.parse(localStorage.getItem('categories')) || [];
-  const category = categories.find(c => c.id === categoryId);
-  if (category) {
-    category.subcategories = category.subcategories.filter(s => s !== subName);
-    localStorage.setItem('categories', JSON.stringify(categories));
-    loadCategoryManagement();
-  }
-}
 
 /* ===============================
    ADMIN NOTIFICATIONS SYSTEM
