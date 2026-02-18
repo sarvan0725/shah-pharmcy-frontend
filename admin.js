@@ -1313,22 +1313,30 @@ function loadActiveOffers() {
     return;
   }
   
-  offersList.innerHTML = discounts.map(discount => `
+   offersList.innerHTML = discounts.map(discount => `
     <div class="offer-item">
-      <div class="offer-info">
-        <h4>${discount.title}</h4>
-        <p>${discount.message}</p>
-        <small>Min Order: ₹${discount.minOrderAmount} | Auto Apply: ${discount.autoApply ? 'Yes' : 'No'}</small>
-      </div>
-      <div class="offer-actions">
-        <button onclick="toggleDiscount(${discount.id})" class="${discount.active ? 'deactivate' : 'activate'}-btn">
-          ${discount.active ? 'Deactivate' : 'Activate'}
-        </button>
-        <button onclick="deleteDiscount(${discount.id})" class="delete-btn">Delete</button>
-      </div>
+        <div class="offer-info">
+            <h4>${discount.title}</h4>
+            <p>${discount.message}</p>
+            <small>
+                Min Order: ₹${discount.minOrderAmount} | 
+                Auto Apply: ${discount.autoApply ? 'Yes' : 'No'}
+            </small>
+        </div>
+
+        <div class="offer-actions">
+            <button onclick="toggleDiscount(${discount.id})" 
+                class="${discount.active ? 'deactivate' : 'activate'}-btn">
+                ${discount.active ? 'Deactivate' : 'Activate'}
+            </button>
+
+            <button onclick="deleteDiscount(${discount.id})" 
+                class="delete-btn">
+                Delete
+            </button>
+        </div>
     </div>
-  `).join('');
-}
+`).join('');
 
 function toggleDiscount(id) {
   let discounts = JSON.parse(localStorage.getItem('adminDiscounts')) || [];
