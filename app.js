@@ -232,6 +232,20 @@ function getFilteredProducts() {
 }
 
 
+
+function filterProductsByCategory(categoryId) {
+  const filtered = products.filter(p => {
+    const pCat = (p.categoryId || p.category || "").toString();
+    return pCat === categoryId.toString();
+  });
+
+  renderProducts(filtered);
+}
+
+
+
+
+
   /* ========= PAGINATION ========= */
 function renderProducts(products = []) {
   const list = document.getElementById("productList");
@@ -304,51 +318,51 @@ function changeQty(id, delta) {
    ADD TO CART (FIXED)
 ================================*/
 function addToCart(id, btn) {
-    const product = products.find(p => (p._id || p.id) == id);
-    if (!product) return;
+  const product = products.find(p => (p._id || p.id) == id);
+  if (!product) return;
 
-    // Get selected quantity
-    let qty = quantityMap[id] || 1;
+  let qty = quantityMap[id] || 1;
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const existing = cart.find(i => i.id == id);
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const existing = cart.find(i => i.id == id);
 
-    if (existing) {
-        existing.qty += qty;
-    } else {
-        cart.push({
-            id: product._id || product.id,
-            name: product.name,
-            price: product.price,
-            qty: qty
-        });
-    }
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    cart.push({
+      id: product._id || product.id,
+      name: product.name,
+      price: product.price || product.product_price,
+      qty: qty
+    });
+  }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
+  localStorage.setItem("cart", JSON.stringify(cart));
 
-    if (btn) {
-        btn.innerText = "Added ✓";
-        setTimeout(() => {
-            btn.innerText = "Add to Cart";
-        }, 1200);
-    }
+  if (btn) {
+    btn.innerText = "Added ✓";
+    setTimeout(() => {
+      btn.innerText = "Add to Cart";
+    }, 1200);
+  }
 
-    updateCart();
+  updateCart();
 }
 ////////rendercartcontrol/////
+
+
 function renderCartControls(productId, qty) {
-    const container = document.getElementById(`cart-control-${productId}`);
-    if (!container) return;
+  const container = document.getElementById(`cart-control-${productId}`);
+  if (!container) return;
 
-    container.innerHTML = `
-        <div class="qty-box">
-            <button onclick="changeQty(${productId}, -1)">-</button>
-            <span id="qty-${productId}">${qty}</span>
-            <button onclick="changeQty(${productId}, 1)">+</button>
-        </div>
-    `;
+  container.innerHTML = `
+    <div class="qty-box">
+      <button onclick="changeQty('${productId}', -1)">-</button>
+      <span>${qty}</span>
+      <button onclick="changeQty('${productId}', 1)">+</button>
+    </div>
+  `;
 }
-
 ///////incresequantity///////
 
 
