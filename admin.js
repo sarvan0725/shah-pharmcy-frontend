@@ -618,16 +618,14 @@ async function deleteProduct(id) {
             return;
         }
 
-        loadProducts();
         alert("Product deleted successfully");
+        loadProducts();
 
     } catch (err) {
-        console.error("Delete failed:", err);
+        console.error(err);
         alert("Error deleting product");
     }
 }
-  
-  
 
 async function loadProducts(searchQuery = '') {
   const table = document.getElementById('productTable');
