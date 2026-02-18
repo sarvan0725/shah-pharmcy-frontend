@@ -1382,46 +1382,9 @@ function loadCategoryManagement() {
   `).join('');
 }
 
-f
 
-function deleteCategory(id) {
-  if (!confirm('Are you sure? This will affect products in this category.')) return;
-  
-  let categories = JSON.parse(localStorage.getItem('categories')) || [];
-  categories = categories.filter(c => c.id !== id);
-  localStorage.setItem('categories', JSON.stringify(categories));
-  loadCategoryManagement();
-}
 
-function editCategory(id) {
-  const categories = JSON.parse(localStorage.getItem('categories')) || [];
-  const category = categories.find(c => c.id === id);
-  if (!category) return;
-  
-  const newName = prompt('Enter new category name:', category.name);
-  if (newName && newName.trim()) {
-    category.name = newName.trim();
-    localStorage.setItem('categories', JSON.stringify(categories));
-    loadCategoryManagement();
-  }
-}
 
-function addSubcategory(categoryId) {
-  const subName = prompt('Enter subcategory name:');
-  if (!subName || !subName.trim()) return;
-  
-  let categories = JSON.parse(localStorage.getItem('categories')) || [];
-  const category = categories.find(c => c.id === categoryId);
-  if (category) {
-    if (!category.subcategories.includes(subName.trim())) {
-      category.subcategories.push(subName.trim());
-      localStorage.setItem('categories', JSON.stringify(categories));
-      loadCategoryManagement();
-    } else {
-      alert('Subcategory already exists!');
-    }
-  }
-}
 
 
 /* ===============================
