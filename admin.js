@@ -606,20 +606,26 @@ function removeProductImage() {
 
 
 async function deleteProduct(id) {
-  if (!confirm("Are you sure you want to delete this product?")) return;
+    if (!confirm("Are you sure you want to delete this product?")) return;
 
-  try {
-    await fetch(`https://shah-pharmacy-backend.onrender.com/api/products/${id}`, {
-      method: "DELETE"
-    });
+    try {
+        const res = await fetch(`${API_BASE}/products/${id}`, {
+            method: "DELETE"
+        });
 
-    loadProducts();
-  } catch (err) {
-    console.error("Delete failed:", err);
-    alert("Error deleting product");
-  }
+        if (!res.ok) {
+            alert("Delete failed from backend");
+            return;
+        }
+
+        loadProducts();
+        alert("Product deleted successfully");
+
+    } catch (err) {
+        console.error("Delete failed:", err);
+        alert("Error deleting product");
+    }
 }
-  
   
   
 
