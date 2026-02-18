@@ -3,6 +3,11 @@
 ================================*/
 
 
+const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
+
+
+
+
 let categoryChart = null;
 let salesChart = null;
 let demandChart = null;
