@@ -586,8 +586,8 @@ async function addProduct() {
 } catch (err) {
     console.error(err);
     alert("Error adding product");
-}
-
+  }
+}   
 
 
 
