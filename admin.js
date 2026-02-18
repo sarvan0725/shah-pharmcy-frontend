@@ -773,22 +773,19 @@ function updateCharts(grocery, medicine, bulk, today, week, month) {
         }
 
         salesChart = new Chart(salesCanvas, {
-            type: "bar",
-            data: {
-                labels: ["Today", "7 Days", "30 Days"],
-                datasets: [{
-                    label: "Sales ₹",
-                    data: [today, week, month],
-                    backgroundColor: "#00B761"
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        });
-    }
-}
-
+        type: "bar",
+        data: {
+       labels: ["Today", "7 Days", "30 Days"],
+       datasets: [{
+      label: "Sales ₹",
+      data: [today, week, month],
+      backgroundColor: "#00B761"
+    }]
+  },
+  options: {
+    responsive: true
+  }
+});
 /* ===============================
    ORDERS MANAGEMENT
 ================================*/
