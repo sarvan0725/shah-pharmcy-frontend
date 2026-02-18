@@ -1592,3 +1592,112 @@ function loadAdminSettings() {
   setText('systemOrders', orders.length);
   setText('lastLogin', new Date().toLocaleString());
 }
+
+
+
+
+
+
+
+
+
+/* =========================
+   CATEGORY SYSTEM
+========================= */
+
+const API_BASE = "https://shah-pharmacy-backend.onrender.com/api";
+
+async function loadCategories() {
+  try {
+    const res = await fetch(`${API_BASE}/categories`);
+    const categories = await res.json();
+
+    const list = document.getElementById("categoryList");
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    categories.forEach(cat => {
+      const div = document.createElement("div");
+      div.className = "category-item";
+      div.innerHTML = `
+        <span>${cat.name}</span>
+        <button onclick="deleteCategory('${cat._id}')">Delete</button>
+      `;
+      list.appendChild(div);
+    });
+
+  } catch (err) {
+    console.error("Category load error", err);
+  }
+}
+
+async function addCategory() {
+  const input = document.getElementById("newCategoryName");
+  const name = input.value.trim();
+
+  if (!name) {
+    alert("Enter category name");
+    return;
+  }
+
+  try {
+    await fetch(`${API_BASE}/categories`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name })
+    });
+
+    input.value = "";
+    loadCategories();
+    alert("Category added");
+
+  } catch (err) {
+    console.error("Add category error", err);
+  }
+}
+
+async function deleteCategory(id) {
+  if (!confirm("Delete this category?")) return;
+
+  try {
+    await fetch(`${API_BASE}/categories/${id}`, {
+      method: "DELETE"
+    });
+
+    loadCategories();
+
+  } catch (err) {
+    console.error("Delete error", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadCategories();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
