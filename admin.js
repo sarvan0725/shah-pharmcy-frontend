@@ -1370,31 +1370,29 @@ function loadCategoryManagement() {
   const container = document.getElementById('categoryList');
   if (!container) return;
   
-  container.innerHTML = categories.map(cat => `
+ container.innerHTML = categories.map(cat => `
     <div class="category-item">
-      <div class="category-header">
-        <h4>${cat.name}</h4>
-        <div class="category-actions">
-          <button onclick="editCategory(${cat.id})" class="edit-btn">Edit</button>
-          <button onclick="deleteCategory(${cat.id})" class="delete-btn">Delete</button>
+        <div class="category-header">
+            <h4>${cat.name}</h4>
+            <div class="category-actions">
+                <button onclick="editCategory(${cat.id})" class="edit-btn">Edit</button>
+                <button onclick="deleteCategory(${cat.id})" class="delete-btn">Delete</button>
+            </div>
         </div>
-      </div>
-      <div class="subcategories">
-        <strong>Subcategories:</strong>
-        ${cat.subcategories.map(sub => `
-          <span class="subcategory-tag">
-            ${sub}
-            <button onclick="deleteSubcategory(${cat.id}, '${sub}')" class="remove-sub">×</button>
-          </span>
-        `).join('')}
-        <button onclick="addSubcategory(${cat.id})" class="add-sub-btn">+ Add</button>
-      </div>
+
+        <div class="subcategories">
+            <strong>Subcategories:</strong>
+            ${cat.subcategories.map(sub => `
+                <span class="subcategory-tag">
+                    ${sub}
+                    <button onclick="deleteSubcategory(${cat.id}, '${sub}')">×</button>
+                </span>
+            `).join('')}
+            <button onclick="addSubcategory(${cat.id})" class="add-sub-btn">+ Add</button>
+        </div>
     </div>
-  `).join('');
+`).join('');
 }
-
-
-
 
 
 
