@@ -743,6 +743,7 @@ async function loadAnalytics() {
 }
 
 
+
 function updateCharts(grocery, medicine, bulk, today, week, month) {
 
     grocery = Number(grocery || 0);
@@ -752,11 +753,17 @@ function updateCharts(grocery, medicine, bulk, today, week, month) {
     week = Number(week || 0);
     month = Number(month || 0);
 
+    // DESTROY OLD CHARTS SAFELY
+    const oldCategory = Chart.getChart("categoryChart");
+    if (oldCategory) oldCategory.destroy();
+
+    const oldSales = Chart.getChart("salesChart");
+    if (oldSales) oldSales.destroy();
+
+    // CATEGORY PIE
     const catCanvas = document.getElementById("categoryChart");
     if (catCanvas) {
-        if (categoryChart) categoryChart.destroy();
-
-        categoryChart = new Chart(catCanvas, {
+        new Chart(catCanvas, {
             type: "pie",
             data: {
                 labels: ["Grocery", "Medicine", "Bulk"],
@@ -769,11 +776,10 @@ function updateCharts(grocery, medicine, bulk, today, week, month) {
         });
     }
 
+    // SALES BAR
     const salesCanvas = document.getElementById("salesChart");
     if (salesCanvas) {
-        if (salesChart) salesChart.destroy();
-
-        salesChart = new Chart(salesCanvas, {
+        new Chart(salesCanvas, {
             type: "bar",
             data: {
                 labels: ["Today", "7 Days", "30 Days"],
