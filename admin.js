@@ -744,53 +744,49 @@ async function loadAnalytics() {
 
 
 function updateCharts(grocery, medicine, bulk, today, week, month) {
-   const catCanvas = document.getElementById("categoryChart");
-   if (catCanvas) {
-      if (categoryChart) {
-         categoryChart.destroy();
-      }
 
-      categoryChart = new Chart(catCanvas, {
-         type: "pie",
-         data: {
-            labels: ["Grocery", "Medicine", "Bulk"],
-            datasets: [{
-               data: [grocery, medicine, bulk],
-               backgroundColor: ["#00B761", "#16a34a", "#f97316"]
-            }]
-         },
-         options: {
-            responsive: true
-         }
-      });
-   }
+    grocery = Number(grocery || 0);
+    medicine = Number(medicine || 0);
+    bulk = Number(bulk || 0);
+    today = Number(today || 0);
+    week = Number(week || 0);
+    month = Number(month || 0);
 
-   // Sales Bar Chart - MOVED INSIDE THE FUNCTION
-   const salesCanvas = document.getElementById("salesChart");
-   if (salesCanvas) {
-      if (salesChart) {
-         salesChart.destroy();
-      }
+    const catCanvas = document.getElementById("categoryChart");
+    if (catCanvas) {
+        if (categoryChart) categoryChart.destroy();
 
-      salesChart = new Chart(salesCanvas, {
-         type: "bar",
-         data: {
-            labels: ["Today", "7 Days", "30 Days"],
-            datasets: [{
-               label: "Sales ₹",
-               data: [today, week, month],
-               backgroundColor: "#00B761"
-            }]
-         },
-         options: {
-            responsive: true
-         }
-      });
-   }
+        categoryChart = new Chart(catCanvas, {
+            type: "pie",
+            data: {
+                labels: ["Grocery", "Medicine", "Bulk"],
+                datasets: [{
+                    data: [grocery, medicine, bulk],
+                    backgroundColor: ["#00B761", "#16a34a", "#f97316"]
+                }]
+            },
+            options: { responsive: true }
+        });
+    }
+
+    const salesCanvas = document.getElementById("salesChart");
+    if (salesCanvas) {
+        if (salesChart) salesChart.destroy();
+
+        salesChart = new Chart(salesCanvas, {
+            type: "bar",
+            data: {
+                labels: ["Today", "7 Days", "30 Days"],
+                datasets: [{
+                    label: "Sales ₹",
+                    data: [today, week, month],
+                    backgroundColor: "#00B761"
+                }]
+            },
+            options: { responsive: true }
+        });
+    }
 }
-
-
-
 
 
 
