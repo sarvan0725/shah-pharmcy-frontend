@@ -2473,9 +2473,43 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
   if (paymentMethod === 'razorpay') {
     initiateRazorpayPayment(order);
   } else {
-    processOrder(order);
-  }
+    fetch("https://shah-pharmacy-backend.onrender.com/api/orders", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      userId: user.id,
+      items: cart.map(item => ({
+        productId: item.id,
+        name: item.name,
+        quantity: item.qty,
+        price: item.price,
+        total: item.price * item.qty,
+        image: item.image
+      })),
+      totalAmount: total,
+      deliveryCharge: deliveryCharge,
+      deliveryAddress: deliveryAddress,
+      deliveryDistance: 0,
+      paymentMethod: paymentMethod,
+      notes: ""
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Order saved:", data);
+    localStorage.removeItem("cart");
+    alert("Order placed successfully!");
+    window.location.href = "index.html";
+  })
+  .catch(err => {
+    console.error("Order error:", err);
+  });
+
 }
+} 
+
 
 function initiateRazorpayPayment(order) {
   if (!FEATURES.enableRazorpayPayment) {
