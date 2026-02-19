@@ -53,10 +53,7 @@ function handleUserProfileClick() {
   const user = getCurrentUser();
 
   if (!user) {
-    const modal = document.getElementById("auth-section");
-    if (modal) {
-      modal.style.display = "flex";
-    }
+    window.location.href = "user-login.html";
   } else {
     alert("Logged in as: " + user.name);
   }
