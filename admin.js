@@ -827,7 +827,7 @@ async function loadOrders() {
       orderList.innerHTML += `
         <div class="box">
           <h4>Order #${index + 1}</h4>
-          <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
+          <p><strong>Date:</strong> ${new Date(order.date).toLocaleDateString()}</p>
 
           ${hasDeliveryInfo ? `
             <p><strong>Delivery:</strong> ₹${order.deliveryCharge || 0}</p>
@@ -835,7 +835,7 @@ async function loadOrders() {
             <p><strong>Address:</strong> ${order.deliveryAddress || ""}</p>
           ` : ""}
 
-          <p><strong>Total:</strong> ₹${order.totalAmount}</p>
+          <p><strong>Total:</strong> ₹${order.total}</p>
           <p><strong>Items:</strong> ${order.items.length}</p>
         </div>
       `;
