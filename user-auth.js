@@ -62,7 +62,7 @@ function handleUserProfileClick() {
     const user = JSON.parse(localStorage.getItem("loggedUser"));
 
     if (!user) {
-        document.getElementById("loginModal").style.display = "flex";
+        document.getElementById("auth-section").style.display = "flex";
     } else {
         alert("Logged in as: " + user.name);
     }
