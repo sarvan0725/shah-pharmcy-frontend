@@ -62,7 +62,7 @@ function handleUserProfileClick() {
     const user = JSON.parse(localStorage.getItem("loggedUser"));
 
     if (!user) {
-        openLogin();   // ya showLogin() agar tera modal ka naam ye hai
+        document.getElementById("loginModal").style.display = "flex";
     } else {
         alert("Logged in as: " + user.name);
     }
