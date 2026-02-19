@@ -55,3 +55,15 @@ document.addEventListener("DOMContentLoaded", () => {
     userDisplay.innerText = "Hi, " + user.name;
   }
 });
+
+
+
+function handleUserProfileClick() {
+    const user = JSON.parse(localStorage.getItem("loggedUser"));
+
+    if (!user) {
+        openLogin();   // ya showLogin() agar tera modal ka naam ye hai
+    } else {
+        alert("Logged in as: " + user.name);
+    }
+}
