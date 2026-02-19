@@ -741,7 +741,7 @@ async function loadAnalytics() {
     console.error("Analytics Load Error:", err);
   }
 }
-   
+
 
 function updateCharts(grocery, medicine, bulk, today, week, month) {
    const catCanvas = document.getElementById("categoryChart");
@@ -764,30 +764,43 @@ function updateCharts(grocery, medicine, bulk, today, week, month) {
          }
       });
    }
+
+   // Sales Bar Chart - MOVED INSIDE THE FUNCTION
+   const salesCanvas = document.getElementById("salesChart");
+   if (salesCanvas) {
+      if (salesChart) {
+         salesChart.destroy();
+      }
+
+      salesChart = new Chart(salesCanvas, {
+         type: "bar",
+         data: {
+            labels: ["Today", "7 Days", "30 Days"],
+            datasets: [{
+               label: "Sales ₹",
+               data: [today, week, month],
+               backgroundColor: "#00B761"
+            }]
+         },
+         options: {
+            responsive: true
+         }
+      });
+   }
 }
 
-    // Sales Bar Chart
-    const salesCanvas = document.getElementById("salesChart");
-    if (salesCanvas) {
-        if (salesChart) {
-            salesChart.destroy();
-        }
 
-        salesChart = new Chart(salesCanvas, {
-        type: "bar",
-        data: {
-       labels: ["Today", "7 Days", "30 Days"],
-       datasets: [{
-      label: "Sales ₹",
-      data: [today, week, month],
-      backgroundColor: "#00B761"
-    }]
-  },
-  options: {
-    responsive: true
-  }
-});
-/* ===============================
+
+
+
+
+
+
+
+
+
+
+/*=========================
    ORDERS MANAGEMENT
 ================================*/
 async function loadOrders() {
