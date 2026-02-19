@@ -2434,22 +2434,34 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
 
  const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
 
+const user = JSON.parse(localStorage.getItem("currentUser"));
+
+if (!user) {
+  alert("Please login first");
+  window.location.href = "user-login.html";
+  return;
+}
 
  
-  const order = {
-    id: Date.now(),
-    date: new Date().toISOString(),
-    deliveryDate: deliveryDate.toISOString(),
-    isNextDayOrder: isNextDayOrder,
-    items: [...cart],
-    subtotal: subtotal,
-    deliveryCharge: deliveryCharge,
-    total: total,
-    deliveryAddress: deliveryAddress,
-    paymentMethod: paymentMethod,
-    status: isNextDayOrder ? 'Next Day Delivery' : 'Placed'
-  };
-  
+ const order = {
+  id: Date.now(),
+  date: new Date().toISOString(),
+
+  userName: user.name,
+  userPhone: user.phone,
+  userAddress: user.address,
+
+  deliveryDate: deliveryDate.toISOString(),
+  isNextDayOrder: isNextDayOrder,
+  items: [...cart],
+  subtotal: subtotal,
+  deliveryCharge: deliveryCharge,
+  total: total,
+  deliveryAddress: deliveryAddress,
+  paymentMethod: paymentMethod,
+  status: isNextDayOrder ? "Next Day Delivery" : "Placed"
+};
+ 
   if (paymentMethod === 'razorpay') {
     initiateRazorpayPayment(order);
   } else {
@@ -2503,12 +2515,32 @@ function initiateRazorpayPayment(order) {
   }
 }
 
-function processOrder(order) {
-  // Save order
-  let orders = JSON.parse(localStorage.getItem('orders')) || [];
-  orders.push(order);
-  localStorage.setItem('orders', JSON.stringify(orders));
-  
+async function processOrder(order) {
+    try {
+        const response = await fetch("https://shah-pharmacy-backend.onrender.com/api/orders", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(order)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Order failed");
+        }
+
+        alert("Order placed successfully!");
+
+        localStorage.removeItem("cart");
+        window.location.href = "index.html";
+
+    } catch (error) {
+        console.error("Order Error:", error);
+        alert("Server error while placing order");
+    }
+}
   // Generate invoice
   generateInvoice(order);
   
