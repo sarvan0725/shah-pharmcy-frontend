@@ -2448,20 +2448,23 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
 
 
  
- const order = {
+  const order = {
   id: Date.now(),
   date: new Date().toISOString(),
 
-  userName: user?.name || "Unknown",
-  userPhone: user?.phone || "-",
-  userAddress: user?.address || deliveryAddress,
+  userName: user.name,
+  userPhone: user.phone,
+  userAddress: user.address,
 
   deliveryDate: deliveryDate.toISOString(),
   isNextDayOrder: isNextDayOrder,
+
   items: [...cart],
-  subtotal: subtotal,
-  deliveryCharge: deliveryCharge,
-  total: total,
+
+  subtotal: Number(subtotal) || 0,
+  deliveryCharge: Number(deliveryCharge) || 0,
+  total: Number(total) || 0,
+
   deliveryAddress: deliveryAddress,
   paymentMethod: paymentMethod,
   status: isNextDayOrder ? "Next Day Delivery" : "Placed"
