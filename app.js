@@ -2531,65 +2531,62 @@ async function processOrder(order) {
             throw new Error(data.message || "Order failed");
         }
 
-        alert("Order placed successfully!");
+        // ✅ Generate invoice (inside function)
+        generateInvoice(order);
+  
+        // ✅ Get user coins first (inside function)
+        let userCoins = parseInt(localStorage.getItem("userCoins")) || 0;
 
+        if (coinsUsed > 0) {
+            userCoins -= coinsUsed;
+        }
+
+        // ✅ Award coins (1 coin per ₹100 spent) (inside function)
+        const coinsEarned = Math.floor(order.total / 100);
+        if (coinsEarned > 0) {
+            userCoins += coinsEarned;
+        }
+
+        // ✅ Save final coins (inside function)
+        localStorage.setItem("userCoins", userCoins.toString());
+        updateCoinsDisplay();
+
+        // ✅ Send notification (inside function)
+        sendOrderNotification(order);
+  
+        // ✅ Clear cart (inside function)
         localStorage.removeItem("cart");
+        cart = [];
+        updateCart();
+        toggleCart();
+  
+        // ✅ Show success message (inside function)
+        const paymentText = order.paymentMethod === 'cod' ? 'Cash on Delivery' : 
+            order.paymentMethod === 'razorpay' ? `Online Payment (ID: ${order.paymentId || 'Processing'})` : 'Unknown';
+  
+        let successMessage = `Order placed successfully!\nOrder ID: ${order.id}\nTotal: ₹${order.total}\nPayment: ${paymentText}`;
+  
+        if (order.isNextDayOrder) {
+            const deliveryDate = new Date(order.deliveryDate).toLocaleDateString();
+            successMessage += `\n\n📅 NEXT DAY DELIVERY\nDelivery Date: ${deliveryDate}\n⏰ Will be processed tomorrow morning`;
+        } else {
+            successMessage += `\nDelivery Address: ${order.deliveryAddress}`;
+        }
+  
+        if (coinsEarned > 0) {
+            successMessage += `\n\n🎉 You earned ${coinsEarned} coins!`;
+        }
+  
+        alert(successMessage);
+        
+        // ✅ Redirect after success (inside function)
         window.location.href = "index.html";
 
     } catch (error) {
         console.error("Order Error:", error);
         alert("Server error while placing order");
     }
-}
-  // Generate invoice
-  generateInvoice(order);
-  
-  // Get user coins first
-let userCoins = parseInt(localStorage.getItem("userCoins")) || 0;
-
-
-if (coinsUsed > 0) {
-    userCoins -= coinsUsed;
-}
-
-// Award coins (1 coin per ₹100 spent)
-const coinsEarned = Math.floor(order.total / 100);
-if (coinsEarned > 0) {
-    userCoins += coinsEarned;
-}
-
-// Save final coins
-localStorage.setItem("userCoins", userCoins.toString());
-updateCoinsDisplay();
-
- 
-  // Send notification
-  sendOrderNotification(order);
-  
-  // Clear cart
-  cart = [];
-  updateCart();
-  toggleCart();
-  
-  // Show success message
-  const paymentText = order.paymentMethod === 'cod' ? 'Cash on Delivery' : 
-    order.paymentMethod === 'razorpay' ? `Online Payment (ID: ${order.paymentId || 'Processing'})` : 'Unknown';
-  
-  let successMessage = `Order placed successfully!\nOrder ID: ${order.id}\nTotal: ₹${order.total}\nPayment: ${paymentText}`;
-  
-  if (order.isNextDayOrder) {
-    const deliveryDate = new Date(order.deliveryDate).toLocaleDateString();
-    successMessage += `\n\n📅 NEXT DAY DELIVERY\nDelivery Date: ${deliveryDate}\n⏰ Will be processed tomorrow morning`;
-  } else {
-    successMessage += `\nDelivery Address: ${order.deliveryAddress}`;
-  }
-  
-  if (coinsEarned > 0) {
-    successMessage += `\n\n🎉 You earned ${coinsEarned} coins!`;
-  }
-  
-  alert(successMessage);
-}
+} // ✅ Now the function closes properly here
 
 
 /* ===============================
