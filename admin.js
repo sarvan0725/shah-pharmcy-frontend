@@ -826,34 +826,28 @@ async function loadOrders() {
   const hasDeliveryInfo =
     order.deliveryAddress || order.distance || order.deliveryCharge;
 
-  orderList.innerHTML += `
-    <div class="box">
-      <h4>Order #${index + 1}</h4>
+   orderList.innerHTML += `
+     <div class="box">
+     <h4>Order #${index + 1}</h4>
 
-      <p><strong>Date:</strong>
-        ${
-          order.date
-            ? new Date(order.date).toLocaleDateString()
-            : "-"
-        }
-      </p>
+     <p><strong>Date:</strong> ${
+    order.createdAt 
+        ? new Date(order.createdAt).toLocaleDateString() 
+        : "-"
+  }</p>
 
-      ${
-        hasDeliveryInfo
-          ? `
-            <p><strong>Delivery:</strong> ₹${order.deliveryCharge || 0}</p>
-            <p><strong>Distance:</strong> ${order.distance || 0} km</p>
-            <p><strong>Address:</strong> ${order.deliveryAddress || "-"}</p>
-          `
-          : ""
-      }
+            <p><strong>Name:</strong> ${order.customerName || "-"}</p>
+               <p><strong>Phone:</strong> ${order.phone || "-"}</p>
 
-      <p><strong>Total:</strong> ₹${order.total || 0}</p>
-      <p><strong>Items:</strong> ${
-        order.items ? order.items.length : 0
-      }</p>
-    </div>
-  `;
+            <p><strong>Total:</strong> ₹${order.totalAmount || 0}</p>
+
+        <p><strong>Items:</strong> ${
+          order.items ? order.items.length : 0
+         }</p>
+
+</div>
+`;
+      
 });
 
   } catch (err) {
