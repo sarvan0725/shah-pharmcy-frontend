@@ -40,31 +40,9 @@
 </head>
 <body>
 
-<!-- LOGIN MODAL POPUP -->
-<div id="auth-section" class="login-modal" style="display:none;">
 
-  <div class="login-box">
-    <h2>User Login (OTP)</h2>
 
-    <input id="mobile" placeholder="Enter Mobile Number" />
 
-    <div id="otp-box" style="display:none;">
-      <input id="otp" placeholder="Enter OTP" />
-    </div>
-
-    <button id="send-otp-btn" onclick="sendOTP()">Send OTP</button>
-
-    <button id="verify-otp-btn" onclick="verifyOTP()" style="display:none;">
-      Verify OTP
-    </button>
-
-    <button onclick="closeLogin()" style="background:red;margin-top:10px;">
-      Close
-    </button>
-
-  </div>
-
-</div>
 <!-- MAIN APP SECTION -->
 <div id="app-section" style="display:none;">
   <!-- existing website content will stay visible after login -->
