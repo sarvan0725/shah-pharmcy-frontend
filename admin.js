@@ -1335,6 +1335,8 @@ function loadActiveOffers() {
         </div>
     </div>
 `).join('');
+}
+
 
 function toggleDiscount(id) {
   let discounts = JSON.parse(localStorage.getItem('adminDiscounts')) || [];
