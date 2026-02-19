@@ -2547,9 +2547,6 @@ async function processOrder(order) {
   // Get user coins first
 let userCoins = parseInt(localStorage.getItem("userCoins")) || 0;
 
-// Deduct used coins
-const summary = calculateOrderSummary();
-const coinsUsed = summary.coinsUsed;
 
 if (coinsUsed > 0) {
     userCoins -= coinsUsed;
