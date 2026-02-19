@@ -2384,6 +2384,17 @@ function calculateOrderSummary() {
 
 
 function placeOrder() {
+
+
+ const user = JSON.parse(localStorage.getItem("currentUser"));
+
+if (!user) {
+  alert("Please login first");
+  window.location.href = "user-login.html";
+  return;
+}
+
+ 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     if (cart.length === 0) {
@@ -2434,22 +2445,16 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
 
  const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
 
-const user = JSON.parse(localStorage.getItem("currentUser"));
 
-if (!user) {
-  alert("Please login first");
-  window.location.href = "user-login.html";
-  return;
-}
 
  
  const order = {
   id: Date.now(),
   date: new Date().toISOString(),
 
-  userName: user.name,
-  userPhone: user.phone,
-  userAddress: user.address,
+  userName: user?.name || "Unknown",
+  userPhone: user?.phone || "-",
+  userAddress: user?.address || deliveryAddress,
 
   deliveryDate: deliveryDate.toISOString(),
   isNextDayOrder: isNextDayOrder,
