@@ -58,3 +58,18 @@ function handleUserProfileClick() {
     alert("Logged in as: " + user.name);
   }
 }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const user = getCurrentUser();
+
+  const userDisplay = document.getElementById("userDisplay");
+  const overflowName = document.getElementById("overflowUserName");
+  const overflowPhone = document.getElementById("overflowUserPhone");
+
+  if (user) {
+    if (userDisplay) userDisplay.innerText = "Hi, " + user.name;
+    if (overflowName) overflowName.innerText = user.name;
+    if (overflowPhone) overflowPhone.innerText = user.phone;
+  }
+});
