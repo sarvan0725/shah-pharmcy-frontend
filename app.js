@@ -2452,9 +2452,10 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
   id: Date.now(),
   date: new Date().toISOString(),
 
-  userName: user.name,
-  userPhone: user.phone,
-  userAddress: user.address,
+
+   customerName: user.name,
+   phone: user.phone,
+   deliveryAddress: deliveryAddress,  
 
   deliveryDate: deliveryDate.toISOString(),
   isNextDayOrder: isNextDayOrder,
@@ -2465,7 +2466,7 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
   deliveryCharge: Number(deliveryCharge) || 0,
   total: Number(total) || 0,
 
-  deliveryAddress: deliveryAddress,
+  
   paymentMethod: paymentMethod,
   status: isNextDayOrder ? "Next Day Delivery" : "Placed"
 };
