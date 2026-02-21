@@ -2479,29 +2479,10 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      userId: user.id,
-
-      customerName: user.name || "",
-      phone: user.phone || "",
-
-     
-      items: cart.map(item => ({
-        productId: item.id,
-        name: item.name,
-        quantity: item.qty,
-        price: item.price,
-        total: item.price * item.qty,
-        image: item.image
-      })),
-      totalAmount: total,
-      deliveryCharge: deliveryCharge,
-      deliveryAddress: deliveryAddress,
-      deliveryDistance: 0,
-      paymentMethod: paymentMethod,
-      notes: ""
-    })
+     body: JSON.stringify(order)
   })
+    
+      
   .then(res => res.json())
   .then(data => {
     console.log("Order saved:", data);
