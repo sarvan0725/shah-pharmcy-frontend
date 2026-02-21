@@ -715,14 +715,16 @@ async function loadAnalytics() {
 
       if (o.deliveryCharge) deliveryRevenue += o.deliveryCharge;
 
+       const amount = Number(o.total) || 0;
+
       if (d.toDateString() === now.toDateString())
-        today += o.totalAmount;
+      today += amount;
 
       if (diff <= 7)
-        week += o.totalAmount;
+     week += amount;
 
       if (diff <= 30)
-        month += o.totalAmount;
+      month += amount;
     });
 
     setText("todaySales", "₹" + today);
