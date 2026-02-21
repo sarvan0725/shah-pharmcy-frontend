@@ -839,7 +839,7 @@ async function loadOrders() {
             <p><strong>Name:</strong> ${order.customerName || "-"}</p>
                <p><strong>Phone:</strong> ${order.phone || "-"}</p>
 
-            <p><strong>Total:</strong> ₹${order.totalAmount || 0}</p>
+            <p><strong>Total:</strong> ${Number(order.total) || 0}</p>
 
         <p><strong>Items:</strong> ${
           order.items ? order.items.length : 0
