@@ -2480,6 +2480,11 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
     },
     body: JSON.stringify({
       userId: user.id,
+
+      customerName: user.name || "",
+      phone: user.phone || "",
+
+     
       items: cart.map(item => ({
         productId: item.id,
         name: item.name,
