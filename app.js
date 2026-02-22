@@ -2464,7 +2464,7 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
 
   subtotal: Number(subtotal) || 0,
   deliveryCharge: Number(deliveryCharge) || 0,
-  total: Number(total) || 0,
+  totalAmount: Number(total) || 0,
 
   
   paymentMethod: paymentMethod,
