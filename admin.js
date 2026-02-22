@@ -843,10 +843,22 @@ async function loadOrders() {
 
             <p><strong>Total:</strong> ${Number(order.totalAmount) || 0}</p>
 
-        <p><strong>Items:</strong> ${
-          order.items ? order.items.length : 0
-         }</p>
+      
+       <p><strong>Items:</strong> ${
+  order.items ? order.items.length : 0
+}</p>
 
+${order.items && order.items.length ? `
+  <div style="margin-left:10px;">
+    ${order.items.map(item => `
+      <div>
+        ${item.name} - ${item.qty} x ₹${item.price}
+      </div>
+    `).join("")}
+  </div>
+` : ""}
+
+       
 </div>
 `;
       
