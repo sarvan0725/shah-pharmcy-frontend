@@ -1234,41 +1234,72 @@ function submitPrescription() {
   document.body.appendChild(successModal);
 }
 
+
 function showOrderHistory() {
-  const orders = JSON.parse(localStorage.getItem('orders')) || [];
-  const userOrders = orders.filter(order => currentUser && order.customerName === currentUser.name);
-  
-  const modal = document.createElement('div');
-  modal.innerHTML = `
-    <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;" onclick="this.remove()">
-      <div style="background:white;padding:30px;border-radius:15px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;" onclick="event.stopPropagation()">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-          <h3 style="color:var(--primary-color);margin:0;"><i class="fas fa-history"></i> Order History</h3>
-          <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:none;border:none;font-size:20px;cursor:pointer;">×</button>
-        </div>
-        <div>
-          ${userOrders.length === 0 ? '<p>No orders found</p>' : userOrders.map(order => `
-            <div style="border:1px solid #ddd;border-radius:8px;padding:15px;margin:10px 0;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                <strong>Order #${order.id}</strong>
-                <span style="color:var(--primary-color);font-weight:600;">₹${order.total}</span>
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  if (!currentUser) return;
+
+  fetch(`https://shah-pharmacy-backend.onrender.com/api/orders/user/${currentUser.phone}`)
+    .then(res => res.json())
+    .then(userOrders => {
+
+      const modal = document.createElement("div");
+      modal.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;";
+
+      modal.innerHTML = `
+        <div style="background:white;padding:20px;border-radius:10px;width:90%;max-width:600px;max-height:80%;overflow:auto;">
+          <h3>Order History</h3>
+
+          ${userOrders.length === 0 ? 
+            "<p>No orders found</p>" : 
+            userOrders.map(order => `
+              <div style="border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:10px;">
+                <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
+                <p><strong>Total:</strong> ₹${order.totalAmount}</p>
+                <p><strong>Status:</strong> ${order.status}</p>
+                <p><strong>Items:</strong></p>
+                ${order.items.map(item => `
+                  <div style="font-size:14px;">
+                    ${item.name} - ${item.quantity} x ₹${item.price}
+                  </div>
+                `).join("")}
               </div>
-              <p><strong>Date:</strong> ${new Date(order.date).toLocaleDateString()}</p>
-              <p><strong>Status:</strong> ${getOrderStatus(order)}</p>
-              <p><strong>Items:</strong> ${order.items.length}</p>
-              <p><strong>Payment:</strong> ${order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}</p>
-              <div style="margin-top:10px;">
-                <button onclick="downloadInvoice(${order.id})" style="background:var(--primary-color);color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:12px;margin-right:5px;">Download Invoice</button>
-                <button onclick="trackSpecificOrder(${order.id})" style="background:#2196F3;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:12px;">Ask About Order</button>
-              </div>
-            </div>
-          `).join('')}
+            `).join("")
+          }
+
+          <button onclick="this.parentElement.parentElement.remove()" 
+            style="margin-top:10px;background:red;color:white;border:none;padding:8px 12px;border-radius:5px;">
+            Close
+          </button>
         </div>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(modal);
+      `;
+
+      document.body.appendChild(modal);
+    })
+    .catch(err => {
+      console.error("Order History Error:", err);
+      alert("Error loading order history");
+    });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function trackSpecificOrder(orderId) {
   document.querySelector('[style*="position:fixed"]').remove();
