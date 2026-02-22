@@ -841,6 +841,8 @@ async function loadOrders() {
             <p><strong>Name:</strong> ${order.customerName || "-"}</p>
                <p><strong>Phone:</strong> ${order.phone || "-"}</p>
 
+               <p><strong>Address:</strong> ${order.deliveryAddress || "-"}</p>
+
             <p><strong>Total:</strong> ${Number(order.totalAmount) || 0}</p>
 
       
