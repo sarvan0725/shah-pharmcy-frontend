@@ -1,5 +1,3 @@
-
-
 /*************************************************
  FULL & FINAL USER WEBSITE LOGIC
  Shah Pharmacy & Mini Mart
@@ -2322,31 +2320,49 @@ function checkActiveDiscount() {
    SEARCH
 ================================*/
 function searchProducts() {
-  const q = document
-    .getElementById("searchBox")
-    .value
-    .toLowerCase()
-    .trim();
-
-  const baseList = getFilteredProducts();
-
-  if (q === "") {
-    renderProducts(baseList);
-    return;
-  }
-
-  const searched = baseList.filter(p =>
-    p.name.toLowerCase().includes(q)
-  );
-
-  renderProducts(searched);
+  const q = document.getElementById("searchBox").value.toLowerCase();
+  const list = document.getElementById("productList");
+  
+  if (q.trim() === '') {
+  renderProducts(getFilteredProducts());
+  return;
 }
+  }
+  
+  list.innerHTML = "";
 
+  products.filter(p => p.name.toLowerCase().includes(q)).forEach(p => {
+    if (!quantityMap[p.id]) quantityMap[p.id] = 1;
+    
+    const category = categories.find(c => c.id === p.categoryId);
+    const categoryIcon = category ? category.icon : '📦';
 
-
-
-
-
+    list.innerHTML += `
+      <div class="product-card">
+        <div class="product-image">
+          ${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
+          <div class="product-emoji" ${p.image ? 'style="display:none;"' : ''}>${categoryIcon}</div>
+        </div>
+        <div class="product-info">
+          <h4>${p.name}</h4>
+          <div class="product-weight">${p.weight || 'N/A'}</div>
+          <div class="product-price">₹${p.price}</div>
+          ${p.stock <= 10 ? '<div class="low-stock-warning">⚠️ Limited Stock!</div>' : ''}
+        </div>
+        <div class="quantity-controls">
+          <div class="qty-selector">
+            <button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button>
+            <span class="qty-display" id="qty-${p.id}">${quantityMap[p.id]}</span>
+            <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
+          </div>
+        </div>
+        <button class="add-to-cart" onclick="addToCart(${p.id})">
+          <i class="fas fa-plus"></i> Add to Cart
+        </button>
+      </div>
+    `;
+  });
+}
 ///////CALCULATEORDERSUMMARY////
 
 
@@ -3034,3 +3050,28 @@ function renderCategories(products = []) {
     container.appendChild(div);
   });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
