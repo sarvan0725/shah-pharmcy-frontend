@@ -653,7 +653,7 @@ async function loadProducts(searchQuery = '') {
           <td>${p.category_id}</td>
           <td>${p.image ? `<img src="${p.image}" width="40">` : 'X'}</td>
           <td>
-            <button onclick="deleteProduct(${p.id})">Delete</button>
+            <button onclick="deleteProduct('${p._id}')">Delete</button>
           </td>
         </tr>
       `;
