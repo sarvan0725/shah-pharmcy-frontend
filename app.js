@@ -55,11 +55,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* 🛒 CART & DISCOUNT STATE */
+/* 🛒 CART & DISCOUNT STATE */
 let cart = [];
 let activeDiscount = null;
 let autoDiscount = null;
 let autoDiscountAmount = 0;
 let coinsUsed = 0;
+let userCoins = parseInt(localStorage.getItem('userCoins')) || 0; // ← ADD THIS
+
 
 /* ❤️ WISHLIST */
 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
