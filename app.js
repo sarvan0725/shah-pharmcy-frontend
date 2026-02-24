@@ -3028,7 +3028,7 @@ function renderCategories(products = []) {
     container.appendChild(div);
   });
 }
-
+}
 
 
 
