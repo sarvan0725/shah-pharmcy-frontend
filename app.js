@@ -95,7 +95,7 @@ function initApp() {
   const productContainer = document.getElementById("productList");
   if (productContainer) {
     console.log("✅ productList found, loading products");
-    loadUserProducts();
+    loadProducts();
   }
 
   // Cart & User
@@ -3028,7 +3028,7 @@ function renderCategories(products = []) {
     container.appendChild(div);
   });
 }
-
+}
 
 
 
