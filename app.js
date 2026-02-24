@@ -2211,26 +2211,41 @@ function toggleUserMenu() {
 }
 
 function logoutUser() {
-  currentUser = null;
-  localStorage.removeItem('currentUser');
-  
-  // Update UI
-  document.getElementById('loginBtn').style.display = 'flex';
-  document.getElementById('userProfile').style.display = 'none';
-  
-  // Close modal
-  document.querySelector('[style*="position:fixed"]').remove();
-  
-  alert('You have been logged out successfully.');
+    currentUser = null;
+    localStorage.removeItem('currentUser');
+
+    // Update UI safely
+    const loginBtn = document.getElementById('loginBtn');
+    const userProfile = document.getElementById('userProfile');
+
+    if (loginBtn) loginBtn.style.display = 'flex';
+    if (userProfile) userProfile.style.display = 'none';
+
+    // Close modal safely
+    const modal = document.querySelector('[style*="position:fixed"]');
+    if (modal) modal.remove();
+
+    alert('You have been logged out successfully.');
 }
 
+
 function showUserProfile() {
-  if (currentUser) {
-    document.getElementById('loginBtn').style.display = 'none';
-    document.getElementById('userProfile').style.display = 'flex';
-    document.getElementById('userName').textContent = currentUser.name;
-  }
+    if (!currentUser) return;
+
+    const loginBtn = document.getElementById('loginBtn');
+    const userProfile = document.getElementById('userProfile');
+    const userName = document.getElementById('userName');
+
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (userProfile) userProfile.style.display = 'flex';
+    if (userName) userName.textContent = currentUser.name;
 }
+
+
+
+
+
+
 
 function updateUserStats() {
   // Award coins for orders (1 coin per ₹100 spent)
