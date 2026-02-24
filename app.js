@@ -2203,6 +2203,7 @@ fetch(apiUrl, {
   console.error(err);
   alert('Network error. Backend not reachable.');
 });
+}
   
 function toggleUserMenu() {
   // Redirect to overflow menu
