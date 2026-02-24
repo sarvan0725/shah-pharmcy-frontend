@@ -95,7 +95,7 @@ function initApp() {
   const productContainer = document.getElementById("productList");
   if (productContainer) {
     console.log("✅ productList found, loading products");
-    loadProducts();
+    loadUserProducts();
   }
 
   // Cart & User
