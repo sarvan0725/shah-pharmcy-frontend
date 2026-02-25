@@ -1397,40 +1397,37 @@ function deleteDiscount(id) {
 /* ===============================
    CATEGORY MANAGEMENT SYSTEM
 ================================*/
-function loadCategoryManagement() {
-  const categories = JSON.parse(localStorage.getItem('categories')) || [
-    { id: 1, name: 'Medicine', subcategories: ['Tablets', 'Syrups', 'Capsules', 'Ointments'] },
-    { id: 2, name: 'Grocery', subcategories: ['Rice & Grains', 'Oil & Ghee', 'Spices', 'Pulses'] },
-    { id: 3, name: 'Personal Care', subcategories: ['Skincare', 'Hair Care', 'Oral Care', 'Baby Care'] },
-    { id: 4, name: 'Bulk', subcategories: ['Wholesale Rice', 'Wholesale Oil', 'Wholesale Sugar'] }
-  ];
-  
-  const container = document.getElementById('categoryList');
-  if (!container) return;
-  
- container.innerHTML = categories.map(cat => `
-    <div class="category-item">
+
+ async function loadCategoryManagement() {
+
+  try {
+    const res = await fetch(`${API_BASE}/categories`);
+    const categories = await res.json();
+
+    const container = document.getElementById("categoryList");
+    if (!container) return;
+
+    container.innerHTML = categories.map(cat => `
+      <div class="category-item">
+
         <div class="category-header">
-            <h4>${cat.name}</h4>
-            <div class="category-actions">
-                <button onclick="editCategory(${cat.id})" class="edit-btn">Edit</button>
-                <button onclick="deleteCategory(${cat.id})" class="delete-btn">Delete</button>
-            </div>
+          <h4>${cat.name}</h4>
+
+          <div class="category-actions">
+            <button onclick="deleteCategory('${cat._id}')" 
+                    class="delete-btn">
+              Delete
+            </button>
+          </div>
         </div>
 
-        <div class="subcategories">
-            <strong>Subcategories:</strong>
-            ${cat.subcategories.map(sub => `
-                <span class="subcategory-tag">
-                    ${sub}
-                    <button onclick="deleteSubcategory(${cat.id}, '${sub}')">×</button>
-                </span>
-            `).join('')}
-            <button onclick="addSubcategory(${cat.id})" class="add-sub-btn">+ Add</button>
-        </div>
-    </div>
-`).join('');
-}
+      </div>
+    `).join("");
+
+  } catch (err) {
+    console.error("Category load error:", err);
+  }
+}               
 
 
 
@@ -1693,28 +1690,23 @@ async function addCategory() {
   }
 }
 
+
 async function deleteCategory(id) {
+
   if (!confirm("Delete this category?")) return;
 
   try {
+
     await fetch(`${API_BASE}/categories/${id}`, {
       method: "DELETE"
     });
 
-    loadCategories();
+    loadCategoryManagement();
 
   } catch (err) {
     console.error("Delete error", err);
   }
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  loadCategories();
-});
-
-
-
-
 
 
 
