@@ -393,7 +393,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loadAnalytics();
         loadOrders();
         checkLowStock();
+        loadCategoryDropdown();
 
+       
     }
 
     // ✅ ADD THIS
@@ -1671,6 +1673,54 @@ async function loadCategories() {
     console.error("Category load error", err);
   }
 }
+
+
+
+async function loadCategoryDropdown() {
+
+  try {
+    const res = await fetch(`${API_BASE}/categories`);
+    const categories = await res.json();
+
+    const select = document.getElementById("productCategory");
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Select Category</option>';
+
+    categories.forEach(cat => {
+      select.innerHTML += `
+        <option value="${cat._id}">
+          ${cat.name}
+        </option>
+      `;
+    });
+
+  } catch (err) {
+    console.error("Dropdown load error", err);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 async function addCategory() {
   const input = document.getElementById("newCategoryName");
