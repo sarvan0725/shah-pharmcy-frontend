@@ -1696,20 +1696,16 @@ async function deleteCategory(id) {
   if (!confirm("Delete this category?")) return;
 
   try {
-
     await fetch(`${API_BASE}/categories/${id}`, {
       method: "DELETE"
     });
 
-    loadCategoryManagement();
+    loadCategories();   // ✅ correct function
 
   } catch (err) {
     console.error("Delete error", err);
   }
 }
-
-
-
 
 
 
