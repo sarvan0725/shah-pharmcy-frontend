@@ -386,12 +386,21 @@ function changeAdminUsername() {
    LOAD DASHBOARD
 ================================*/
 document.addEventListener("DOMContentLoaded", () => {
-  if (window.location.pathname.includes("dashboard.html")) {
-    loadProducts();
-    loadAnalytics();
-    loadOrders();
-    checkLowStock();
-  }
+
+    if (window.location.pathname.includes("dashboard.html")) {
+
+        loadProducts();
+        loadAnalytics();
+        loadOrders();
+        checkLowStock();
+
+    }
+
+    // ✅ ADD THIS
+    if (window.location.pathname.includes("admin.html")) {
+        loadCategories();
+    }
+
 });
 
 /* ===============================
