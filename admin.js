@@ -547,7 +547,7 @@ async function addProduct() {
     weight: weight,
     price: Number(price),
     stock: Number(stock),
-    category_id: Number(category),
+    category_id: category,
     image: uploadedImageUrl,
   };
 
