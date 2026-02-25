@@ -1650,28 +1650,27 @@ function loadAdminSettings() {
 
 
 async function loadCategories() {
-  try {
-    const res = await fetch(`${API_BASE}/categories`);
-    const categories = await res.json();
+    try {
+        const res = await fetch(`${API_BASE}/categories`);
+        const categories = await res.json();
 
-    const list = document.getElementById("categoryList");
-    if (!list) return;
+        const select = document.getElementById("pCategory");
+        if (!select) return;
 
-    list.innerHTML = "";
+        select.innerHTML = '<option value="">Select Category</option>';
 
-    categories.forEach(cat => {
-      const div = document.createElement("div");
-      div.className = "category-item";
-     div.innerHTML = `
-     <span>${cat.name}</span>
-     <button onclick="deleteCategory('${cat._id}')">Delete</button>
-   `;
-      list.appendChild(div);
-    });
+        categories.forEach(cat => {
+            const option = document.createElement("option");
+            option.value = cat._id;
+            option.textContent = cat.name;
+            select.appendChild(option);
+        });
 
-  } catch (err) {
-    console.error("Category load error", err);
-  }
+        console.log("Categories loaded:", categories);
+
+    } catch (err) {
+        console.error("Category error:", err);
+    }
 }
 
 
