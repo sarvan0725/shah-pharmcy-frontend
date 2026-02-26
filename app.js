@@ -236,15 +236,15 @@ function getFilteredProducts() {
 
 
 
-function filterProductsByCategory(categoryId) {
+function setCategory(categoryId) {
+  currentCategoryId = categoryId;
 
-  const filtered = products.filter(p => {
-    return String(p.category_id) === String(categoryId);
-  });
+  const filtered = products.filter(p =>
+    String(p.category_id) === String(categoryId)
+  );
 
   renderProducts(filtered);
 }
-
 
 
 
