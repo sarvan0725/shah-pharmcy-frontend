@@ -427,34 +427,49 @@
 </div>
 
 <!-- AI CHATBOT -->
-<div id="aiOverlay" class="ai-overlay" onclick="toggleAIChat()"></div>
 <div id="aiChatbot" class="ai-chatbot">
+
   <div class="ai-header">
     <h3><i class="fas fa-robot"></i> AI Assistant</h3>
     <button class="close-ai" onclick="toggleAIChat()">×</button>
   </div>
+
   <div class="ai-body">
     <div id="aiChatBody" class="ai-chat-body">
+      
       <div class="ai-message">
         <div class="ai-avatar">🤖</div>
         <div class="message-content">
           <p>Hi! I'm your pharmacy assistant. Ask me about medicines, symptoms, or health advice!</p>
         </div>
       </div>
+
     </div>
   </div>
+
   <div class="ai-footer">
+
     <div class="quick-queries">
       <button onclick="quickAIQuery('fever')">Fever</button>
       <button onclick="quickAIQuery('headache')">Headache</button>
       <button onclick="quickAIQuery('diabetes')">Diabetes</button>
       <button onclick="quickAIQuery('vitamins')">Vitamins</button>
     </div>
+
     <div class="ai-input-section">
-      <input type="text" id="aiInput" placeholder="Ask me anything..." onkeypress="handleAIEnter(event)">
-      <button onclick="sendAIMessage()"><i class="fas fa-paper-plane"></i></button>
+      <input 
+        type="text"
+        id="aiInput"
+        placeholder="Ask me anything..."
+        onkeypress="quickAIQuery(event)"
+      >
+      <button onclick="quickAIQuery()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
     </div>
+
   </div>
+
 </div>
 
 <!-- SMART SUGGESTIONS -->
