@@ -3115,6 +3115,62 @@ console.log("POPSTATE TRIGGERED");
 
 
 
+// ===============================
+// AI QUICK QUERY HANDLER
+// ===============================
+
+
+
+
+function sendAIMessage(message) {
+  console.log("Sending:", message);
+
+  fetch("https://shah-pharmacy-backend.onrender.com/api/ai", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ message })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("AI Response:", data);
+  })
+  .catch(err => {
+    console.error("AI Error:", err);
+  });
+}
+
+
+
+
+
+function quickAIQuery(queryOrEvent) {
+
+  let message = "";
+
+  // Agar Enter press hua
+  if (queryOrEvent instanceof KeyboardEvent) {
+    if (queryOrEvent.key !== "Enter") return;
+
+    message = document.getElementById("aiInput").value.trim();
+  } 
+  else {
+    message = queryOrEvent;
+  }
+
+  if (!message) return;
+
+  sendAIMessage(message);
+
+  document.getElementById("aiInput").value = "";
+}
+
+window.quickAIQuery = quickAIQuery; // 👈 IMPORTANT
+
+
+
+
 
 
 
