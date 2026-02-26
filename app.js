@@ -2981,8 +2981,11 @@ function trackEvent(eventName, data) {
 // ================================
 // LOAD PRODUCTS FROM BACKEND (FINAL)
 // ================================
+
+
 async function loadUserProducts() {
   try {
+
     console.log("🟢 Loading products via pharmacyAPI...");
 
     const response = await window.pharmacyAPI.getProducts();
@@ -2999,9 +3002,18 @@ async function loadUserProducts() {
 
     console.log("✅ Products loaded:", products.length);
 
-    // ✅ SUCCESS RENDER — ONLY HERE
+    // Categories render
     renderCategories(products);
-    renderProducts(getFilteredProducts());
+
+    // ✅ URL se category read karo
+    const params = new URLSearchParams(window.location.search);
+    const categoryFromUrl = params.get("category");
+
+    if (categoryFromUrl) {
+      setCategory(categoryFromUrl);
+    } else {
+      renderProducts(getFilteredProducts());
+    }
 
   } catch (err) {
     console.error("❌ Product load failed:", err);
@@ -3009,10 +3021,16 @@ async function loadUserProducts() {
     products = [];
     currentCategoryId = null;
     currentSubcategoryId = null;
-
-    
   }
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -3064,7 +3082,20 @@ function renderCategories(products = []) {
 
 
 
+window.addEventListener("popstate", () => {
 
+  const params = new URLSearchParams(window.location.search);
+  const categoryFromUrl = params.get("category");
+
+  if (categoryFromUrl) {
+    setCategory(categoryFromUrl);
+  } else {
+    currentCategoryId = null;
+    currentSubcategoryId = null;
+    renderProducts(products);
+  }
+
+});
 
 
 
