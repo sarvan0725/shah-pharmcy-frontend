@@ -237,9 +237,9 @@ function getFilteredProducts() {
 
 
 function filterProductsByCategory(categoryId) {
+
   const filtered = products.filter(p => {
-    const pCat = (p.categoryId || p.category || "").toString();
-    return pCat === categoryId.toString();
+    return String(p.category_id) === String(categoryId);
   });
 
   renderProducts(filtered);
