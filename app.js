@@ -2698,25 +2698,24 @@ function setCategory(categoryId) {
 
 
 
-
-
-
-
-
-
-
-
-
 function loadSubcategories(categoryId) {
+
   const category = categories.find(cat => cat.id === categoryId);
   const container = document.getElementById('subcategoryContainer');
-  
+
+  // 🔥 IMPORTANT FIX
+  if (!container) {
+    console.warn("No subcategory container found — skipping");
+    return;
+  }
+
   if (!category || !category.subcategories || category.subcategories.length === 0) {
     container.style.display = 'none';
     return;
   }
-  
+
   container.style.display = 'block';
+
   container.innerHTML = `
     <div class="subcategory-scroll">
       <div class="subcategory-item active" onclick="setSubcategory(null)">
@@ -2730,6 +2729,15 @@ function loadSubcategories(categoryId) {
     </div>
   `;
 }
+
+
+
+
+
+
+
+
+
 
 function setSubcategory(subcategoryId) {
   currentSubcategoryId = subcategoryId;
