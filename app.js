@@ -237,7 +237,13 @@ function getFilteredProducts() {
 
 
 function setCategory(categoryId) {
+
   currentCategoryId = categoryId;
+
+  // ✅ URL update karo (History API)
+  const url = new URL(window.location);
+  url.searchParams.set("category", categoryId);
+  window.history.pushState({ categoryId }, "", url);
 
   const filtered = products.filter(p =>
     String(p.category_id) === String(categoryId)
