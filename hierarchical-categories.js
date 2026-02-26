@@ -89,26 +89,26 @@ function getCurrentCategories() {
 ================================*/
 function navigateToCategory(category) {
 
-  console.log("✅ Category Clicked:", category);
+  console.log("🟢 Category Clicked:", category);
 
-  // अगर children हैं → अंदर जाओ
+  // Agar children hain → andar jao
   if (category.children && category.children.length > 0) {
-
     currentCategoryPath.push(category);
-
     renderCategoryNavigation();
-
     return;
   }
 
-  // अगर children नहीं हैं → यही final category है
+  // ✅ FINAL CATEGORY — YAHI PE HISTORY PUSH KARNA HAI
+  const url = new URL(window.location);
+  url.searchParams.set("category", category._id);
+  window.history.pushState({ categoryId: category._id }, "", url);
 
-  // अब products filter करो name से
+  // ✅ Products filter karwao (push dobara na ho)
   if (window.setCategory) {
-    window.setCategory(category._id);
+    window.setCategory(category._id, true);
   } else {
     console.warn("⚠ setCategory() missing in app.js");
- }
+  }
 }
 
 function navigateToRoot() {
