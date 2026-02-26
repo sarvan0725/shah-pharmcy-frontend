@@ -3144,46 +3144,33 @@ function sendAIMessage(message) {
 
 
 
-
-function quickAIQuery(queryOrEvent) {
+function quickAIQuery(input) {
 
   let message = "";
 
-  // Agar Enter press hua
-  if (queryOrEvent instanceof KeyboardEvent) {
-    if (queryOrEvent.key !== "Enter") return;
-
-    message = document.getElementById("aiInput").value.trim();
+  // Agar button se call hua (fever, diabetes etc)
+  if (typeof input === "string") {
+    message = input;
   } 
-  else {
-    message = queryOrEvent;
+  // Agar Enter press hua
+  else if (input instanceof KeyboardEvent) {
+    if (input.key !== "Enter") return;
+
+    const inputBox = document.getElementById("aiInput");
+    if (!inputBox) return;
+
+    message = inputBox.value.trim();
   }
 
-  if (!message) return;
+  if (!message) {
+    console.log("No message found");
+    return;
+  }
 
   sendAIMessage(message);
 
-  document.getElementById("aiInput").value = "";
+  const inputBox = document.getElementById("aiInput");
+  if (inputBox) inputBox.value = "";
 }
 
-window.quickAIQuery = quickAIQuery; // 👈 IMPORTANT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+window.quickAIQuery = quickAIQuery;
