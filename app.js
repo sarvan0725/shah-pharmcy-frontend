@@ -3122,8 +3122,28 @@ console.log("POPSTATE TRIGGERED");
 
 
 
-function sendAIMessage(message) {
-  console.log("Sending:", message);
+function quickAIQuery(message) {
+
+  // Agar event pass ho raha hai (Enter press)
+  if (message instanceof Event) {
+    if (message.key !== "Enter") return;
+    message = document.getElementById("aiInput").value;
+  }
+
+  if (!message) return;
+
+  const chatBody = document.getElementById("aiChatBody");
+
+  // User message add karo
+  chatBody.innerHTML += `
+    <div class="ai-message user">
+      <div class="message-content">
+        <p>${message}</p>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("aiInput").value = "";
 
   fetch("https://shah-pharmacy-backend.onrender.com/api/ai", {
     method: "POST",
@@ -3134,43 +3154,20 @@ function sendAIMessage(message) {
   })
   .then(res => res.json())
   .then(data => {
-    console.log("AI Response:", data);
+
+    chatBody.innerHTML += `
+      <div class="ai-message">
+        <div class="ai-avatar">🤖</div>
+        <div class="message-content">
+          <p>${data.reply}</p>
+        </div>
+      </div>
+    `;
+
+    chatBody.scrollTop = chatBody.scrollHeight;
+
   })
   .catch(err => {
     console.error("AI Error:", err);
   });
 }
-
-
-
-
-function quickAIQuery(input) {
-
-  let message = "";
-
-  // Agar button se call hua (fever, diabetes etc)
-  if (typeof input === "string") {
-    message = input;
-  } 
-  // Agar Enter press hua
-  else if (input instanceof KeyboardEvent) {
-    if (input.key !== "Enter") return;
-
-    const inputBox = document.getElementById("aiInput");
-    if (!inputBox) return;
-
-    message = inputBox.value.trim();
-  }
-
-  if (!message) {
-    console.log("No message found");
-    return;
-  }
-
-  sendAIMessage(message);
-
-  const inputBox = document.getElementById("aiInput");
-  if (inputBox) inputBox.value = "";
-}
-
-window.quickAIQuery = quickAIQuery;
