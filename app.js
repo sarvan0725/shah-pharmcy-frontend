@@ -3090,6 +3090,8 @@ function renderCategories(products = []) {
 
 window.addEventListener("popstate", () => {
 
+console.log("POPSTATE TRIGGERED");
+
   const params = new URLSearchParams(window.location.search);
   const categoryFromUrl = params.get("category");
 
