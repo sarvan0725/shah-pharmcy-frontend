@@ -104,15 +104,11 @@ function navigateToCategory(category) {
   // अगर children नहीं हैं → यही final category है
 
   // अब products filter करो name से
-  if (window.filterProductsByCategory) {
-
-    window.filterProductsByCategory(category.name);
-
+  if (window.setCategory) {
+    window.setCategory(category._id);
   } else {
-
-    console.warn("⚠️ filterProductsByCategory() missing in app.js");
-
-  }
+    console.warn("⚠ setCategory() missing in app.js");
+ }
 }
 
 function navigateToRoot() {
