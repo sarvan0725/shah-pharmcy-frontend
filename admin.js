@@ -387,20 +387,22 @@ function changeAdminUsername() {
 ================================*/
 document.addEventListener("DOMContentLoaded", () => {
 
+    // Dashboard page
     if (window.location.pathname.includes("dashboard.html")) {
 
         loadProducts();
         loadAnalytics();
         loadOrders();
         checkLowStock();
-        loadCategoryDropdown();
 
-       
     }
 
-    // ✅ ADD THIS
-    if (window.location.pathname.includes("admin.html")) {
-        loadCategories();
+    // Admin / Product management page
+    if (
+        window.location.pathname.includes("admin.html") ||
+        window.location.pathname.includes("dashboard.html")
+    ) {
+        loadCategories();   // 🔥 sirf ye hi call hoga
     }
 
 });
