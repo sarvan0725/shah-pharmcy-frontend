@@ -236,14 +236,16 @@ function getFilteredProducts() {
 
 
 
-function setCategory(categoryId) {
+function setCategory(categoryId, skipPush = false) {
 
   currentCategoryId = categoryId;
 
-  // ✅ URL update karo (History API)
-  const url = new URL(window.location);
-  url.searchParams.set("category", categoryId);
-  window.history.pushState({ categoryId }, "", url);
+  // ✅ Sirf click ke time pushState
+  if (!skipPush) {
+    const url = new URL(window.location);
+    url.searchParams.set("category", categoryId);
+    window.history.pushState({ categoryId }, "", url);
+  }
 
   const filtered = products.filter(p =>
     String(p.category_id) === String(categoryId)
@@ -251,7 +253,6 @@ function setCategory(categoryId) {
 
   renderProducts(filtered);
 }
-
 
 
 
@@ -3011,15 +3012,14 @@ async function loadUserProducts() {
     // Categories render
     renderCategories(products);
 
-    // ✅ URL se category read karo
     const params = new URLSearchParams(window.location.search);
     const categoryFromUrl = params.get("category");
 
-    if (categoryFromUrl) {
-      setCategory(categoryFromUrl);
-    } else {
-      renderProducts(getFilteredProducts());
-    }
+  if (categoryFromUrl) {
+    setCategory(categoryFromUrl);
+} else {
+  renderProducts(getFilteredProducts());
+}
 
   } catch (err) {
     console.error("❌ Product load failed:", err);
