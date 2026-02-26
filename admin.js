@@ -1675,6 +1675,7 @@ async function loadCategories() {
 
 
 
+
 async function loadCategoryDropdown() {
 
   try {
