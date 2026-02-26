@@ -2986,6 +2986,12 @@ function trackEvent(eventName, data) {
 async function loadUserProducts() {
   try {
 
+
+   if (!window.history.state) {
+  window.history.replaceState({ page: "home" }, "", window.location.href);
+}
+
+
     console.log("🟢 Loading products via pharmacyAPI...");
 
     const response = await window.pharmacyAPI.getProducts();
@@ -3088,7 +3094,14 @@ window.addEventListener("popstate", () => {
   const categoryFromUrl = params.get("category");
 
   if (categoryFromUrl) {
-    setCategory(categoryFromUrl);
+    currentCategoryId = categoryFromUrl;
+
+    const filtered = products.filter(p =>
+      String(p.category_id) === String(categoryFromUrl)
+    );
+
+    renderProducts(filtered);
+
   } else {
     currentCategoryId = null;
     currentSubcategoryId = null;
@@ -3096,7 +3109,6 @@ window.addEventListener("popstate", () => {
   }
 
 });
-
 
 
 
