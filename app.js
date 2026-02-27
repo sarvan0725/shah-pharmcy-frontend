@@ -14,6 +14,11 @@ const COIN_CONFIG = {
 
 
 
+const FEATURES = {
+  enableRazorpayPayment: true
+};
+
+
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
 
