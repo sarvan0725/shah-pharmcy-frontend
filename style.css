@@ -3008,3 +3008,47 @@ body {
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
+
+
+
+@media (max-width: 768px) {
+
+  .products {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .product-card {
+    padding: 8px;
+    border-radius: 14px;
+  }
+
+  /* 👇 IMAGE CONTAINER */
+  .product-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;   /* perfect square */
+    object-fit: contain;   /* cut nahi karega */
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 8px;
+  }
+
+  .product-card h3 {
+    font-size: 14px;
+    margin: 6px 0 4px;
+  }
+
+  .price {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .add-to-cart {
+    padding: 6px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+}
