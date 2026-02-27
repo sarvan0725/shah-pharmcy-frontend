@@ -1,10 +1,12 @@
-// Razorpay Configuration
-const RAZORPAY_CREDENTIALS = {
-    keyId: 'rzp_test_Rt82KwTYuXIf63',
-    keySecret: 'v4JhIC4Uw051OjAZMULPVNn3' // Keep this secure - never expose in frontend
+// Razorpay Frontend Config
+
+const RAZORPAY_CONFIG = {
+  key: "rzp_test_xxxxxxxxxxxx",  // ONLY keyId
+  currency: "INR",
+  name: "Shah Pharmacy",
+  theme: {
+    color: "#ff6b00"
+  }
 };
 
-// Export for backend use only
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = RAZORPAY_CREDENTIALS;
-}
+window.RAZORPAY_CONFIG = RAZORPAY_CONFIG;
