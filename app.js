@@ -296,12 +296,12 @@ function renderProducts(products = []) {
           <button onclick="changeQty('${productId}', 1)">+</button>
         </div>
 
-        <button 
-            class="wishlist-btn"
-            onclick="toggleWishlist('${productId}', this)"
-         >
-           ❤️
-        </button>
+       <button 
+             class="wishlist-btn"
+              onclick="toggleWishlistItem('${productId}', this)"
+           >
+             ❤️
+      </button>
 
         <!-- Add to cart button -->
         <button 
@@ -748,17 +748,18 @@ function toggleWishlist() {
 
 
 function toggleWishlistItem(id, btn) {
-    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+  let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
-    if (wishlist.includes(id)) {
-        wishlist = wishlist.filter(w => w !== id);
-        btn.style.color = "black";
-    } else {
-        wishlist.push(id);
-        btn.style.color = "red";
-    }
+  if (wishlist.includes(id)) {
+    wishlist = wishlist.filter(w => w !== id);
+    btn.style.color = "black";
+  } else {
+    wishlist.push(id);
+    btn.style.color = "red";
+  }
 
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  loadWishlistItems(); // 👈 refresh sidebar data
 }
 
 function addAllToCart() {
