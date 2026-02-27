@@ -296,6 +296,13 @@ function renderProducts(products = []) {
           <button onclick="changeQty('${productId}', 1)">+</button>
         </div>
 
+        <button 
+            class="wishlist-btn"
+            onclick="toggleWishlist('${productId}', this)"
+         >
+           ❤️
+        </button>
+
         <!-- Add to cart button -->
         <button 
           id="btn-${productId}"
