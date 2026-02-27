@@ -747,19 +747,24 @@ function toggleWishlist() {
 
 
 
-function toggleWishlistItem(id, btn) {
-  let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+function loadWishlistItems() {
+  const wishlistIds = JSON.parse(localStorage.getItem("wishlist")) || [];
 
-  if (wishlist.includes(id)) {
-    wishlist = wishlist.filter(w => w !== id);
-    btn.style.color = "black";
-  } else {
-    wishlist.push(id);
-    btn.style.color = "red";
-  }
+  const wishlistContainer = document.getElementById("wishlistItems");
+  wishlistContainer.innerHTML = "";
 
-  localStorage.setItem("wishlist", JSON.stringify(wishlist));
-  loadWishlistItems(); // 👈 refresh sidebar data
+  wishlistIds.forEach(id => {
+    const product = products.find(p => (p._id || p.id) == id);
+
+    if (!product) return;   // 👈 IMPORTANT
+
+    wishlistContainer.innerHTML += `
+      <div class="wishlist-item">
+        <h4>${product.name}</h4>
+        <p>₹${product.price}</p>
+      </div>
+    `;
+  });
 }
 
 function addAllToCart() {
