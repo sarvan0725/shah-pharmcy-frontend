@@ -9,7 +9,7 @@ window.APP_CONFIG = {
   
   
   
-  const RAZORPAY_KEY_ID = "rzp_live_xxxxx";
+  const RAZORPAY_KEY_ID = "rzp_live_xxxxx",
 
   BUSINESS_CONFIG: {
     minOrderAmount: 500,
