@@ -2549,15 +2549,17 @@ async function initiateRazorpayPayment(order) {
 
     // 🔥 STEP 1: Create order from backend
     const orderResponse = await fetch(
-      "https://shah-pharmacy-backend.onrender.com/api/payment/create-order",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount: order.total }),
-      }
-    );
+  "https://shah-pharmacy-backend.onrender.com/api/payment/create-order",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      amount: order.totalAmount * 100
+    })
+  }
+);
 
     const razorpayOrder = await orderResponse.json();
 
