@@ -7,7 +7,7 @@ window.APP_CONFIG = {
 
   API_BASE_URL: "https://shah-pharmacy-backend.onrender.com/api",
 
-  RAZORPAY_KEY_ID: "rzp_live_xxxxx", // <-- Apna live key daal
+  RAZORPAY_KEY_ID: "rzp_live_SLUPQe8lwZl4Iy", // <-- Apna live key daal
 
   BUSINESS_CONFIG: {
     minOrderAmount: 500,
