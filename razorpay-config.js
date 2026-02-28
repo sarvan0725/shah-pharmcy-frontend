@@ -1,7 +1,7 @@
 // Razorpay Frontend Config
 
 const RAZORPAY_CONFIG = {
-  key: "rzp_test_xxxxxxxxxxxx",  // ONLY keyId
+  key: "rzp_live_xxxxxxxxx",  // ONLY keyId
   currency: "INR",
   name: "Shah Pharmacy",
   theme: {
