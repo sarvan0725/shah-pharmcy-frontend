@@ -16,7 +16,7 @@ window.APP_CONFIG = {
 // PAYMENT CONFIGURATION
 // Replace with your actual Razorpay Key ID from dashboard
 // BACKEND API BASE URL (PRODUCTION)
-const RAZORPAY_KEY_ID = 'rzp_test_Rt82KwTYuXIf63';
+const RAZORPAY_KEY_ID = "rzp_live_xxxxx";
 
 // BUSINESS SETTINGS
 const BUSINESS_CONFIG = {
