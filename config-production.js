@@ -2,14 +2,12 @@
 // PRODUCTION CONFIG (SINGLE SOURCE)
 // ================================
 
-// Global App Config (ONLY HERE)
+// Global App Config
 window.APP_CONFIG = {
+
   API_BASE_URL: "https://shah-pharmacy-backend.onrender.com/api",
 
-  
-  
-  
-  const RAZORPAY_KEY_ID = "rzp_live_xxxxx",
+  RAZORPAY_KEY_ID: "rzp_live_xxxxx", // <-- Apna live key daal
 
   BUSINESS_CONFIG: {
     minOrderAmount: 500,
@@ -21,12 +19,11 @@ window.APP_CONFIG = {
     phone1: "9792997667",
     phone2: "7905190933",
     whatsappNumber: "919792997667",
-    address:
-      "Banjariya Road, Near Naval's National Academy Junior, Khalilabad - Sant Kabir Nagar",
+    address: "BanjarIya Road, Near Naval's National Academy Junior, Khalilabad - Sant Kabir Nagar",
     shopLocation: {
       lat: 26.7606,
-      lng: 83.0732,
-    },
+      lng: 83.0732
+    }
   },
 
   FEATURES: {
@@ -35,14 +32,14 @@ window.APP_CONFIG = {
     enableAIAssistant: true,
     enableQRCodes: true,
     enableUserAuth: true,
-    enableCoinsSystem: true,
-  },
+    enableCoinsSystem: true
+  }
+
 };
 
-// Short global alias (READ-ONLY USE)
+// Short global aliases
 window.API_BASE_URL = window.APP_CONFIG.API_BASE_URL;
-
-// ADD THIS LINE
 window.BUSINESS_CONFIG = window.APP_CONFIG.BUSINESS_CONFIG;
+window.RAZORPAY_KEY_ID = window.APP_CONFIG.RAZORPAY_KEY_ID;
 
-console.log("config-production loaded:", window.API_BASE_URL);
+console.log("Config loaded successfully");
