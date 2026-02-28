@@ -2544,52 +2544,65 @@ const deliveryAddress = document.getElementById('deliveryAddress').value;
 } 
 
 
-function initiateRazorpayPayment(order) {
-  if (!FEATURES.enableRazorpayPayment) {
-    alert('Online payment is currently unavailable. Please use Cash on Delivery.');
-    return;
-  }
-  
-  const options = {
-    key: RAZORPAY_CONFIG.key,
-    amount: order.total * 100,
-    currency: RAZORPAY_CONFIG.currency,
-    name: RAZORPAY_CONFIG.name,
-    description: `Order #${order.id}`,
-    handler: function(response) {
-      order.paymentId = response.razorpay_payment_id;
-      order.status = order.isNextDayOrder ? 'Next Day Delivery - Paid' : 'Paid';
-      processOrder(order);
-    },
-    prefill: {
-      name: currentUser ? currentUser.name : 'Customer',
-      contact: currentUser ? currentUser.phone : BUSINESS_CONFIG.phone1
-    },
-    method: {
-      upi: true,
-      card: true,
-      netbanking: true,
-      wallet: true
-    },
-    theme: RAZORPAY_CONFIG.theme,
-    modal: {
-      ondismiss: function() {
-        alert('Payment cancelled. You can try again or use Cash on Delivery.');
-      }
-    }
-  };
-  
+async function initiateRazorpayPayment(order) {
   try {
+
+    // 🔥 STEP 1: Create order from backend
+    const orderResponse = await fetch(
+      "https://shah-pharmacy-backend.onrender.com/api/payment/create-order",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: order.total }),
+      }
+    );
+
+    const razorpayOrder = await orderResponse.json();
+
+    if (!razorpayOrder.id) {
+      alert("Order creation failed.");
+      return;
+    }
+
+    // 🔥 STEP 2: Open Razorpay with order_id
+    const options = {
+      key: RAZORPAY_CONFIG.key,
+      amount: razorpayOrder.amount,
+      currency: razorpayOrder.currency,
+      order_id: razorpayOrder.id,
+
+      name: RAZORPAY_CONFIG.name,
+      description: `Order #${order.id}`,
+
+      handler: function (response) {
+        order.paymentId = response.razorpay_payment_id;
+        order.status = "Paid";
+        processOrder(order);
+      },
+
+      prefill: {
+        name: currentUser ? currentUser.name : "Customer",
+        contact: currentUser ? currentUser.phone : BUSINESS_CONFIG.phone1,
+      },
+
+      theme: RAZORPAY_CONFIG.theme,
+    };
+
     const rzp = new Razorpay(options);
-    rzp.on('payment.failed', function (response) {
-      alert(`Payment failed. Please try again or use Cash on Delivery.`);
+
+    rzp.on("payment.failed", function () {
+      alert("Payment failed. Please try again.");
     });
+
     rzp.open();
+
   } catch (error) {
-    alert('Payment gateway error. Please try Cash on Delivery.');
+    console.error(error);
+    alert("Payment gateway error.");
   }
 }
-
 async function processOrder(order) {
     try {
         const response = await fetch("https://shah-pharmacy-backend.onrender.com/api/orders", {
